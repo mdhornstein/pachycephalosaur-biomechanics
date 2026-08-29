@@ -15,7 +15,7 @@ This report delivers the foundational data inventory, provenance audit, and geom
 
 Phase 1 establishes that the **software environment, manifest infrastructure, secure ingestion engine, and data inventory are complete**. The next milestone is the physical acquisition and empirical inspection of primary CT data and reference models.
 
-Below are detailed, authoritative answers to the **8 core questions** defining the Phase 1 milestone.
+Below are the documented findings for the 8 core questions defining the Phase 1 milestone.
 
 ---
 
