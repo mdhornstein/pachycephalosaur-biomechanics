@@ -61,18 +61,21 @@ flowchart TD
 - Checksum validation and safe ingestion tooling (`scripts/ingest_data.py`).
 - Publication of Phase 1 Synthesis Report ([`reports/phase1_data_and_geometry_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase1_data_and_geometry_report.md)).
 
-### Phase 2: Inspection of Existing 3D Geometry
-- Ingest and inspect available 3D surface models using `trimesh`, `pyvista`, and `meshio`.
-- Verify topological manifoldness: watertight status, self-intersections, non-manifold edges/vertices, degenerate faces.
-- Audit physical coordinate frame and scale ($mm$ vs. $cm$ vs. $m$) by comparing bounding dimensions against published anatomical measurements.
-- Extract surface area, bounding box, volume, and Euler characteristic $\chi = V - E + F$.
-- Export sanitized baseline copies to `data/meshes/cleaned/` without modifying raw source geometry.
+### Phase 2: Digital Anatomy Inventory & Geometry Validation *(Completed)*
+- Ingested and inventoried 33 MorphoSource surface STLs (Whole Skull `000018284` + 32 Component Bones `000043121-000043162`).
+- Generated quantitative inventory catalog [`data/metadata/geometry_inventory.csv`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/geometry_inventory.csv) with SHA-256 digests, vertex/face counts, and topology.
+- Verified common native coordinate system alignment ($\Delta \le 0.029$ coordinate units) and zero-transformation assembly.
+- Characterized 14 bilateral symmetry pairs and sampled nearest-point distance distributions.
+- Published Phase 2 Synthesis Report ([`reports/phase2_digital_anatomy_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase2_digital_anatomy_report.md)).
 
-### Phase 3: Raw CT Volume & Density Inspection
-- Ingest DICOM slice stacks using `SimpleITK` and `pydicom`.
-- Document scan metadata: slice thickness, pixel spacing, acquisition matrix, field of view, kVp/mA, bit depth, and Hounsfield unit calibration directly from DICOM tags.
-- Generate orthogonal multi-planar reconstructions (axial, coronal, sagittal).
-- Compute density histograms across anatomical subregions (dome apex, supratemporal fenestrae, palate, basicranium) to assess beam-hardening artifacts and mineral infilling.
+### Phase 3: Published-Model Input Audit & Biomechanical Feasibility *(Completed - Gate)*
+- Line-by-line model parameter and methodology extraction from primary reference Snively & Theodor (2011) ([`literature/snively_theodor_2011_model_audit.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/literature/snively_theodor_2011_model_audit.md)).
+- Constructed formal Biomechanics Input Matrix ([`data/metadata/biomechanics_input_matrix.csv`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/biomechanics_input_matrix.csv)) with 5-tier evidence levels and 7 availability categories.
+- Reconstructed published computational workflow and separated geometry-limited, parameter-limited, and model-form uncertainties ([`reports/snively_theodor_model_reconstruction.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/snively_theodor_model_reconstruction.md)).
+- Formally justified that raw CT is NOT required for the first baseline benchmark, but required for voxel-level density mapping.
+- Specified concrete first benchmark experiment with explicit quantitative validation targets ([`reports/phase3_recommended_benchmark.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase3_recommended_benchmark.md)).
+- Automated dimensional consistency audit notebook ([`notebooks/05_model_input_dimensional_audit.ipynb`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/05_model_input_dimensional_audit.ipynb)).
+- Automated verification tests ([`tests/test_phase3_model_audit.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase3_model_audit.py)).
 
 ### Phase 4: Cranial Segmentation & Cavity Isolation
 - Semi-automated segmentation in 3D Slicer / SimpleITK.

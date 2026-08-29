@@ -46,33 +46,39 @@ pachycephalosaurus-biomechanics/
 │   │   ├── cleaned/                    # Standardized, watertight, scale-verified meshes
 │   │   └── fe/                         # Solid tetrahedral / hexahedral meshes for FEA
 │   ├── reference/                      # 3D PDFs and animation reference files
-│   └── metadata/
-│       └── dataset_manifest.yaml       # Machine-readable provenance & SHA-256 checksum manifest
+│   ├── metadata/
+│   │   ├── dataset_manifest.yaml       # Machine-readable provenance & SHA-256 checksum manifest
+│   │   ├── geometry_inventory.csv      # 33-mesh quantitative topological & coordinate catalog
+│   │   └── biomechanics_input_matrix.csv # Formally audited model input & evidence matrix
+│   │
+│   └── meshes/                         # Raw and cleaned 3D surface models
+│       └── original/                   # 33 acquired MorphoSource STLs
 │
-├── literature/                         # Reference documentation, notes, and methodology logs
+├── literature/                         # Parameter audits and methodology logs
+│   ├── snively_theodor_2011_model_audit.md # Line-by-line model input audit
+│   └── missing_input_sources.md        # Alternative source & gap resolution strategy
+│
 ├── notebooks/
 │   ├── 01_data_inventory.ipynb         # Interactive dataset audit & provenance inspector
-│   └── 02_load_skull_mesh.ipynb        # Mesh loading, topology, scale hint, and manifold analysis
+│   ├── 02_load_skull_mesh.ipynb        # Mesh loading, topology, scale hint, and manifold analysis
+│   ├── 03_component_geometry_inventory.ipynb # Multi-bone inventory & topological audit
+│   ├── 04_skull_component_assembly.ipynb     # Coordinate congruence & bilateral symmetry
+│   └── 05_model_input_dimensional_audit.ipynb # Dimensional & unit consistency verification
 │
 ├── src/
 │   └── stegoceras_biomechanics/        # Reusable scientific Python package
-│       ├── __init__.py
 │       ├── io/                         # Manifest parsers, checksum validators, secure ingestion tools
-│       ├── geometry/                   # Mesh operations, topological checks, scale diagnostic hints
-│       ├── segmentation/               # CT volume thresholding & Slicer integration (placeholder)
-│       ├── meshing/                    # Surface and volume meshing pipelines (placeholder)
-│       ├── fea/                        # Finite element model configs & solver runners (placeholder)
-│       ├── uq/                         # Sampling, uncertainty propagation & SALib tools (placeholder)
-│       └── visualization/              # 3D PyVista plotting & slice rendering utilities
+│       ├── geometry/                   # Inventory engines, assembly metrics, coordinate checkers
+│       └── visualization/              # Publication 3D multi-view PyVista rendering engine
 │
-├── models/                             # Pre-configured simulation models & solver input files
-├── simulations/                        # Local FE simulation outputs
-├── results/                            # Consolidated post-processed data, metrics, and plots
-├── reports/                            # Formal phase reports and scientific synthesis
-│   └── phase1_data_and_geometry_report.md
-├── scripts/
-│   └── ingest_data.py                  # CLI tool for validating, checksumming, and ingesting raw data
-└── tests/                              # Automated Pytest validation suite
+├── reports/                            # Formal milestone synthesis reports & figures
+│   ├── phase1_data_and_geometry_report.md
+│   ├── phase2_digital_anatomy_report.md
+│   ├── snively_theodor_model_reconstruction.md
+│   ├── phase3_recommended_benchmark.md
+│   ├── walkthrough.md
+│   └── figures/                        # Publication 3D multi-panel renders
+├── tests/                              # Automated Pytest validation suite (19 passing tests)
 ```
 
 ---
