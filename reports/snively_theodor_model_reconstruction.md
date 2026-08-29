@@ -133,10 +133,10 @@ Based on the parameter audit and input matrix, we define three candidate modelin
 | Attribute | Model A (Minimal Homogeneous) | Model B (Literature Multi-Zone) | Model C (High-Fidelity CT) |
 | :--- | :--- | :--- | :--- |
 | **Required Inputs** | UALVP 2 surface STL, $E_{\text{cort}}$, $\nu$, $F_{\text{apex}}$, condyle BC | Surface STL, internal zone geometry, $E_{\text{cort}}$, $E_{\text{canc}}$, $\nu$, $F_{\text{apex}}$, BCs | Raw CT volume ($HU$), voxel segmentation, automated density mapping, BCs |
-| **Available Inputs** | **100% In Hand** (Level B + Level C literature constants) | Surface in hand; internal zone geometry must be assumed/offset | Raw CT is undeposited |
+| **Available Inputs** | **All required inputs are currently obtainable**: specimen geometry is in hand; material parameters are literature-derived; load/BC definitions are model assumptions. | Surface in hand; internal zone geometry must be assumed/offset | Raw CT is undeposited |
 | **Primary Assumptions** | Homogeneous isotropic bone; monolithic fused sutures; uncalibrated mm scale | Geometric offset represents histological zonation; monolithic sutures | Continuous HU-to-modulus relationship holds despite fossil permineralization |
 | **Major Limitations** | Does not capture internal strain dissipation in cancellous core | Internal zone boundaries are synthetic approximations, not direct scan voxels | Requires acquiring undeposited primary scan data |
-| **Scientific Claims Supported** | Global cranial force transmission; dome apex vs. basicranium stress distribution; broad vs. concentrated load sensitivity | Comparative stress attenuation through dome layers; approximate replication of Snively & Theodor (2011) | Precise voxel-level internal strain distribution; exact local trabecular stress |
+| **Scientific Claims Supported** | Baseline cranial force transmission under surface geometry and boundary conditions; broad vs. concentrated load sensitivity | Comparative stress attenuation through dome layers; approximate replication of Snively & Theodor (2011) | Precise voxel-level internal strain distribution; exact local trabecular stress |
 | **Scientific Claims NOT Supported** | Internal trabecular failure prediction | Empirical validation of individual specimen bone mineral density | N/A |
 
 ---
@@ -150,7 +150,7 @@ Based on the parameter audit and input matrix, we define three candidate modelin
 
 ### Formal Justification:
 1. **External Geometry & Boundary Verification**: The acquired 33 MorphoSource STLs provide a high-resolution, validated geometric envelope for *Stegoceras* (UALVP 2) with verified topological integrity and shared native coordinates.
-2. **Macro-Mechanical Force Transmission**: In linear elasticity, global stress trajectories from the dorsal dome apex to the occipital condyle and basicranium are governed primarily by **overall cranial vault geometry, dome curvature, and boundary constraint placement** rather than subtle internal density variations.
+2. **First-Order Geometric Baseline**: Model A provides a useful first-order test of the contribution of external cranial geometry and boundary conditions. The extent to which internal material heterogeneity changes the resulting stress distribution remains an empirical scientific question to be tested in later model tiers (e.g., Model B and Model C).
 3. **Linear Scaling Property**: As demonstrated by Snively & Theodor (2011, p. 9), linear static stress and strain scale strictly linearly with applied load. A baseline homogeneous model (Model A) and a literature-partitioned sensitivity model (Model B) allow full verification of the computational solver, meshing pipeline, and global stress dissipation patterns prior to introducing raw CT voxel mapping.
 4. **Where Raw CT Becomes Essential**: Raw CT data is strictly necessary when attempting to reproduce voxel-level Hounsfield heterogeneity (Model C), resolving micro-trabecular orientation within Zone 2, or capturing precise specimen-specific cortical thickness variations.
 
