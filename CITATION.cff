@@ -3,7 +3,7 @@ message: "If you use this software or data pipeline in your research, please cit
 title: "Stegoceras Biomechanics & Uncertainty Quantification Pipeline"
 version: 0.1.0
 date-released: 2026-08-28
-url: "https://github.com/mdhornstein/pachycephalosaurus-biomechanics"
+url: "https://github.com/mdhornstein/pachycephalosaur-biomechanics"
 authors:
   - family-names: "Hornstein"
     given-names: "Michael"

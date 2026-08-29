@@ -82,8 +82,8 @@ This project uses [`uv`](https://github.com/astral-sh/uv) for fast, deterministi
 
 ```bash
 # 1. Clone the repository
-git clone git@github-mdhornstein:mdhornstein/pachycephalosaurus-biomechanics.git
-cd pachycephalosaurus-biomechanics
+git clone git@github-mdhornstein:mdhornstein/pachycephalosaur-biomechanics.git
+cd pachycephalosaur-biomechanics
 
 # 2. Sync virtual environment and install dependencies
 uv sync --all-extras
