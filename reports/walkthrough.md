@@ -9,6 +9,10 @@ We have completed **Phase 2: Digital Anatomy Inventory & Geometry Validation** f
 * **Study Specimen**: **UALVP 2** (University of Alberta, Edmonton; articulated referred specimen)
 * **Source Repository**: MorphoSource / WitmerLab (Ohio University)
 * **Licensing**: Creative Commons Attribution-NonCommercial 4.0 International (**CC BY-NC 4.0**)
+* **Provenance Distinction**:
+  - `UALVP2-CT-RAW-CRAN-01`: Primary raw micro-CT scan acquired at UTCT (undeposited as a downloadable media file on MorphoSource).
+  - `UALVP2-MS-SKULL-STL-01`: Whole-skull surface mesh (Media `000018284`), segmented from primary scan.
+  - `UALVP2-MS-COMPONENTS-32`: 32 segmented cranial element meshes (Media `000043121`–`000043162`).
 
 ---
 
@@ -23,12 +27,12 @@ We have completed **Phase 2: Digital Anatomy Inventory & Geometry Validation** f
 
 ### 2. Geometry Inventory & Manifest
 - [**`data/metadata/geometry_inventory.csv`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/geometry_inventory.csv): Catalog of all 33 meshes containing SHA-256 digests, vertex counts (raw and unique topological), triangle counts, bounding boxes, coordinate extents, centroids, surface areas, boundary edge counts, non-manifold edge counts, and watertightness booleans.
-- [**`data/metadata/dataset_manifest.yaml`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml): Updated with `UALVP2-MS-SKULL-STL-01` and `UALVP2-MS-COMPONENTS-32` status `acquired_locally` and `checksum_status: verified`.
+- [**`data/metadata/dataset_manifest.yaml`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml): Updated with `UALVP2-MS-SKULL-STL-01` and `UALVP2-MS-COMPONENTS-32` status `acquired_locally` and `checksum_status: verified`, while designating raw CT records as `not_publicly_deposited`.
 
 ### 3. Core Geometry & Assembly Code
 - [**`src/stegoceras_biomechanics/geometry/inventory.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/geometry/inventory.py): Computes topological manifoldness, unique vertex counts, and diagnostic scale hints.
-- [**`src/stegoceras_biomechanics/geometry/assembly.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/geometry/assembly.py): Multi-part assembly without transformation, cKDTree distance analysis, component containment evaluation, and metadata-driven bilateral symmetry analysis.
-- [**`src/stegoceras_biomechanics/visualization/render_geometry.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/visualization/render_geometry.py): Publication-quality 3D renders with multi-view projections.
+- [**`src/stegoceras_biomechanics/geometry/assembly.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/geometry/assembly.py): Multi-part assembly without transformation, cKDTree sampled point distance analysis, component containment evaluation, and metadata-driven candidate midsagittal symmetry diagnostics.
+- [**`src/stegoceras_biomechanics/visualization/render_geometry.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/visualization/render_geometry.py): Publication-quality 3D renders using PyVista (VTK) offscreen rendering.
 
 ### 4. Interactive Notebooks & Figures
 - [**`notebooks/03_component_geometry_inventory.ipynb`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/03_component_geometry_inventory.ipynb): Interactive mesh inventory and topological quality inspection.
@@ -50,19 +54,19 @@ We have completed **Phase 2: Digital Anatomy Inventory & Geometry Validation** f
 1. Global Coordinate System Alignment:
    - Whole Skull BBox:  [38.012, 4.269, 0.375] to [169.144, 204.770, 128.087]
    - Assembly BBox:     [38.023, 4.271, 0.376] to [169.173, 204.770, 128.090]
-   - BBox Delta:        Δ ≤ 0.029 coordinate units (< 0.02% error)
-   - Coordinate Frame:  All 32 component meshes share the exact native coordinate system!
+   - BBox Delta:        Δ ≤ 0.029 coordinate units (< 0.02% relative difference)
+   - Coordinate Frame:  Strong empirical evidence for a common native coordinate frame across all 32 meshes.
 
-2. Quantitative Distance Metrics (Sampled Bidirectional Approximation, N = 50,000 points):
+2. Quantitative Distance Metrics (Sampled Bidirectional Nearest-Point Approximation, N = 50,000 points):
    - Whole Skull → Assembly Median Distance:   0.850 coordinate units
    - Whole Skull → Assembly Mean Distance:     0.904 coordinate units
    - Whole Skull → Assembly 95th Percentile:  1.738 coordinate units
    - Assembly → Whole Skull Median Distance:   0.922 coordinate units
-   - Sampled Bidirectional Hausdorff Approx:  16.330 coordinate units
+   - Sampled Bidirectional Hausdorff-Like Approx: 16.330 coordinate units
 
-3. Bilateral Symmetry (14 Paired Elements):
+3. Bilateral Symmetry (14 Paired Elements across Candidate Midsagittal Plane x = x_centroid):
    - High bilateral congruence in cranial roof: Nasals (ΔArea 0.34%, mean dev 2.33), Lacrimals (ΔArea 0.94%, mean dev 2.39), Prefrontals (ΔArea 1.33%, mean dev 2.76).
-   - Greater asymmetry in basicranium/quadrates due to known post-mortem taphonomic distortion (Quadrate mean dev 6.37, Quadratojugal 13.54).
+   - Greater asymmetry in basicranium/quadrates (Quadrate mean dev 6.37, Quadratojugal 13.54).
 ```
 
 ---
@@ -78,10 +82,6 @@ uv run pytest -v
 * `tests/test_ingest.py` (3 tests) ✅ PASSED
 * `tests/test_manifest.py` (4 tests) ✅ PASSED
 * `tests/test_phase2_geometry.py` (4 tests) ✅ PASSED
-  - `test_geometry_inventory_exists_and_complete` ✅
-  - `test_whole_skull_mesh_integrity` ✅
-  - `test_component_assembly_coordinate_congruence` ✅
-  - `test_surface_distance_and_bilateral_symmetry` ✅
 
 ---
 

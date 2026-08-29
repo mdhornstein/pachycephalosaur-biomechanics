@@ -21,45 +21,44 @@ Every resource is classified according to the project's **4-tier provenance taxo
 
 | Dataset ID | Provenance Tier | Resource Title / Modality | Repository & Media ID | Source URL | Access & Licensing |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `UALVP2-MS-CRAN-01` | `primary_scan` | Stegoceras validum cranium micro-CT scan | MorphoSource `000018284` | [MorphoSource](https://www.morphosource.org/concern/media/000018284) | Free download upon user registration & use statement; CC BY-NC 4.0 |
-| `UALVP2-MS-MAND-01` | `primary_scan` | Stegoceras validum mandible micro-CT scan | MorphoSource `000780312` | [MorphoSource](https://www.morphosource.org/concern/media/000780312) | Free download upon user registration & use statement; CC BY-NC 4.0 |
-| `UALVP2-SKETCH-SKULL-01` | `segmented_from_primary_scan` | Stegoceras validum segmented skull surface mesh | Sketchfab `f7fc7cccf9624aeb803788810d6261d5` | [Sketchfab](https://sketchfab.com/3d-models/stegoceras-pachycephalosaur-dinosaur-skull-f7fc7cccf9624aeb803788810d6261d5) | CC BY-NC 4.0 (WitmerLab at Ohio University) |
-| `UALVP2-SKETCH-EXPLODE-01`| `segmented_from_primary_scan` | Stegoceras validum exploded skull 3D model | Sketchfab `ab74413ebcf441398af2668eba0e200f` | [Sketchfab](https://sketchfab.com/3d-models/stegoceras-exploding-skull-pachyceph-dinosaur-ab74413ebcf441398af2668eba0e200f) | CC BY-NC 4.0 (WitmerLab at Ohio University) |
-| `UALVP2-WITMER-3DPDF-01` | `secondary_reference` | Interactive 3D PDF Cranium Visualization | WitmerLab / Ohio University | [WitmerLab](https://people.ohio.edu/witmerl/3D_pachy.htm) | CC BY-NC 4.0 / Educational dissemination |
-| `UALVP2-WITMER-ANIM-01`  | `secondary_reference` | Orthogonal CT Slice Sequence Animations | WitmerLab / Ohio University | [WitmerLab](https://people.ohio.edu/witmerl/3D_pachy.htm) | CC BY-NC 4.0 / Educational dissemination |
-| `UALVP2-PLOS-SNIVELY-2011` | `researcher_derived` | Published FEA Cranial Tetrahedral Model | Snively & Theodor (2011) PLoS ONE | [PMC3125168](https://pmc.ncbi.nlm.nih.gov/articles/PMC3125168/) | Open Access (CC BY) publication target for FEA reproduction |
-| `UALVP2-PLOS-MOORE-2022` | `researcher_derived` | Appendicular Myology & Postcranial Anatomy | Moore et al. (2022) PLoS ONE | [PLoS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0268144) | Open Access (CC BY) supplementary data |
+| Dataset ID | Provenance Tier | Resource Title / Modality | Repository & Media ID | Source URL | Access & Licensing |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `UALVP2-CT-RAW-CRAN-01` | `primary_scan` | Stegoceras validum cranium raw micro-CT | UTCT / WitmerLab (Undeposited raw CT) | [MorphoSource](https://www.morphosource.org/concern/media/000018284) | Not publicly deposited as raw slice stack |
+| `UALVP2-CT-RAW-MAND-01` | `primary_scan` | Stegoceras validum mandible raw micro-CT | UTCT / WitmerLab (Undeposited raw CT) | [MorphoSource](https://www.morphosource.org/concern/media/000780312) | Not publicly deposited as raw slice stack |
+| `UALVP2-MS-SKULL-STL-01` | `segmented_from_primary_scan` | Whole skull segmented surface mesh (STL) | MorphoSource `000018284` | [MorphoSource](https://www.morphosource.org/concern/media/000018284) | Acquired locally; CC BY-NC 4.0 |
+| `UALVP2-MS-COMPONENTS-32`| `segmented_from_primary_scan` | 32 individual cranial bone surface meshes (STL) | MorphoSource `000043121-000043162` | [MorphoSource](https://www.morphosource.org/concern/media/000043121) | Acquired locally; CC BY-NC 4.0 |
+| `UALVP2-SKETCH-SKULL-01` | `segmented_from_primary_scan` | Segmented skull surface mesh (glTF/OBJ) | Sketchfab `f7fc7cccf9624aeb803788810d6261d5` | [Sketchfab](https://sketchfab.com/3d-models/stegoceras-pachycephalosaur-dinosaur-skull-f7fc7cccf9624aeb803788810d6261d5) | CC BY-NC 4.0 |
+| `UALVP2-SKETCH-EXPLODE-01`| `segmented_from_primary_scan` | Exploded skull 3D model | Sketchfab `ab74413ebcf441398af2668eba0e200f` | [Sketchfab](https://sketchfab.com/3d-models/stegoceras-exploding-skull-pachyceph-dinosaur-ab74413ebcf441398af2668eba0e200f) | CC BY-NC 4.0 |
+| `UALVP2-WITMER-3DPDF-01` | `secondary_reference` | Interactive 3D PDF Cranium Visualization | WitmerLab / Ohio University | [WitmerLab](https://people.ohio.edu/witmerl/3D_pachy.htm) | CC BY-NC 4.0 |
+| `UALVP2-WITMER-ANIM-01`  | `secondary_reference` | Orthogonal CT Slice Sequence Animations | WitmerLab / Ohio University | [WitmerLab](https://people.ohio.edu/witmerl/3D_pachy.htm) | CC BY-NC 4.0 |
+| `UALVP2-PLOS-SNIVELY-2011` | `researcher_derived` | Published FEA Cranial Tetrahedral Model | Snively & Theodor (2011) PLoS ONE | [PMC3125168](https://pmc.ncbi.nlm.nih.gov/articles/PMC3125168/) | Open Access (CC BY) |
+| `UALVP2-PLOS-MOORE-2022` | `researcher_derived` | Appendicular Myology & Postcranial Anatomy | Moore et al. (2022) PLoS ONE | [PLoS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0268144) | Open Access (CC BY) |
 
 ---
 
 ## 🔍 Resource Audits & Metadata Status
 
-### 1. `UALVP2-MS-CRAN-01` — Cranium CT Data
+### 1. `UALVP2-CT-RAW-CRAN-01` — Cranium Raw Micro-CT Acquisition
 * **Provenance Tier**: `primary_scan`
 * **Specimen**: *Stegoceras validum*, UALVP 2 (referred specimen, cranium)
 * **Institution**: University of Alberta Laboratory for Vertebrate Paleontology (Edmonton, Alberta, Canada)
 * **Contributing Lab**: WitmerLab, Ohio University (Dr. Lawrence M. Witmer)
-* **Repository**: MorphoSource ([Media 000018284](https://www.morphosource.org/concern/media/000018284))
-* **Modality / Format**: High-Resolution X-ray Computed Tomography (DICOM slice stack / TIFF archive / RAW)
 * **Scanner / Facility**: University of Texas High-Resolution X-ray CT Facility (UTCT)
-* **Voxel Dimensions ($x, y, z$)**: `UNKNOWN` (To be measured directly from DICOM headers upon ingestion)
-* **Physical Units**: `UNKNOWN` (Pending DICOM header verification)
-* **Coordinate System**: `UNKNOWN` (Pending DICOM spatial tag extraction)
-* **Checksum Status**: `pending_acquisition`
-* **Licensing**: Creative Commons Attribution-NonCommercial (CC BY-NC 4.0)
-* **Access Protocol**: Authenticated web download via MorphoSource user account with research use statement (minimum 50 characters).
-
-### 2. `UALVP2-MS-MAND-01` — Mandible CT Data
-* **Provenance Tier**: `primary_scan`
-* **Specimen**: *Stegoceras validum*, UALVP 2 (referred specimen, mandible)
-* **Institution**: University of Alberta Laboratory for Vertebrate Paleontology
-* **Contributing Lab**: WitmerLab, Ohio University
-* **Repository**: MorphoSource ([Media 000780312](https://www.morphosource.org/concern/media/000780312))
-* **Modality / Format**: High-Resolution X-ray Computed Tomography (DICOM / TIFF stack)
-* **Voxel Dimensions**: `UNKNOWN`
+* **Modality / Format**: High-Resolution X-ray Computed Tomography (DICOM slice stack / 16-bit TIFF volumetric archive)
+* **Deposition Status**: `not_publicly_deposited` (Underlying raw scan basis for WitmerLab segmentations; raw volume is not downloadable as a distinct public file on MorphoSource)
+* **Voxel Dimensions ($x, y, z$)**: `UNKNOWN`
 * **Physical Units**: `UNKNOWN`
 * **Coordinate System**: `UNKNOWN`
-* **Checksum Status**: `pending_acquisition`
+* **Licensing**: CC BY-NC 4.0 (contributor policy)
+
+### 2. `UALVP2-MS-SKULL-STL-01` & `UALVP2-MS-COMPONENTS-32` — Acquired MorphoSource Surface Meshes
+* **Provenance Tier**: `segmented_from_primary_scan`
+* **Specimen**: *Stegoceras validum*, UALVP 2
+* **Contributing Lab**: WitmerLab, Ohio University
+* **Repository**: MorphoSource ([Media 000018284](https://www.morphosource.org/concern/media/000018284) and [000043121–000043162](https://www.morphosource.org/concern/media/000043121))
+* **Format**: 33 Binary STL files (1 Whole Skull + 32 Cranial Elements)
+* **Download Status**: `acquired_locally`
+* **Checksum Status**: `verified` (SHA-256 digests cataloged in `data/metadata/geometry_inventory.csv`)
 * **Licensing**: CC BY-NC 4.0
 
 ### 3. `UALVP2-SKETCH-SKULL-01` — Segmented Skull Surface Mesh

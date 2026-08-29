@@ -48,11 +48,16 @@ def test_manifest_structure():
 
 def test_get_dataset_entry():
     """Verify lookup of specific datasets."""
-    entry = get_dataset_entry("UALVP2-MS-CRAN-01")
-    assert entry is not None
-    assert entry["specimen_id"] == "UALVP 2"
-    assert entry["provenance_tier"] == "primary_scan"
-    assert entry["media_id"] == "000018284"
+    entry_mesh = get_dataset_entry("UALVP2-MS-SKULL-STL-01")
+    assert entry_mesh is not None
+    assert entry_mesh["specimen_id"] == "UALVP 2"
+    assert entry_mesh["provenance_tier"] == "segmented_from_primary_scan"
+    assert entry_mesh["media_id"] == "000018284"
+    
+    entry_raw = get_dataset_entry("UALVP2-CT-RAW-CRAN-01")
+    assert entry_raw is not None
+    assert entry_raw["provenance_tier"] == "primary_scan"
+    assert entry_raw["media_id"] == "NOT_PUBLICLY_DEPOSITED"
     
     missing = get_dataset_entry("NON_EXISTENT_ID")
     assert missing is None

@@ -5,7 +5,7 @@
 **Taxon**: *Stegoceras validum* Lambe, 1902  
 **Taxonomic Lectotype**: **CMN 515** (Canadian Museum of Nature, Ottawa; frontoparietal dome)  
 **Study Specimen**: **UALVP 2** (University of Alberta Laboratory for Vertebrate Paleontology, Edmonton; referred specimen comprising an articulated skull, mandible, and associated postcrania)  
-**Milestone**: Phase 2 Gate Synthesis & Deliverable Deliverables  
+**Milestone**: Phase 2 Gate Synthesis & Geometry Inventory  
 
 ---
 
@@ -15,18 +15,23 @@ This report delivers the quantitative empirical findings from **Phase 2: Digital
 
 All raw downloaded ZIP archives (`morphosource_media-id-000018284_download-68a5778e.zip` and `morphosource_media-32-items_download-d836d81e.zip`) have been safely unpacked with path-traversal protection and stored in immutable staging under `data/raw/downloads/`. The original MorphoSource manifest CSVs and XLSX files have been cataloged in `data/raw/morphosource_manifests/`.
 
+### Provenance Clarification: Derived Meshes vs. Primary CT Scans
+MorphoSource Media `000018284` is the **whole-skull STL surface mesh** (`WitmerLab_Stegoceras_UALVP2.stl`), which was derived by WitmerLab from high-resolution micro-CT data acquired at the University of Texas High-Resolution X-ray CT Facility (UTCT). The raw micro-CT volumetric slice stack itself is **not publicly deposited** as a discrete downloadable media file on MorphoSource.
+
 ### Key Empirical Findings
 
-1. **Native Global Coordinate Frame**:
-   All 32 component meshes natively share the exact same global coordinate frame as the whole-skull mesh. Their bounding-box minima and maxima match the whole-skull bounding box to within **$\Delta \le 0.029$ coordinate units** ($< 0.02\%$ relative difference).
+1. **Common Native Coordinate Frame**:
+   The available evidence strongly supports a common native coordinate frame across all 32 component meshes and the whole-skull STL. Bounding-box minima and maxima match the whole-skull bounding box to within **$\Delta \le 0.029$ coordinate units** ($< 0.02\%$ relative difference).
 2. **Zero-Transformation Assembly**:
    The multi-part cranial assembly constructed without any artificial registration, rotation, translation, or scaling aligns directly with the whole-skull STL.
-3. **Surface Correspondence & Distance Metrics**:
-   A sampled bidirectional Hausdorff approximation ($N = 50,000$ points) yields a median nearest-surface distance from whole skull to assembly of **$0.85$ coordinate units** (mean $0.90$, 95th percentile $1.74$). The assembly surface area sum ($171,788$) exceeds the fused whole skull ($120,512$) by $42.5\%$ because internal sutural contact surfaces and cavity walls are exposed in the segmented individual elements.
-4. **Topological Manifoldness & Watertightness**:
-   Only 6 of the 33 meshes are watertight 2-manifolds (Lacrimals, Right Palatine, Right Quadrate, Left Quadratojugal, Ventromedial Process). The remaining 27 meshes (including the Whole Skull and Frontoparietal) are open 2-manifold surfaces possessing boundary edges corresponding to internal sinuses, neurovascular channels, or unsegmented sutural margins.
-5. **Bilateral Symmetry & Taphonomy**:
-   Metadata-inferred bilateral symmetry across all 14 paired elements demonstrates high fidelity in dorsal roof elements (Nasal mean deviation $2.33$, Lacrimal $2.39$, Prefrontal $2.76$), with increased asymmetry in basicranial/suspensorial elements (Quadrate $6.37$, Quadratojugal $13.54$) consistent with known post-mortem taphonomic distortion.
+3. **Surface Correspondence & Sampled Nearest-Point Distances**:
+   Evaluating point-to-nearest-sampled-point distance across independently sampled surface point clouds ($N = 50,000$ points) yields a median distance from whole skull to assembly of **$0.850$ coordinate units** (mean $0.904$, 95th percentile $1.738$). The assembly surface area sum ($171,788$) exceeds the fused whole skull ($120,512$) by $42.5\%$, consistent with the presence of internal sutural contact surfaces and deep cavity walls that are exposed in the segmented individual elements but disappear in the outer whole-skull shell.
+4. **Topological Manifoldness & Degrees of Closure**:
+   The meshes are predominantly manifold surface representations with varying degrees of closure. 6 are closed watertight 2-manifolds (Lacrimals, Right Palatine, Right Quadrate, Left Quadratojugal, Ventromedial Process), 26 are open 2-manifold surfaces possessing boundary loops corresponding to internal sinuses or unsegmented borders, and 1 mesh (the whole skull) contains 2 non-manifold edges out of $1,200,102$ faces.
+5. **Metadata Discrepancies Exposed**:
+   Auditing measured geometry against MorphoSource repository records identified minor discrepancies. For example, the Right Ectopterygoid (Media `000043140`) is listed in MorphoSource web metadata as having $6,701$ polygons, whereas the actual downloaded binary STL contains **$6,705$ triangular faces**.
+6. **Bilateral Symmetry Diagnostic**:
+   Symmetry analysis measuring geometric deviation of reflected Left elements relative to Right elements about a candidate midsagittal plane ($x = x_{\text{centroid}}$) demonstrates high fidelity in dorsal skull roof elements (Nasal mean deviation $2.33$, Lacrimal $2.39$, Prefrontal $2.76$), with increased asymmetry in basicranial elements (Quadrate $6.37$, Quadratojugal $13.54$). Observed deviations reflect a composite of biological asymmetry, taphonomic deformation, segmentation differences, and possible slight deviation of the candidate plane from the true anatomical midline.
 
 ---
 
@@ -49,7 +54,7 @@ A total of **33 STL surface meshes** and **4 provenance manifest documents** wer
 
 ### 2. What anatomical elements are represented?
 
-The 32 individual component meshes represent the complete preserved cranial anatomy of UALVP 2:
+The 32 individual component meshes represent the anatomical elements included in the deposited MorphoSource segmented-skull collection:
 
 1. **Midline & Complex Structural Elements (4)**:
    * **Frontoparietal** (Media `000043121`): Thickened pachycephalosaur dome comprising fused frontals and parietals.
@@ -72,6 +77,8 @@ The 32 individual component meshes represent the complete preserved cranial anat
    * **Palatine** (L: `43127`, R: `43146`): Vaulted hard palate.
    * **Ectopterygoid** (L: `43122`, R: `43140`): Palatomaxillary strut.
 
+*(Note: Preserved teeth and mandible are separate from this cranial collection).*
+
 ---
 
 ### 3. Are left/right elements present where expected?
@@ -82,27 +89,27 @@ The 32 individual component meshes represent the complete preserved cranial anat
 * **Unpaired Midline Elements**: $4$
 * Total individual components = $28 + 4 = 32$.
 
-Every single dermatocranial and splanchnocranial pair is accounted for with separate Left and Right STL files.
+Every dermatocranial and splanchnocranial pair in the collection is accounted for with separate Left and Right STL files.
 
 ---
 
 ### 4. Are the meshes geometrically valid?
 
-The meshes are valid 2-manifold representations, but exhibit specific topological and closure characteristics:
+The meshes are predominantly manifold surface representations with varying degrees of closure:
 
 | Category | Mesh Count | Description |
 | :--- | :--- | :--- |
 | **Watertight 2-Manifolds** | $6$ | Closed shells with $0$ boundary edges and $0$ non-manifold edges (L/R Lacrimal, L Quadratojugal, R Palatine, R Quadrate, Ventromedial Process). Volumes can be computed directly. |
 | **Open 2-Manifolds** | $26$ | Topological surfaces with open boundary loops ($3$ to $55$ boundary edges, $0$ non-manifold edges) representing internal sinuses, vascular canals, or unsegmented borders. |
-| **Non-Manifold Boundary Edges** | $1$ (Whole Skull) | The whole skull mesh possesses $0$ boundary edges and only $2$ non-manifold edges out of $1,200,102$ faces ($< 0.0002\%$). |
+| **Surfaces with Non-Manifold Edges** | $1$ (Whole Skull) | The whole skull mesh possesses $0$ boundary edges and only $2$ non-manifold edges out of $1,200,102$ faces ($< 0.0002\%$). |
 
-> **Conclusion**: The meshes are clean, defect-free 3D surface models for anatomical visualization. However, because 27 of the 33 meshes are not watertight, **direct volumetric tetrahedral meshing requires manifold repair, matrix isolation, or CT voxel re-segmentation prior to FEA**.
+> **Conclusion**: The meshes are clean, defect-free 3D surface models for anatomical visualization. However, because 27 of the 33 meshes are not closed solids, **direct volumetric tetrahedral meshing requires manifold repair or solid boundary definition prior to FEA**.
 
 ---
 
 ### 5. Do the components share a common coordinate system?
 
-**Yes, absolutely.** The component meshes natively reside in the identical global coordinate frame:
+**The available evidence strongly supports a common native coordinate frame.** The component meshes can be assembled without transformation and closely correspond spatially to the whole-skull mesh:
 
 | Metric | Whole Skull STL (`000018284`) | 32-Component Assembly | Coordinate Delta ($\Delta$) |
 | :--- | :--- | :--- | :--- |
@@ -111,14 +118,14 @@ The meshes are valid 2-manifold representations, but exhibit specific topologica
 | **Coordinate Extents ($\Delta x, \Delta y, \Delta z$)** | $[131.132, 200.501, 127.711]$ | $[131.150, 200.499, 127.714]$ | $[+0.018, -0.002, +0.002]$ |
 | **Centroid ($\bar{x}, \bar{y}, \bar{z}$)** | $[105.627, 114.016, 71.638]$ | $[106.499, 112.988, 69.752]$ | Offset distance $= 2.318$ |
 
-* Every one of the 32 component centroids and bounding boxes is strictly contained within the whole-skull bounding box.
+* Every one of the 32 component centroids and bounding boxes is strictly contained within the whole-skull bounding envelope.
 * Maximum bounding extent discrepancy across any axis is **$0.029$ coordinate units** ($0.014\%$).
 
 ---
 
 ### 6. Can they be assembled without registration?
 
-**Yes.** Concatenating the 32 component meshes without applying any rotation, translation, scaling, or registration yields a complete, fully articulated cranium that geometrically coincides with the deposited whole-skull mesh.
+**Yes.** Concatenating the 32 component meshes without applying any rotation, translation, scaling, or registration yields a complete, articulated cranium that geometrically coincides with the deposited whole-skull mesh.
 
 ![32-Component Cranial Assembly Render](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/02_component_assembly_render.png)
 
@@ -126,14 +133,14 @@ The meshes are valid 2-manifold representations, but exhibit specific topologica
 
 ### 7. How closely does the component assembly correspond to the whole-skull STL?
 
-Quantitative distance and surface area analysis reveals remarkable geometric agreement:
+Quantitative distance and surface area comparisons indicate strong geometric congruence:
 
 ```
 Whole Skull Surface Area:               120,512.20 coordinate units²
 Sum of Component Surface Areas:          171,788.42 coordinate units²
 Ratio (Component Sum / Whole Skull):     1.4255 (42.5% increase)
 
-Point-to-Surface Distance Metrics (Sampled N = 50,000 points):
+Sampled Nearest-Point Distance Metrics (Independently sampled N = 50,000 points):
 - Whole Skull → Assembly Median Distance:       0.850 coordinate units
 - Whole Skull → Assembly Mean Distance:         0.904 coordinate units
 - Whole Skull → Assembly 95th Percentile:      1.738 coordinate units
@@ -141,40 +148,34 @@ Point-to-Surface Distance Metrics (Sampled N = 50,000 points):
 - Assembly → Whole Skull Median Distance:       0.922 coordinate units
 - Assembly → Whole Skull Mean Distance:         1.636 coordinate units
 - Assembly → Whole Skull 95th Percentile:      6.383 coordinate units
-- Sampled Bidirectional Hausdorff Approx:      16.330 coordinate units
+- Sampled Bidirectional Hausdorff-Like Approx: 16.330 coordinate units
 ```
 
 ![Assembly vs. Whole Skull Overlay](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/03_assembly_whole_overlay.png)
 
-#### Interpretation of Differences
-1. **Surface Area Discrepancy**: The sum of individual component areas is $42.5\%$ greater than the whole skull because the individual segmented bones retain their internal sutural contact facets and deep internal cavity walls. In the whole-skull STL, adjacent bones are fused together into a single shell, eliminating internal inter-bone surfaces.
-2. **Asymmetric Distances**: The 95th percentile distance from Whole Skull to Assembly is very small ($1.74$ units), confirming the outer skull shell is nearly identical. The larger tail in the Assembly-to-Whole direction ($6.38$ units, max $16.33$ units) reflects internal bony septa, turbinates, and deep pterygoid flanges present in the segmented components that were excluded or smoothed in the outer whole-skull model.
+#### Interpretation of Geometric Observations
+1. **Surface Area Difference**: The sum of individual component areas is $42.5\%$ greater than the whole skull, consistent with the presence of internal sutural contact surfaces and cavity walls that are exposed in the segmented individual elements but disappear/fuse in the unified whole-skull representation.
+2. **Sampled Distance Asymmetry**: The 95th percentile nearest-point distance from Whole Skull to Assembly is very small ($1.74$ units), confirming the outer skull shell is nearly identical. The larger tail in the Assembly-to-Whole direction ($6.38$ units, max $16.33$ units) reflects internal bony septa, turbinates, and deep pterygoid flanges present in the segmented components that were excluded or smoothed in the outer whole-skull model.
 
 ---
 
 ### 8. What anatomical and geometry problems remain?
 
-1. **Permineralized Rock Matrix vs. Endocranial Cavities**:
-   The surface meshes represent segmented bone boundaries, but do not contain internal material density distributions. The endocranial cavity and basicranial air spaces contain permineralized sediment in the fossil specimen.
-2. **Histological Zonation Absence**:
-   The whole-skull STL and component meshes represent uniform surface shells. They do not distinguish the three mechanical zones described in the histological literature:
-   - **Zone 1**: Basal dense compact bone.
-   - **Zone 2**: Vascular cancellous bone (radiating trabeculae absorbing impact energy).
-   - **Zone 3**: Superficial dense compact bone at the dome apex.
-3. **Biological Unpreservation (Keratin Shield)**:
-   In vivo cornified keratin pads over the frontoparietal dome are unpreserved and must be treated as parametric distributions in downstream Uncertainty Quantification (Phase 10).
-4. **Physical Unit Calibration**:
-   The coordinate extents ($\Delta x \approx 131, \Delta y \approx 200, \Delta z \approx 128$) strongly suggest millimeters ($mm$), which aligns with published skull dimensions for *Stegoceras validum* (skull length $\approx 200\text{ mm}$). However, units remain designated `likely_millimeters` until formally calibrated against DICOM voxel metadata in Phase 3.
+1. **Internal Density & Histological Zonation**:
+   The surface meshes represent segmented surface boundaries, but do not contain internal material density distributions. They do not distinguish the three mechanical zones described in the histological literature (Zone 1 compact base, Zone 2 vascular cancellous core, Zone 3 compact dome cortex).
+2. **Biological Uncertainty (Keratin Shield)**:
+   In vivo cornified keratin pads over the frontoparietal dome are unpreserved and must be treated as parametric distributions in downstream Uncertainty Quantification (UQ).
+3. **Physical Unit Calibration**:
+   The coordinate extents ($\Delta x \approx 131, \Delta y \approx 200, \Delta z \approx 128$) strongly suggest millimeters ($mm$), which aligns with published skull dimensions for *Stegoceras validum* (skull length $\approx 200\text{ mm}$). However, units remain designated `likely_millimeters` until formally calibrated.
 
 ---
 
 ### 9. What is the best next step toward biomechanical modeling?
 
-The next step is **Phase 3: Raw CT Volume Inspection & Density Profiling**:
-1. Acquire the raw radiological micro-CT volume (DICOM slice stack from UTCT / MorphoSource).
-2. Extract physical voxel dimensions $(\Delta x_v, \Delta y_v, \Delta z_v)$ directly from DICOM headers to establish empirical physical units.
-3. Quantify Hounsfield unit (HU) / attenuation density profiles across the dome to distinguish Zone 1, Zone 2, and Zone 3 bone from rock matrix.
-4. Prepare multi-material volumetric tetrahedral meshes representing the cancellous core and compact cortex for finite element analysis.
+Given that we now possess an exceptionally clean, unified 3D surface dataset of all 32 articulated cranial elements, the next phase should focus on **defining the exact biomechanical reproduction target and modeling requirements**:
+1. Review the deterministic finite element modeling requirements from Snively & Theodor (2011) (1360 N dome load, boundary constraints at occipital condyle and neck muscles).
+2. Determine specifically what internal volumetric partitioning (cancellous vs. cortical core) is required for the target FE simulation.
+3. Evaluate whether solid tetrahedral meshing directly from the watertight/repaired component assembly is sufficient for the initial biomechanical reproduction, or whether acquiring raw CT voxel data is essential.
 
 ---
 
