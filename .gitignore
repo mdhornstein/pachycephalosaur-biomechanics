@@ -1,0 +1,34 @@
+# Environments
+.venv/
+env/
+venv/
+*.egg-info/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Raw CT / DICOM data (must not be committed to git)
+data/raw/dicom/*
+!data/raw/dicom/.gitkeep
+data/raw/downloads/*
+!data/raw/downloads/.gitkeep
+
+# Large binary mesh files in raw/original
+data/meshes/original/*
+!data/meshes/original/.gitkeep
+
+# Intermediate simulation files and outputs
+simulations/*
+!simulations/.gitkeep
+results/*
+!results/.gitkeep
+
+# OS and IDE files
+.DS_Store
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software or data pipeline in your research, please cite it as below."
+title: "Stegoceras Biomechanics & Uncertainty Quantification Pipeline"
+version: 0.1.0
+date-released: 2026-08-28
+url: "https://github.com/mdhornstein/pachycephalosaurus-biomechanics"
+authors:
+  - family-names: "Hornstein"
+    given-names: "Michael"
+abstract: >-
+  A reproducible computational biomechanics and uncertainty quantification pipeline
+  for the pachycephalosaur dinosaur Stegoceras validum (specimen UALVP 2).
+keywords:
+  - "biomechanics"
+  - "paleontology"
+  - "finite element analysis"
+  - "uncertainty quantification"
+  - "pachycephalosaur"
+  - "Stegoceras validum"
+  - "CT morphology"
+license: MIT
