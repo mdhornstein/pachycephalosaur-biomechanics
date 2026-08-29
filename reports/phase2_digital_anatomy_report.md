@@ -166,7 +166,7 @@ Sampled Nearest-Point Distance Metrics (Independently sampled N = 50,000 points)
 2. **Biological Uncertainty (Keratin Shield)**:
    In vivo cornified keratin pads over the frontoparietal dome are unpreserved and must be treated as parametric distributions in downstream Uncertainty Quantification (UQ).
 3. **Physical Unit Calibration**:
-   The coordinate extents ($\Delta x \approx 131, \Delta y \approx 200, \Delta z \approx 128$) strongly suggest millimeters ($mm$), which aligns with published skull dimensions for *Stegoceras validum* (skull length $\approx 200\text{ mm}$). However, units remain designated `likely_millimeters` until formally calibrated.
+   The coordinate extents ($\Delta x \approx 131, \Delta y \approx 200, \Delta z \approx 128$) are consistent with a candidate millimeter scale, aligning plausibly with published skull dimensions for *Stegoceras validum* (skull length $\approx 200\text{ mm}$). However, physical units remain designated `candidate millimeter scale (uncalibrated)` with formal status explicitly `UNKNOWN` until calibrated against physical specimen measurements or scan acquisition logs.
 
 ---
 
