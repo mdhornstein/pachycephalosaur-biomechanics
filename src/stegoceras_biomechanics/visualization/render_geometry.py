@@ -1,207 +1,174 @@
-"""Visualization utilities for generating publication-quality 3D renders of Stegoceras cranium and components."""
+"""Publication-quality 3D rendering engine for Stegoceras cranial meshes using PyVista and Matplotlib."""
 
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import numpy as np
 import pandas as pd
-import trimesh
+import pyvista as pv
+
+# Configure headless offscreen rendering
+pv.OFF_SCREEN = True
+pv.set_plot_theme("document")
 
 
-def get_subsampled_triangles(mesh: trimesh.Trimesh, max_faces: int = 15000) -> np.ndarray:
-    """Subsample face array with uniform stride for clean, high-performance 3D rendering."""
-    num_f = len(mesh.faces)
-    if num_f <= max_faces:
-        return mesh.vertices[mesh.faces]
-    stride = int(np.ceil(num_f / max_faces))
-    sub_faces = mesh.faces[::stride]
-    return mesh.vertices[sub_faces]
+def get_standard_cranial_cameras(mesh: pv.PolyData) -> List[Tuple[str, Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]]:
+    """Define standard 4-view anatomical camera positions (Lateral, Dorsal, Rostral, Oblique) with upright dome orientation."""
+    center = mesh.center
+    dist = mesh.length * 1.65
+    return [
+        ("Left Lateral View (Rostral to Left)", (center[0] - dist, center[1], center[2]), center, (0, 0, -1)),
+        ("Dorsal View (Skull Roof & Frontoparietal Dome)", (center[0], center[1], center[2] - dist), center, (0, -1, 0)),
+        ("Rostral View (Anterior Snout & Orbits)", (center[0], center[1] - dist, center[2]), center, (0, 0, -1)),
+        ("Anterodorsolateral Oblique Perspective", (center[0] - dist * 0.72, center[1] - dist * 0.72, center[2] - dist * 0.58), center, (0, 0, -1))
+    ]
 
 
 def render_mesh_orthogonal_views(
-    mesh: trimesh.Trimesh,
+    mesh_or_path: pv.PolyData,
     title: str,
     output_path: Path,
-    max_faces: int = 15000,
-    face_color: str = "#d4c5b9",
-    edge_color: Optional[str] = None
+    color: str = "#d8cdb8"
 ) -> None:
-    """Render 4 orthogonal/perspective views (Lateral, Dorsal, Rostral, Oblique) of a mesh to PNG."""
-    triangles = get_subsampled_triangles(mesh, max_faces=max_faces)
+    """Render 4-panel publication-grade shaded views of a single mesh (e.g. Whole Skull STL)."""
+    if isinstance(mesh_or_path, (str, Path)):
+        mesh = pv.read(str(mesh_or_path))
+    else:
+        mesh = mesh_or_path
 
-    fig = plt.figure(figsize=(16, 12), dpi=150)
-    fig.suptitle(title, fontsize=16, fontweight="bold", y=0.95)
+    cameras = get_standard_cranial_cameras(mesh)
+    plotter = pv.Plotter(shape=(2, 2), off_screen=True, window_size=[1920, 1440])
+    plotter.set_background("white")
 
-    views = [
-        ("Lateral View (Left)", 0, -90),
-        ("Dorsal View (Superior)", 90, -90),
-        ("Rostral View (Anterior)", 0, 180),
-        ("Oblique Perspective", 25, -45)
-    ]
-
-    for idx, (view_name, elev, azim) in enumerate(views, 1):
-        ax = fig.add_subplot(2, 2, idx, projection="3d")
-        poly = Poly3DCollection(
-            triangles,
-            facecolors=face_color,
-            edgecolors=edge_color if edge_color else "none",
-            linewidths=0.2 if edge_color else 0,
-            alpha=0.9
+    for idx, (view_title, pos, focal, up) in enumerate(cameras):
+        row, col = idx // 2, idx % 2
+        plotter.subplot(row, col)
+        plotter.add_mesh(
+            mesh,
+            color=color,
+            smooth_shading=True,
+            specular=0.45,
+            specular_power=18
         )
-        ax.add_collection3d(poly)
-        
-        # Center bounds
-        max_extent = np.max(mesh.extents)
-        center = mesh.centroid
-        ax.set_xlim(center[0] - max_extent / 2, center[0] + max_extent / 2)
-        ax.set_ylim(center[1] - max_extent / 2, center[1] + max_extent / 2)
-        ax.set_zlim(center[2] - max_extent / 2, center[2] + max_extent / 2)
-        
-        ax.view_init(elev=elev, azim=azim)
-        ax.set_title(view_name, fontsize=12, pad=10)
-        ax.set_xlabel("X (Coordinate units)", fontsize=8)
-        ax.set_ylabel("Y (Coordinate units)", fontsize=8)
-        ax.set_zlabel("Z (Coordinate units)", fontsize=8)
-        ax.grid(False)
-        ax.xaxis.pane.fill = False
-        ax.yaxis.pane.fill = False
-        ax.zaxis.pane.fill = False
+        plotter.add_text(view_title, position="upper_left", font_size=12, color="#222222")
+        plotter.camera_position = [pos, focal, up]
 
-    plt.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_path, bbox_inches="tight", dpi=150)
-    plt.close(fig)
-    print(f"Saved figure: {output_path}")
+    plotter.screenshot(str(output_path))
+    plotter.close()
+    print(f"Saved whole skull render: {output_path}")
 
 
 def render_component_assembly_views(
-    components_dict: Dict[str, trimesh.Trimesh],
+    components_dir: Path,
     inventory_df: pd.DataFrame,
     title: str,
-    output_path: Path,
-    max_faces_per_comp: int = 1500
+    output_path: Path
 ) -> None:
-    """Render 4 views of the multi-part assembly color-coded by anatomical element."""
-    # Palette of distinct harmonious colors for anatomical bones
+    """Render 4-panel shaded views of the 32-component cranial assembly color-coded by anatomical bone."""
+    # Palette of 20 distinct harmonious colors for anatomical elements
     cmap = plt.get_cmap("tab20")
     unique_elements = sorted(inventory_df[inventory_df["side"] != "Complete"]["element_name"].unique())
-    color_map = {elem: cmap(i % 20) for i, elem in enumerate(unique_elements)}
+    color_map = {elem: [int(c * 255) for c in cmap(i % 20)[:3]] for i, elem in enumerate(unique_elements)}
 
-    fig = plt.figure(figsize=(16, 12), dpi=150)
-    fig.suptitle(title, fontsize=16, fontweight="bold", y=0.95)
-
-    views = [
-        ("Lateral View (Assembly)", 0, -90),
-        ("Dorsal View (Assembly)", 90, -90),
-        ("Rostral View (Assembly)", 0, 180),
-        ("Oblique Perspective (Assembly)", 25, -45)
-    ]
-
-    # Pre-process simplified component triangles and colors
-    comp_render_data = []
-    global_center = np.zeros(3)
-    total_verts = 0
-
+    # Preload all component PolyData meshes
+    comp_meshes = []
     for _, row in inventory_df.iterrows():
         if row["side"] == "Complete":
             continue
-        stem = Path(row["filename"]).stem
-        mesh = components_dict.get(stem)
-        if mesh is None:
+        stl_path = components_dir / row["filename"]
+        if not stl_path.exists():
             continue
+        m = pv.read(str(stl_path))
         elem = row["element_name"]
-        color = color_map.get(elem, (0.7, 0.7, 0.7, 0.9))
-        
-        tris = get_subsampled_triangles(mesh, max_faces=max_faces_per_comp)
-        comp_render_data.append((tris, color, elem))
-        global_center += mesh.centroid * len(mesh.vertices)
-        total_verts += len(mesh.vertices)
+        color = color_map.get(elem, [180, 180, 180])
+        comp_meshes.append((m, color, elem))
 
-    global_center /= total_verts
+    # Reference camera from combined bounding envelope
+    combined = pv.PolyData()
+    for m, _, _ in comp_meshes:
+        combined = combined.merge(m)
 
-    for idx, (view_name, elev, azim) in enumerate(views, 1):
-        ax = fig.add_subplot(2, 2, idx, projection="3d")
-        for tris, color, _ in comp_render_data:
-            poly = Poly3DCollection(tris, facecolors=color, edgecolors="none", alpha=0.85)
-            ax.add_collection3d(poly)
-            
-        max_extent = 210.0
-        ax.set_xlim(global_center[0] - max_extent / 2, global_center[0] + max_extent / 2)
-        ax.set_ylim(global_center[1] - max_extent / 2, global_center[1] + max_extent / 2)
-        ax.set_zlim(global_center[2] - max_extent / 2, global_center[2] + max_extent / 2)
-        
-        ax.view_init(elev=elev, azim=azim)
-        ax.set_title(view_name, fontsize=12, pad=10)
-        ax.set_xlabel("X", fontsize=8)
-        ax.set_ylabel("Y", fontsize=8)
-        ax.set_zlabel("Z", fontsize=8)
-        ax.grid(False)
-        ax.xaxis.pane.fill = False
-        ax.yaxis.pane.fill = False
-        ax.zaxis.pane.fill = False
+    cameras = get_standard_cranial_cameras(combined)
+    plotter = pv.Plotter(shape=(2, 2), off_screen=True, window_size=[1920, 1440])
+    plotter.set_background("white")
 
-    plt.tight_layout()
+    for idx, (view_title, pos, focal, up) in enumerate(cameras):
+        row, col = idx // 2, idx % 2
+        plotter.subplot(row, col)
+        for m, color, _ in comp_meshes:
+            plotter.add_mesh(
+                m,
+                color=color,
+                smooth_shading=True,
+                specular=0.40,
+                specular_power=15
+            )
+        plotter.add_text(view_title, position="upper_left", font_size=12, color="#222222")
+        plotter.camera_position = [pos, focal, up]
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_path, bbox_inches="tight", dpi=150)
-    plt.close(fig)
-    print(f"Saved figure: {output_path}")
+    plotter.screenshot(str(output_path))
+    plotter.close()
+    print(f"Saved component assembly render: {output_path}")
 
 
 def render_assembly_vs_whole_overlay(
-    skull_mesh: trimesh.Trimesh,
-    assembly_mesh: trimesh.Trimesh,
-    output_path: Path,
-    max_faces: int = 15000
+    skull_path: Path,
+    components_dir: Path,
+    inventory_df: pd.DataFrame,
+    output_path: Path
 ) -> None:
-    """Render overlay comparison of whole-skull mesh (gray solid) and component assembly (cyan wireframe/points)."""
-    sk_tris = get_subsampled_triangles(skull_mesh, max_faces=max_faces)
-    as_tris = get_subsampled_triangles(assembly_mesh, max_faces=max_faces)
+    """Render 4-panel overlay of whole skull (semi-transparent gray) and component assembly."""
+    skull_mesh = pv.read(str(skull_path))
 
-    fig = plt.figure(figsize=(16, 12), dpi=150)
-    fig.suptitle("Whole Skull (Gray) vs. 32-Component Assembly (Cyan) Overlay", fontsize=15, fontweight="bold", y=0.95)
+    cmap = plt.get_cmap("tab20")
+    unique_elements = sorted(inventory_df[inventory_df["side"] != "Complete"]["element_name"].unique())
+    color_map = {elem: [int(c * 255) for c in cmap(i % 20)[:3]] for i, elem in enumerate(unique_elements)}
 
-    views = [
-        ("Lateral Overlay View", 0, -90),
-        ("Dorsal Overlay View", 90, -90),
-        ("Rostral Overlay View", 0, 180),
-        ("Oblique Overlay Perspective", 25, -45)
-    ]
+    comp_meshes = []
+    for _, row in inventory_df.iterrows():
+        if row["side"] == "Complete":
+            continue
+        stl_path = components_dir / row["filename"]
+        if not stl_path.exists():
+            continue
+        m = pv.read(str(stl_path))
+        elem = row["element_name"]
+        color = color_map.get(elem, [180, 180, 180])
+        comp_meshes.append((m, color))
 
-    center = skull_mesh.centroid
-    max_extent = np.max(skull_mesh.extents)
+    cameras = get_standard_cranial_cameras(skull_mesh)
+    plotter = pv.Plotter(shape=(2, 2), off_screen=True, window_size=[1920, 1440])
+    plotter.set_background("white")
 
-    for idx, (view_name, elev, azim) in enumerate(views, 1):
-        ax = fig.add_subplot(2, 2, idx, projection="3d")
-        
-        # Add whole skull as solid gray
-        poly_sk = Poly3DCollection(sk_tris, facecolors="#cccccc", edgecolors="none", alpha=0.6)
-        ax.add_collection3d(poly_sk)
-        
-        # Add assembly as semi-transparent cyan with subtle edges
-        poly_as = Poly3DCollection(as_tris, facecolors="#00a8cc", edgecolors="#005b66", linewidths=0.1, alpha=0.4)
-        ax.add_collection3d(poly_as)
-        
-        ax.set_xlim(center[0] - max_extent / 2, center[0] + max_extent / 2)
-        ax.set_ylim(center[1] - max_extent / 2, center[1] + max_extent / 2)
-        ax.set_zlim(center[2] - max_extent / 2, center[2] + max_extent / 2)
-        
-        ax.view_init(elev=elev, azim=azim)
-        ax.set_title(view_name, fontsize=12, pad=10)
-        ax.set_xlabel("X", fontsize=8)
-        ax.set_ylabel("Y", fontsize=8)
-        ax.set_zlabel("Z", fontsize=8)
-        ax.grid(False)
-        ax.xaxis.pane.fill = False
-        ax.yaxis.pane.fill = False
-        ax.zaxis.pane.fill = False
+    for idx, (view_title, pos, focal, up) in enumerate(cameras):
+        row, col = idx // 2, idx % 2
+        plotter.subplot(row, col)
+        # Whole skull semi-transparent shell
+        plotter.add_mesh(
+            skull_mesh,
+            color="#bbbbbb",
+            opacity=0.35,
+            smooth_shading=True,
+            specular=0.2
+        )
+        # Individual colored bones
+        for m, color in comp_meshes:
+            plotter.add_mesh(
+                m,
+                color=color,
+                opacity=0.85,
+                smooth_shading=True,
+                specular=0.4
+            )
+        plotter.add_text(view_title, position="upper_left", font_size=12, color="#222222")
+        plotter.camera_position = [pos, focal, up]
 
-    plt.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_path, bbox_inches="tight", dpi=150)
-    plt.close(fig)
-    print(f"Saved figure: {output_path}")
+    plotter.screenshot(str(output_path))
+    plotter.close()
+    print(f"Saved overlay render: {output_path}")
 
 
 def render_bilateral_symmetry_mosaic(
@@ -210,9 +177,9 @@ def render_bilateral_symmetry_mosaic(
 ) -> None:
     """Generate summary bar chart ranking bilateral symmetry deviation across all 14 cranial bone pairs."""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7), dpi=150)
-    
+
     df_sorted = symmetry_df.sort_values("mean_symmetry_deviation", ascending=True)
-    
+
     # Chart 1: Mean Symmetry Deviation (coordinate distance between reflected left & native right)
     y_pos = np.arange(len(df_sorted))
     ax1.barh(y_pos, df_sorted["mean_symmetry_deviation"], color="#2b580c", alpha=0.85, edgecolor="#1f3c08")
@@ -221,10 +188,10 @@ def render_bilateral_symmetry_mosaic(
     ax1.set_xlabel("Mean Symmetry Deviation (Coordinate Units)", fontsize=11)
     ax1.set_title("Bilateral Geometric Deviation (Reflected Left vs. Right)", fontsize=12, fontweight="bold")
     ax1.grid(axis="x", linestyle="--", alpha=0.6)
-    
+
     for i, v in enumerate(df_sorted["mean_symmetry_deviation"]):
         ax1.text(v + 0.1, i, f"{v:.2f}", va="center", fontsize=9)
-        
+
     # Chart 2: Surface Area Difference Percentage
     df_area_sorted = symmetry_df.sort_values("area_difference_percent", ascending=True)
     y_pos2 = np.arange(len(df_area_sorted))
@@ -234,10 +201,10 @@ def render_bilateral_symmetry_mosaic(
     ax2.set_xlabel("Surface Area Difference (%)", fontsize=11)
     ax2.set_title("Bilateral Surface Area Discrepancy", fontsize=12, fontweight="bold")
     ax2.grid(axis="x", linestyle="--", alpha=0.6)
-    
+
     for i, v in enumerate(df_area_sorted["area_difference_percent"]):
         ax2.text(v + 0.3, i, f"{v:.1f}%", va="center", fontsize=9)
-        
+
     plt.suptitle("Bilateral Symmetry & Taphonomic Deformation Audit (14 Cranial Element Pairs)", fontsize=14, fontweight="bold", y=0.98)
     plt.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
