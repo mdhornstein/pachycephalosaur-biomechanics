@@ -3,14 +3,17 @@
 **Author / Investigation**: Biomechanics & Uncertainty Quantification Research Pipeline  
 **Date**: August 28, 2026  
 **Taxon**: *Stegoceras validum* Lambe, 1902  
-**Specimen**: **UALVP 2** (Holotype cranium and associated postcranial skeleton, University of Alberta Laboratory for Vertebrate Paleontology)  
+**Taxonomic Lectotype**: **CMN 515** (Canadian Museum of Nature, Ottawa; frontoparietal dome)  
+**Study Specimen**: **UALVP 2** (University of Alberta Laboratory for Vertebrate Paleontology, Edmonton; referred specimen comprising an articulated skull, mandible, and associated postcrania)  
 **Milestone**: Phase 1 Gate Synthesis & Deliverable H  
 
 ---
 
 ## 🔬 Executive Summary
 
-This report delivers the foundational data inventory, provenance audit, and geometric evaluation for *Stegoceras validum* specimen **UALVP 2**. In accordance with project principles, no mechanical modeling or FEA simulations are conducted until digital assets are cataloged, verified, and placed under strict version control.
+This report delivers the foundational data inventory, provenance audit, and geometric evaluation for *Stegoceras validum* specimen **UALVP 2**. In accordance with project principles, no mechanical modeling or FEA simulations are conducted until digital assets are acquired, verified, and placed under strict version control.
+
+Phase 1 establishes that the **software environment, manifest infrastructure, secure ingestion engine, and data inventory are complete**. The next milestone is the physical acquisition and empirical inspection of primary CT data and reference models.
 
 Below are detailed, authoritative answers to the **8 core questions** defining the Phase 1 milestone.
 
@@ -20,14 +23,15 @@ Below are detailed, authoritative answers to the **8 core questions** defining t
 
 ### 1. What UALVP 2 files can actually be obtained?
 
-The following digital resources for *Stegoceras validum* (UALVP 2) have been identified across public scientific repositories and publications:
+The following digital resources for *Stegoceras validum* (UALVP 2) have been identified through searches of MorphoSource, WitmerLab, Sketchfab, the primary literature, and associated repositories:
 
 1. **MorphoSource Media `000018284`**: High-resolution micro-CT scan of the UALVP 2 cranium, contributed by the WitmerLab (Ohio University) in collaboration with the University of Texas High-Resolution X-ray CT Facility (UTCT).
 2. **MorphoSource Media `000780312`**: Micro-CT scan of the UALVP 2 mandible, contributed by WitmerLab.
 3. **Sketchfab Model `f7fc7cccf9624aeb803788810d6261d5`**: WitmerLab segmented 3D surface model of the complete articulated skull.
 4. **Sketchfab Model `ab74413ebcf441398af2668eba0e200f`**: WitmerLab exploded 3D model displaying individual cranial bones translated along exploded vectors.
-5. **PLoS ONE Supporting Materials (Moore et al. 2022)**: 3D muscle reconstruction figures, appendicular osteology, and anatomical coordinate measurements.
-6. **PLoS ONE Benchmark Data (Snively & Theodor 2011)**: Published von Mises stress distributions, strain energy profiles, and tabular safety factors for reproduction (the raw proprietary 2.2M element Strand7 mesh was not publicly deposited).
+5. **WitmerLab Reference Visualizations**: Interactive 3D PDF cranium and orthogonal CT slice sequence movies (transverse, sagittal, coronal) from the WitmerLab 3D pachycephalosaur portal.
+6. **PLoS ONE Supporting Materials (Moore et al. 2022)**: 3D muscle reconstruction figures, appendicular osteology, and anatomical coordinate measurements.
+7. **PLoS ONE Benchmark Data (Snively & Theodor 2011)**: Published von Mises stress distributions, strain energy profiles, and tabular safety factors for reproduction (the raw proprietary 2.2M element Strand7 mesh was not publicly deposited).
 
 ---
 
@@ -54,11 +58,12 @@ The following digital resources for *Stegoceras validum* (UALVP 2) have been ide
 | Dataset / Asset | Modality | In-Plane Pixel Spacing | Slice Thickness / Pitch | Matrix Size | Element / Poly Count |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **MorphoSource 000018284** | Micro-CT (UTCT) | `UNKNOWN` (Recorded in DICOM header) | `UNKNOWN` (2x transverse, 4.5x AP vs. medical) | `UNKNOWN` | Volumetric voxels |
+| **MorphoSource 000780312** | Micro-CT (UTCT) | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` | Volumetric voxels |
 | **CDC Calgary Scan (2011)**| Medical CT (GE Lightspeed)| Pathological bone protocol | Standard helical pitch | `UNKNOWN` | Volumetric voxels |
-| **Sketchfab Articulated Skull** | Polygonal Surface | N/A | N/A | N/A | ~50k–250k triangles (decimated for web) |
-| **Snively & Theodor 2011 FEA** | Solid Tetrahedra | N/A | N/A | N/A | 2,200,000 linear tetrahedra |
+| **Sketchfab Articulated Skull** | Polygonal Surface | N/A | N/A | N/A | `UNKNOWN` (To be measured upon download) |
+| **Snively & Theodor 2011 FEA** | Solid Tetrahedra | N/A | N/A | N/A | 2,200,000 linear tetrahedra (reported) |
 
-> *Note: In accordance with project policy, exact micron-level voxel dimensions are marked `UNKNOWN` until direct extraction from the raw DICOM headers upon local ingestion.*
+> *Note: In strict compliance with zero-fabrication policy, all un-ingested dimensions, units, and polygon counts are marked `UNKNOWN` until measured directly from ingested files.*
 
 ---
 
@@ -72,6 +77,8 @@ The following digital resources for *Stegoceras validum* (UALVP 2) have been ide
    - Dentary, surangular, angular, articular, and preserved dentition.
 3. **Appendicular & Axial Skeleton (Moore et al. 2022)**:
    - Pelvic girdle (ilium, ischium, pubis), sacral vertebrae, hindlimb elements, and pectoral girdle.
+4. **WitmerLab Reference Visualizations**:
+   - Interactive 3D PDF and orthogonal slice animations visualizing internal cranial anatomy and sinuses.
 
 ---
 
@@ -81,8 +88,8 @@ The following digital resources for *Stegoceras validum* (UALVP 2) have been ide
   - **License**: Creative Commons Attribution-NonCommercial 4.0 International (**CC BY-NC 4.0**).
   - **Permitted**: Non-commercial scientific research, educational reuse, academic analysis, reproduction with proper attribution to WitmerLab, University of Alberta, and MorphoSource.
   - **Restricted**: Commercial exploitation without written permission from the contributing institution.
-* **Sketchfab Models (`f7fc7cccf9624aeb803788810d6261d5`, `ab74413ebcf441398af2668eba0e200f`)**:
-  - **License**: CC BY-NC 4.0 (Attribution to WitmerLab).
+* **Sketchfab Models & WitmerLab Visualizations (`f7fc7cccf9624aeb803788810d6261d5`, `ab74413ebcf441398af2668eba0e200f`, 3D PDFs)**:
+  - **License**: CC BY-NC 4.0 (Attribution to WitmerLab at Ohio University).
 * **Published Literature & Figures (Snively & Theodor 2011, Moore et al. 2022)**:
   - **License**: Creative Commons Attribution (**CC BY 4.0**).
 
@@ -102,18 +109,19 @@ The following digital resources for *Stegoceras validum* (UALVP 2) have been ide
 
 ### 8. What is the recommended next step?
 
-1. **Ingest Downloaded Micro-CT Archive**:
-   - Researcher downloads Media `000018284` from MorphoSource to `data/raw/downloads/`.
-   - Run `uv run python scripts/ingest_data.py --scan-downloads` to unpack, compute SHA-256, and update `data/metadata/dataset_manifest.yaml`.
-2. **Phase 2 Gate**:
-   - Execute `notebooks/02_load_skull_mesh.ipynb` on the segmented surface mesh to verify coordinate alignment, bounding dimensions (~180mm skull length), and manifold properties.
-3. **Phase 3 Gate**:
-   - Ingest DICOM volume in `notebooks/03_ct_inspection.ipynb` via SimpleITK to measure exact voxel spacing, inspect density histograms, and evaluate beam hardening.
+1. **Physical Acquisition & Ingestion**:
+   - Download Media `000018284` from MorphoSource to `data/raw/downloads/`.
+   - Download the Sketchfab surface mesh and WitmerLab reference visualizations to `data/raw/downloads/`.
+   - Run `uv run python scripts/ingest_data.py --scan-downloads` to safely unpack (with path-traversal protection), compute actual SHA-256 digests, and record measured metadata in `data/metadata/dataset_manifest.yaml`.
+2. **Phase 2 (Mesh Inspection)**:
+   - Execute `notebooks/02_load_skull_mesh.ipynb` on the downloaded mesh to measure vertex counts, test for watertightness, inspect manifold edges, and empirically calibrate physical scale against published anatomical measurements.
+3. **Phase 3 (CT Inspection)**:
+   - Ingest DICOM volume in `notebooks/03_ct_inspection.ipynb` via SimpleITK to extract exact voxel spacing and inspect Hounsfield density distributions.
 4. **Phase 4 & 5 (Segmentation & Validation)**:
-   - Perform semi-automated segmentation and cavity matrix removal in 3D Slicer before generating tetrahedral meshes for finite-element analysis.
+   - Segment cranial zones and remove rock matrix in 3D Slicer before generating tetrahedral meshes for finite element analysis.
 
 ---
 
-## 🏁 Phase 1 Gate Conclusion
+## 🏁 Phase 1 Gate Status
 
-Phase 1 deliverables are **COMPLETE**. All digital resources have been cataloged with verifiable provenance, automated integrity tools are operational, and the project is positioned for systematic CT inspection and segmentation in Phase 2/3.
+Phase 1 is **INFRASTRUCTURE AND DATA-INVENTORY COMPLETE**. All tools, manifests, safety checks, and exploratory notebooks are in place. The project holds at the Phase 1 Gate awaiting physical dataset acquisition before proceeding to Phase 2 inspection.

@@ -61,17 +61,22 @@ def inspect_mesh_topology(mesh: trimesh.Trimesh) -> Dict[str, Any]:
         
     surface_area = float(mesh.area)
     
-    # Infer likely physical scale based on Stegoceras skull morphology
-    # Expected adult Stegoceras skull length is approximately 160-220 mm.
+    # Diagnostic scale hint based on bounding-box magnitude
+    # NOTE: This is a diagnostic heuristic and does NOT constitute empirical scale verification.
+    # Empirical scale verification requires comparative registration against published anatomical dimensions.
     max_dim = float(np.max(extents))
     if 50.0 <= max_dim <= 500.0:
-        inferred_unit = "millimeters (mm)"
+        candidate_hint = "likely_millimeters (diagnostic magnitude 50-500)"
+        candidate_units = "mm"
     elif 5.0 <= max_dim <= 50.0:
-        inferred_unit = "centimeters (cm)"
+        candidate_hint = "likely_centimeters (diagnostic magnitude 5-50)"
+        candidate_units = "cm"
     elif 0.05 <= max_dim <= 0.50:
-        inferred_unit = "meters (m)"
+        candidate_hint = "likely_meters (diagnostic magnitude 0.05-0.5)"
+        candidate_units = "m"
     else:
-        inferred_unit = "UNKNOWN / Non-standard scale"
+        candidate_hint = "UNKNOWN / Non-standard scale (requires anatomical calibration)"
+        candidate_units = "UNKNOWN"
         
     return {
         "num_vertices": num_v,
@@ -85,7 +90,8 @@ def inspect_mesh_topology(mesh: trimesh.Trimesh) -> Dict[str, Any]:
         "bounding_box_max": [float(x) for x in bounds[1]],
         "extents_xyz": [float(x) for x in extents],
         "max_extent": max_dim,
-        "inferred_physical_unit": inferred_unit,
+        "candidate_scale_hint": candidate_hint,
+        "candidate_units": candidate_units,
         "surface_area": surface_area,
         "enclosed_volume": volume,
     }

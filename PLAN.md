@@ -1,7 +1,8 @@
 # Master Research & Implementation Plan: Stegoceras Biomechanics & Uncertainty Quantification
 
-**Taxon**: *Stegoceras validum* (Lambe, 1902)  
-**Specimen**: **UALVP 2** (Holotype cranium & skeleton, University of Alberta Laboratory for Vertebrate Paleontology)  
+**Taxon**: *Stegoceras validum* Lambe, 1902  
+**Taxonomic Lectotype**: **CMN 515** (Canadian Museum of Nature, Ottawa)  
+**Study Specimen**: **UALVP 2** (University of Alberta Laboratory for Vertebrate Paleontology, Edmonton; an articulated, exceptionally preserved referred specimen comprising skull, mandible, and postcrania)  
 **Primary Biomechanics Target**: Snively, E. & Theodor, J. M. (2011). *Common functional correlates of head-strike behavior in bovid artiodactyls and pachycephalosaurs*. PLoS ONE 6(6): e21412.  
 **Core Scientific Question**: *How robust are conclusions about pachycephalosaur cranial biomechanics to uncertainty in geometry, material properties, loading conditions, and modeling assumptions?*
 
@@ -14,15 +15,15 @@ The objective of this project is to construct a fully reproducible, open-source 
 ### Core Methodological Principles
 
 1. **Strict Provenance & Immutability**:
-   Every raw scan, surface mesh, and reference model has documented provenance, checksum, repository ID, and licensing. Raw data are never altered in place.
+   Every raw scan, surface mesh, and reference model has documented provenance, repository ID, and licensing. Raw data are never altered in place.
 2. **Explicit Uncertainty & Zero Fabrication**:
-   Unknown parameters (e.g., in vivo keratin thickness, permineralization modulus inflation, non-preserved cartilage) are explicitly labeled `UNKNOWN` and modeled as probability distributions $\theta \sim p(\theta)$ rather than asserted as fixed constants.
+   Unknown parameters (e.g., in vivo keratin thickness, permineralization modulus inflation, non-preserved cartilage) are explicitly labeled `UNKNOWN` and modeled as probability distributions $\theta \sim p(\theta)$ rather than asserted as fixed constants. Uninspected meshes are marked `NOT_YET_INSPECTED`.
 3. **Reproducibility Over Complexity**:
    A deterministic, transparent, and reproducible FEA benchmark is established and validated prior to deploying non-linear contacts, complex anisotropic tensors, or machine learning surrogates.
 4. **Distinction of Uncertainty Sources**:
    Numerical discretization error (mesh convergence) is strictly separated from biological uncertainty (material properties, in vivo muscle force) and model-form uncertainty (boundary conditions).
 5. **Phase Gating**:
-   Each milestone serves as an explicit gate. Downstream simulation phases do not proceed without formal validation and review of upstream data and geometry.
+   Each milestone serves as an explicit gate. Downstream simulation phases do not proceed without formal empirical validation and review of upstream data and geometry.
 
 ---
 
@@ -53,23 +54,23 @@ flowchart TD
 - Configured `pyproject.toml` with `hatchling` exposing editable `stegoceras_biomechanics` package.
 - Clean directory hierarchy (`data/`, `literature/`, `notebooks/`, `src/`, `models/`, `simulations/`, `results/`, `reports/`).
 
-### Phase 1: Data Acquisition & Provenance Manifest *(Current Milestone - Gate)*
-- Exhaustive inventory of all public UALVP 2 digital records across MorphoSource, WitmerLab, and Sketchfab.
+### Phase 1: Data Acquisition & Provenance Manifest *(Infrastructure Complete - Gate)*
+- Comprehensive inventory of public UALVP 2 digital records identified across MorphoSource, WitmerLab, and Sketchfab.
 - Implementation of 4-tier provenance taxonomy (`primary_scan`, `segmented_from_primary_scan`, `researcher_derived`, `secondary_reference`).
-- Machine-readable manifest [`data/metadata/dataset_manifest.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml) with SHA-256 validation.
-- Ingestion tooling for local authenticated downloads (`scripts/ingest_data.py`).
+- Machine-readable manifest [`data/metadata/dataset_manifest.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml).
+- Checksum validation and safe ingestion tooling (`scripts/ingest_data.py`).
 - Publication of Phase 1 Synthesis Report ([`reports/phase1_data_and_geometry_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase1_data_and_geometry_report.md)).
 
 ### Phase 2: Inspection of Existing 3D Geometry
 - Ingest and inspect available 3D surface models using `trimesh`, `pyvista`, and `meshio`.
 - Verify topological manifoldness: watertight status, self-intersections, non-manifold edges/vertices, degenerate faces.
-- Audit physical coordinate frame and scale ($mm$ vs. $cm$ vs. $m$).
+- Audit physical coordinate frame and scale ($mm$ vs. $cm$ vs. $m$) by comparing bounding dimensions against published anatomical measurements.
 - Extract surface area, bounding box, volume, and Euler characteristic $\chi = V - E + F$.
 - Export sanitized baseline copies to `data/meshes/cleaned/` without modifying raw source geometry.
 
 ### Phase 3: Raw CT Volume & Density Inspection
 - Ingest DICOM slice stacks using `SimpleITK` and `pydicom`.
-- Document scan metadata: slice thickness, pixel spacing, acquisition matrix, field of view, kVp/mA, bit depth, and Hounsfield unit calibration.
+- Document scan metadata: slice thickness, pixel spacing, acquisition matrix, field of view, kVp/mA, bit depth, and Hounsfield unit calibration directly from DICOM tags.
 - Generate orthogonal multi-planar reconstructions (axial, coronal, sagittal).
 - Compute density histograms across anatomical subregions (dome apex, supratemporal fenestrae, palate, basicranium) to assess beam-hardening artifacts and mineral infilling.
 
@@ -146,22 +147,3 @@ flowchart TD
   - *Prenocephale prenes*
   - *Homalocephale calathoceros* (flat-headed morphotype)
   - Extant combative analogues (*Cephalophus leucogaster*, *Ovibos moschatus*, *Ovis canadensis*).
-
----
-
-## 📊 3. Primary Reference Reproduction Specifications (Snively & Theodor, 2011)
-
-| Parameter | Snively & Theodor (2011) Reported Specification | Reproducible Parameter Value |
-| :--- | :--- | :--- |
-| **Specimen** | *Stegoceras validum* cranium UALVP 2 | UALVP 2 (holotype) |
-| **Primary CT Source** | High-resolution micro-CT, UT Austin (UTCT) | MorphoSource Media `000018284` |
-| **Element Type** | 4-node linear solid tetrahedra | $C3D4$ / $C3D10$ |
-| **Element Count** | ~2.2 million tetrahedral elements | Convergence tested ($10^5 - 2.5\times 10^6$) |
-| **Applied Load** | 1360 N static compressive force | $F = 1360\text{ N}$ at dorsal dome apex |
-| **Loading Scenarios** | 1) Concentrated impact; 2) Broad cap distribution | 1) Point/localized; 2) Area-distributed |
-| **Cortical Bone Modulus** | Density-mapped (up to 18–20 GPa for ~2500 HU) | $E_{cort} = 17.0\text{ GPa}$, $\nu = 0.30$ |
-| **Cancellous Modulus** | Uniform conservative baseline | $E_{canc} = 1.0\text{ GPa}$, $\nu = 0.30$ |
-| **Keratin Pad Modulus** | Modeled in selected scenarios | $E_{ker} = 3.9\text{ GPa}$, $\nu = 0.28$ |
-| **Boundary Constraints** | Fixed occipital condyle + nuchal crest rim | Occipital condyle fixed ($u_x=u_y=u_z=0$); nuchal rim spring/fixed |
-| **Target Output Metric** | Von Mises stress (peak 8–46 MPa; cancellous 1 MPa) | Von Mises stress ($\sigma_{vM}$), safety factor ($SF = \sigma_{ult}/\sigma$) |
-| **Documented Unknowns** | Exact in vivo keratin thickness; permineralization effect | Treated as uncertain distributions in Phase 10 |

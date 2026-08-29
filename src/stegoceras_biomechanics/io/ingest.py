@@ -28,8 +28,19 @@ def scan_downloads(project_root: Optional[Path] = None) -> List[Path]:
     return sorted(found)
 
 
+def _is_safe_path(base_dir: Path, target_path: Path) -> bool:
+    """Verify that target_path resolves strictly inside base_dir."""
+    try:
+        resolved_base = base_dir.resolve()
+        resolved_target = target_path.resolve()
+        # Check if resolved_target is within resolved_base
+        return resolved_base == resolved_target or resolved_base in resolved_target.parents
+    except Exception:
+        return False
+
+
 def unpack_archive(archive_path: Path, target_dir: Path) -> List[Path]:
-    """Safely extract a ZIP or TAR archive into a destination folder.
+    """Safely extract a ZIP or TAR archive into a destination folder with path-traversal protection.
     
     Args:
         archive_path: Path to archive.
@@ -37,21 +48,50 @@ def unpack_archive(archive_path: Path, target_dir: Path) -> List[Path]:
         
     Returns:
         List of extracted file paths.
+        
+    Raises:
+        ValueError: If archive contains unsafe path traversal attempts.
     """
     target_dir.mkdir(parents=True, exist_ok=True)
+    resolved_target_dir = target_dir.resolve()
     extracted = []
     
     if archive_path.suffix.lower() == ".zip":
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(target_dir)
-            extracted = [target_dir / name for name in zip_ref.namelist()]
+            for member in zip_ref.infolist():
+                member_path = member.filename
+                # Path traversal check
+                if Path(member_path).is_absolute() or ".." in Path(member_path).parts:
+                    raise ValueError(f"Unsafe archive member detected (path traversal): {member_path}")
+                
+                dest = (resolved_target_dir / member_path).resolve()
+                if not _is_safe_path(resolved_target_dir, dest):
+                    raise ValueError(f"Unsafe archive destination detected: {member_path} -> {dest}")
+                
+                zip_ref.extract(member, resolved_target_dir)
+                extracted.append(dest)
+                
     elif archive_path.suffix.lower() in [".tar", ".gz", ".tgz"]:
         with tarfile.open(archive_path, 'r:*') as tar_ref:
-            tar_ref.extractall(target_dir)
-            extracted = [target_dir / name for name in tar_ref.getnames()]
+            for member in tar_ref.getmembers():
+                member_path = member.name
+                if Path(member_path).is_absolute() or ".." in Path(member_path).parts:
+                    raise ValueError(f"Unsafe archive member detected (path traversal): {member_path}")
+                if member.issym() or member.islnk():
+                    # Reject symlinks that could escape sandbox
+                    link_target = Path(member.linkname)
+                    if link_target.is_absolute() or ".." in link_target.parts:
+                        raise ValueError(f"Unsafe archive link detected: {member_path} -> {member.linkname}")
+                        
+                dest = (resolved_target_dir / member_path).resolve()
+                if not _is_safe_path(resolved_target_dir, dest):
+                    raise ValueError(f"Unsafe archive destination detected: {member_path} -> {dest}")
+                
+                tar_ref.extract(member, resolved_target_dir)
+                extracted.append(dest)
     else:
         # Single file copy
-        dest = target_dir / archive_path.name
+        dest = resolved_target_dir / archive_path.name
         shutil.copy2(archive_path, dest)
         extracted = [dest]
         

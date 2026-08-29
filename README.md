@@ -4,13 +4,13 @@
 [![Package Manager: uv](https://img.shields.io/badge/environment-uv-purple.svg)](https://github.com/astral-sh/uv)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A reproducible, open-source computational biomechanics pipeline for the pachycephalosaur dinosaur *Stegoceras validum* (specimen **UALVP 2**, holotype cranium).
+A reproducible, open-source computational biomechanics pipeline for the pachycephalosaur dinosaur *Stegoceras validum*, focusing on **UALVP 2** (an exceptionally complete referred specimen with articulated skull and postcrania; taxonomic lectotype is CMN 515).
 
 ---
 
 ## 🎯 1. Project Objective & Scope
 
-The long-term scientific question investigated by this project is:
+The central scientific question investigated by this project is:
 > **How robust are conclusions about pachycephalosaur cranial biomechanics to uncertainty in geometry, material properties, loading conditions, and modeling assumptions?**
 
 Rather than asserting or disputing behavioral hypotheses (e.g., head-butting vs. flank-butting vs. display), this project establishes a rigorous, transparent computational pipeline:
@@ -26,7 +26,7 @@ Rather than asserting or disputing behavioral hypotheses (e.g., head-butting vs.
 ## 📁 2. Repository Layout
 
 ```text
-stegoceras-biomechanics/
+pachycephalosaurus-biomechanics/
 ├── README.md                           # Project overview and quickstart
 ├── PLAN.md                             # Master 18-phase implementation roadmap
 ├── DATA_SOURCES.md                     # Comprehensive UALVP 2 data catalog & provenance audit
@@ -45,19 +45,20 @@ stegoceras-biomechanics/
 │   │   ├── original/                   # Original un-altered 3D surface files
 │   │   ├── cleaned/                    # Standardized, watertight, scale-verified meshes
 │   │   └── fe/                         # Solid tetrahedral / hexahedral meshes for FEA
+│   ├── reference/                      # 3D PDFs and animation reference files
 │   └── metadata/
 │       └── dataset_manifest.yaml       # Machine-readable provenance & SHA-256 checksum manifest
 │
 ├── literature/                         # Reference documentation, notes, and methodology logs
 ├── notebooks/
 │   ├── 01_data_inventory.ipynb         # Interactive dataset audit & provenance inspector
-│   └── 02_load_skull_mesh.ipynb        # Mesh loading, topology, scale, and manifold analysis
+│   └── 02_load_skull_mesh.ipynb        # Mesh loading, topology, scale hint, and manifold analysis
 │
 ├── src/
 │   └── stegoceras_biomechanics/        # Reusable scientific Python package
 │       ├── __init__.py
-│       ├── io/                         # Manifest parsers, checksum validators, ingestion tools
-│       ├── geometry/                   # Mesh operations, topological checks, scale conversions
+│       ├── io/                         # Manifest parsers, checksum validators, secure ingestion tools
+│       ├── geometry/                   # Mesh operations, topological checks, scale diagnostic hints
 │       ├── segmentation/               # CT volume thresholding & Slicer integration (placeholder)
 │       ├── meshing/                    # Surface and volume meshing pipelines (placeholder)
 │       ├── fea/                        # Finite element model configs & solver runners (placeholder)
@@ -97,12 +98,12 @@ uv run jupyter lab
 
 ---
 
-## 🔬 4. Current Phase: Phase 0 & Phase 1
+## 🔬 4. Current Milestone: Phase 1 (Infrastructure & Data Inventory Complete)
 
-This repository is currently at the **Phase 1 Gate**:
-- Data sources cataloged and audited in [`DATA_SOURCES.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/DATA_SOURCES.md).
+This repository is currently holding at the **Phase 1 Gate**:
+- Data sources cataloged in [`DATA_SOURCES.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/DATA_SOURCES.md).
 - Manifest and provenance codified in [`data/metadata/dataset_manifest.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml).
-- Interactive exploratory workflows in `notebooks/01_data_inventory.ipynb` and `notebooks/02_load_skull_mesh.ipynb`.
-- Phase 1 findings documented in `reports/phase1_data_and_geometry_report.md`.
+- Checksum validation and secure ingestion tooling ready (`scripts/ingest_data.py`).
+- Phase 1 synthesis documented in [`reports/phase1_data_and_geometry_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase1_data_and_geometry_report.md).
 
-*Per project principles, finite element simulations will not be executed until Phase 1 data and geometry gates are reviewed and validated.*
+*The next milestone is the physical acquisition and inspection of primary CT data and reference meshes before proceeding to geometric validation and FEA preprocessing.*

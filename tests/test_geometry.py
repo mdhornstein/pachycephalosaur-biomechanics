@@ -38,8 +38,9 @@ def test_inspect_mesh_topology(sample_box_mesh):
     assert np.isclose(extents[1], 120.0, atol=1e-3)
     assert np.isclose(extents[2], 90.0, atol=1e-3)
     
-    # Scale inference for 180mm should be millimeters
-    assert "millimeters" in metrics["inferred_physical_unit"]
+    # Diagnostic scale hint for 180mm should indicate likely millimeters
+    assert "millimeters" in metrics["candidate_scale_hint"]
+    assert metrics["candidate_units"] == "mm"
     
     # Volume of 180 * 120 * 90 = 1,944,000 mm^3
     expected_vol = 180.0 * 120.0 * 90.0
