@@ -75,6 +75,66 @@ datasets:
     notes: "Micro-CT scan of UALVP 2 mandible."
     evidence_source: "MorphoSource Media 000780312"
 
+  - dataset_id: "UALVP2-MS-SKULL-STL-01"
+    specimen_id: "UALVP 2"
+    specimen_status: "referred_specimen"
+    taxon: "Stegoceras validum"
+    element: "Whole Skull (Surface Mesh STL)"
+    repository: "MorphoSource"
+    media_id: "000018284"
+    source_url: "https://www.morphosource.org/concern/media/000018284"
+    provenance_tier: "segmented_from_primary_scan"
+    contributor: "WitmerLab (Ohio University)"
+    facility: "WitmerLab 3D Visualization Pipeline"
+    file_type: "STL (Binary)"
+    file_size_bytes: 60005184
+    voxel_dimensions_mm: null
+    physical_units: "UNKNOWN"
+    coordinate_frame: "MorphoSource_deposited_coordinates (untransformed)"
+    topology_status: "inspected_2manifold_non_watertight"
+    measured_raw_vertex_count: 3600306
+    measured_unique_vertex_count: 599948
+    measured_face_count: 1200102
+    measured_boundary_edges: 0
+    measured_non_manifold_edges: 2
+    is_watertight: false
+    license: "CC BY-NC 4.0"
+    download_status: "acquired_locally"
+    requires_authentication: true
+    local_path: "data/meshes/original/whole_skull/WitmerLab_Stegoceras_UALVP2-000018284.stl"
+    sha256_checksum: "aa994f41df3a7763a048f93339345dd68ea91f475386b8ae129ec80fd226c7c3"
+    checksum_status: "verified"
+    notes: "High-resolution segmented whole-skull surface mesh deposited by WitmerLab on MorphoSource."
+    evidence_source: "MorphoSource Media 000018284"
+
+  - dataset_id: "UALVP2-MS-COMPONENTS-32"
+    specimen_id: "UALVP 2"
+    specimen_status: "referred_specimen"
+    taxon: "Stegoceras validum"
+    element: "32 Segmented Cranial Component Meshes"
+    repository: "MorphoSource"
+    media_id: "000043121-000043162"
+    source_url: "https://www.morphosource.org/concern/media/000043121"
+    provenance_tier: "segmented_from_primary_scan"
+    contributor: "WitmerLab (Ohio University)"
+    facility: "WitmerLab 3D Visualization Pipeline"
+    file_type: "32 STL files"
+    file_size_bytes: 71505746
+    voxel_dimensions_mm: null
+    physical_units: "UNKNOWN"
+    coordinate_frame: "MorphoSource_deposited_coordinates (untransformed, unified)"
+    topology_status: "inspected_individual_elements"
+    measured_total_faces: 1435848
+    measured_total_unique_vertices: 720836
+    license: "CC BY-NC 4.0"
+    download_status: "acquired_locally"
+    requires_authentication: true
+    local_path: "data/meshes/original/components/"
+    sha256_checksum: "refer_to_geometry_inventory.csv"
+    checksum_status: "verified_per_file"
+    notes: "32 individual cranial elements (14 paired L/R + 4 midline) segmented by WitmerLab. Full inventory in data/metadata/geometry_inventory.csv."
+    evidence_source: "MorphoSource Media 000043121-000043162"
+
   - dataset_id: "UALVP2-SKETCH-SKULL-01"
     specimen_id: "UALVP 2"
     specimen_status: "referred_specimen"

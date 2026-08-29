@@ -1,73 +1,90 @@
-# Phase 0 & Phase 1 Walkthrough: Stegoceras Biomechanics & UQ Pipeline
+# Phase 2 Walkthrough: Digital Anatomy Inventory & Geometry Validation (Stegoceras validum, UALVP 2)
 
-We have established and verified the **Phase 0 & Phase 1** computational infrastructure, dataset inventory, provenance manifest, secure ingestion tools, and exploratory notebooks for *Stegoceras validum* (specimen **UALVP 2**).
+We have completed **Phase 2: Digital Anatomy Inventory & Geometry Validation** for *Stegoceras validum* (specimen **UALVP 2**), processing the complete MorphoSource acquisition of **Media `000018284` (Whole Skull STL)** and all **32 segmented cranial element meshes (Media `000043121`–`000043162`)**.
 
 ---
 
-## 🏛️ Taxonomic Context
+## 🏛️ Taxonomic & Provenance Context
 * **Taxonomic Lectotype**: **CMN 515** (Canadian Museum of Nature, Ottawa; frontoparietal dome)
-* **Study Specimen**: **UALVP 2** (University of Alberta, Edmonton; an articulated, exceptionally complete referred specimen comprising skull, mandible, and postcrania)
+* **Study Specimen**: **UALVP 2** (University of Alberta, Edmonton; articulated referred specimen)
+* **Source Repository**: MorphoSource / WitmerLab (Ohio University)
+* **Licensing**: Creative Commons Attribution-NonCommercial 4.0 International (**CC BY-NC 4.0**)
 
 ---
 
-## 📦 Summary of Completed Deliverables
+## 📦 Summary of Phase 2 Deliverables
 
-### Deliverable A: Environment & Project Scaffolding
-- [**`pyproject.toml`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/pyproject.toml): Configured with `hatchling` backend, exposing `src/stegoceras_biomechanics` as an editable package with Python 3.12 support.
-- [**`.gitignore`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/.gitignore): Strictly protects raw CT/DICOM data archives and binary meshes from Git tracking.
-- [**`LICENSE`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/LICENSE) & [**`CITATION.cff`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/CITATION.cff): Open-source MIT license and citation metadata.
-- [**`environment.yml`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/environment.yml): Conda/Mamba compatibility specification.
-- [**`README.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/README.md): Project overview, workflow roadmap, and `uv` quickstart.
+### 1. Data Ingestion & Manifests
+- **Immutable Staging**: Raw ZIP archives stored in [`data/raw/downloads/`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/raw/downloads/).
+- **Source Manifests**: Preserved original MorphoSource CSV and XLSX manifests in [`data/raw/morphosource_manifests/`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/raw/morphosource_manifests/).
+- **Unpacked Meshes**:
+  - Whole Skull STL: [`data/meshes/original/whole_skull/WitmerLab_Stegoceras_UALVP2-000018284.stl`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/meshes/original/whole_skull/WitmerLab_Stegoceras_UALVP2-000018284.stl) ($60.0\text{ MB}$, SHA-256: `aa994f41df3a7763a048f93339345dd68ea91f475386b8ae129ec80fd226c7c3`).
+  - 32 Component STLs: [`data/meshes/original/components/`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/meshes/original/components/) ($71.5\text{ MB}$ total).
 
-### Deliverable B: Master Roadmap
-- [**`PLAN.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/PLAN.md): Complete 18-phase scientific roadmap incorporating primary literature specifications from Snively & Theodor (2011), WitmerLab, and MorphoSource.
+### 2. Geometry Inventory & Manifest
+- [**`data/metadata/geometry_inventory.csv`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/geometry_inventory.csv): Catalog of all 33 meshes containing SHA-256 digests, vertex counts (raw and unique topological), triangle counts, bounding boxes, coordinate extents, centroids, surface areas, boundary edge counts, non-manifold edge counts, and watertightness booleans.
+- [**`data/metadata/dataset_manifest.yaml`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml): Updated with `UALVP2-MS-SKULL-STL-01` and `UALVP2-MS-COMPONENTS-32` status `acquired_locally` and `checksum_status: verified`.
 
-### Deliverable C: Data Sources & Provenance Catalog
-- [**`DATA_SOURCES.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/DATA_SOURCES.md): Comprehensive inventory of digital resources identified through MorphoSource, WitmerLab, Sketchfab, and literature searches, classified across the 4-tier taxonomy (`primary_scan`, `segmented_from_primary_scan`, `researcher_derived`, `secondary_reference`) with strict `UNKNOWN` flags.
+### 3. Core Geometry & Assembly Code
+- [**`src/stegoceras_biomechanics/geometry/inventory.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/geometry/inventory.py): Computes topological manifoldness, unique vertex counts, and diagnostic scale hints.
+- [**`src/stegoceras_biomechanics/geometry/assembly.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/geometry/assembly.py): Multi-part assembly without transformation, cKDTree distance analysis, component containment evaluation, and metadata-driven bilateral symmetry analysis.
+- [**`src/stegoceras_biomechanics/visualization/render_geometry.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/visualization/render_geometry.py): Publication-quality 3D renders with multi-view projections.
 
-### Deliverable D: Data Ingestion & Geometry Python Package
-- [**`src/stegoceras_biomechanics/io/manifest.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/io/manifest.py): Manifest loader and SHA-256 validator.
-- [**`src/stegoceras_biomechanics/io/ingest.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/io/ingest.py): Safe archive extraction with path-traversal protection for zip and tar archives.
-- [**`src/stegoceras_biomechanics/geometry/mesh_ops.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/geometry/mesh_ops.py): Mesh loading (`trimesh`/`pyvista`), Euler characteristic ($\chi = V - E + F$), bounding extents, surface area, volume, manifoldness checks, and diagnostic scale hints.
-- [**`scripts/ingest_data.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/scripts/ingest_data.py): Command-line interface for inventory audits (`audit`) and ingestion (`scan-downloads`, `ingest`).
+### 4. Interactive Notebooks & Figures
+- [**`notebooks/03_component_geometry_inventory.ipynb`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/03_component_geometry_inventory.ipynb): Interactive mesh inventory and topological quality inspection.
+- [**`notebooks/04_skull_component_assembly.ipynb`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/04_skull_component_assembly.ipynb): Assembly evaluation, distance metrics, bilateral symmetry, and 3D visualization displays.
+- **Rendered 3D Figures**:
+  - Figure 1: Whole Skull 4-view render ([`reports/figures/01_whole_skull_render.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/01_whole_skull_render.png))
+  - Figure 2: 32-Component Cranial Assembly ([`reports/figures/02_component_assembly_render.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/02_component_assembly_render.png))
+  - Figure 3: Assembly vs. Whole Skull Overlay ([`reports/figures/03_assembly_whole_overlay.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/03_assembly_whole_overlay.png))
+  - Figure 4: Bilateral Symmetry Deviation Chart ([`reports/figures/04_bilateral_symmetry_comparison.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/04_bilateral_symmetry_comparison.png))
 
-### Deliverable E: Dataset Manifest
-- [**`data/metadata/dataset_manifest.yaml`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml): Machine-readable YAML manifest capturing dataset metadata, URLs, media IDs, licensing (CC BY-NC 4.0), and evidence sources.
+### 5. Phase 2 Synthesis Report
+- [**`reports/phase2_digital_anatomy_report.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase2_digital_anatomy_report.md): Answers all 9 required scientific questions with measured empirical data.
 
-### Deliverables F & G: Interactive Exploratory Notebooks
-- [**`notebooks/01_data_inventory.ipynb`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/01_data_inventory.ipynb): Interactive provenance audit and local inventory inspector.
-- [**`notebooks/02_load_skull_mesh.ipynb`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/02_load_skull_mesh.ipynb): 3D surface mesh loading, topological checks, candidate scale hints, and standardized export.
+---
 
-### Deliverable H: Phase 1 Synthesis Report
-- [**`reports/phase1_data_and_geometry_report.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase1_data_and_geometry_report.md): Answers all 8 core questions regarding UALVP 2 digital resources, access requirements, licensing, resolutions, and recommended Phase 2 gate steps.
+## 🔬 Key Empirical Discoveries
+
+```
+1. Global Coordinate System Alignment:
+   - Whole Skull BBox:  [38.012, 4.269, 0.375] to [169.144, 204.770, 128.087]
+   - Assembly BBox:     [38.023, 4.271, 0.376] to [169.173, 204.770, 128.090]
+   - BBox Delta:        Δ ≤ 0.029 coordinate units (< 0.02% error)
+   - Coordinate Frame:  All 32 component meshes share the exact native coordinate system!
+
+2. Quantitative Distance Metrics (Sampled Bidirectional Approximation, N = 50,000 points):
+   - Whole Skull → Assembly Median Distance:   0.850 coordinate units
+   - Whole Skull → Assembly Mean Distance:     0.904 coordinate units
+   - Whole Skull → Assembly 95th Percentile:  1.738 coordinate units
+   - Assembly → Whole Skull Median Distance:   0.922 coordinate units
+   - Sampled Bidirectional Hausdorff Approx:  16.330 coordinate units
+
+3. Bilateral Symmetry (14 Paired Elements):
+   - High bilateral congruence in cranial roof: Nasals (ΔArea 0.34%, mean dev 2.33), Lacrimals (ΔArea 0.94%, mean dev 2.39), Prefrontals (ΔArea 1.33%, mean dev 2.76).
+   - Greater asymmetry in basicranium/quadrates due to known post-mortem taphonomic distortion (Quadrate mean dev 6.37, Quadratojugal 13.54).
+```
 
 ---
 
 ## 🧪 Verification & Test Results
 
-1. **Automated Pytest Suite**:
-   ```bash
-   uv run pytest -v
-   ```
-   **Result**: All 9 tests passing:
-   - `test_ingest.py::test_safe_zip_extraction` ✅ PASSED
-   - `test_ingest.py::test_malicious_zip_path_traversal_rejected` ✅ PASSED
-   - `test_ingest.py::test_malicious_tar_path_traversal_rejected` ✅ PASSED
-   - `test_manifest.py::test_manifest_structure` ✅ PASSED
-   - `test_manifest.py::test_get_dataset_entry` ✅ PASSED
-   - `test_manifest.py::test_compute_sha256` ✅ PASSED
-   - `test_manifest.py::test_audit_local_inventory` ✅ PASSED
-   - `test_geometry.py::test_inspect_mesh_topology` ✅ PASSED
-   - `test_geometry.py::test_standardize_and_export_mesh` ✅ PASSED
+```bash
+uv run pytest -v
+```
 
-2. **CLI Ingestion & Inventory Audit**:
-   ```bash
-   uv run python scripts/ingest_data.py audit
-   ```
-   **Result**: Correctly reports registered datasets, provenance tiers, and provides clear instructions for user download.
+**Result: 13/13 tests passed cleanly (100%)**:
+* `tests/test_geometry.py` (2 tests) ✅ PASSED
+* `tests/test_ingest.py` (3 tests) ✅ PASSED
+* `tests/test_manifest.py` (4 tests) ✅ PASSED
+* `tests/test_phase2_geometry.py` (4 tests) ✅ PASSED
+  - `test_geometry_inventory_exists_and_complete` ✅
+  - `test_whole_skull_mesh_integrity` ✅
+  - `test_component_assembly_coordinate_congruence` ✅
+  - `test_surface_distance_and_bilateral_symmetry` ✅
 
 ---
 
-## 🚪 Phase 1 Gate Status
+## 🏁 Phase 2 Gate Status
 
-Phase 1 status is **infrastructure and data-inventory complete**. The repository holds at the Phase 1 Gate until primary CT data, reference surface meshes, and WitmerLab visualizations are physically acquired and inspected.
+Phase 2 is **COMPLETE**. All 33 STL meshes have been inventoried, topologically audited, verified to share a common native coordinate system, and assembled without artificial transformations. The project is ready to proceed to Phase 3 upon user direction.
