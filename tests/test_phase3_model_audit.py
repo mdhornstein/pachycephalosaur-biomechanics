@@ -117,13 +117,14 @@ def test_model_a_inputs_fully_defensible():
     # Model A required input IDs
     model_a_inputs = [
         "INP-GEO-01",  # External cranial surface (AVAILABLE_DIRECT)
-        "INP-GEO-03",  # Candidate scale calibration (INFERABLE_WITH_ASSUMPTION)
+        "INP-GEO-03",  # Candidate scale parameter s_mm/unit (INFERABLE_WITH_ASSUMPTION)
         "INP-MAT-01",  # Cortical modulus (LITERATURE_ONLY)
         "INP-MAT-02",  # Cortical Poisson ratio (LITERATURE_ONLY)
-        "INP-LOAD-01", # Impact force (LITERATURE_ONLY)
-        "INP-LOAD-02", # Load location (AVAILABLE_DIRECT)
-        "INP-LOAD-03", # Load direction (INFERABLE_WITH_ASSUMPTION)
-        "INP-LOAD-04", # Broad load area (INFERABLE_WITH_ASSUMPTION)
+        "INP-LOAD-01", # Primary normalized load F_ref (NOT_REQUIRED_FOR_SIMPLIFIED_MODEL)
+        "INP-LOAD-02", # Derived biological impact load F_bio (LITERATURE_ONLY)
+        "INP-LOAD-03", # Load location (AVAILABLE_DIRECT)
+        "INP-LOAD-04", # Load direction (INFERABLE_WITH_ASSUMPTION)
+        "INP-LOAD-05", # Broad load area envelope (INFERABLE_WITH_ASSUMPTION)
         "INP-BC-01",   # Occipital condyle BC (AVAILABLE_DIRECT)
         "INP-BC-02",   # Nuchal crest BC (AVAILABLE_DIRECT)
     ]
@@ -132,6 +133,6 @@ def test_model_a_inputs_fully_defensible():
         match = df[df["input_id"] == inp_id]
         assert len(match) == 1, f"Missing input definition for {inp_id}"
         status = match.iloc[0]["availability_status"]
-        assert status in {"AVAILABLE_DIRECT", "AVAILABLE_DERIVED", "LITERATURE_ONLY", "INFERABLE_WITH_ASSUMPTION"}, (
+        assert status in {"AVAILABLE_DIRECT", "AVAILABLE_DERIVED", "LITERATURE_ONLY", "INFERABLE_WITH_ASSUMPTION", "NOT_REQUIRED_FOR_SIMPLIFIED_MODEL"}, (
             f"Model A contains an UNAVAILABLE input: {inp_id} (status: {status})"
         )

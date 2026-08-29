@@ -146,16 +146,16 @@ Based on the parameter audit and input matrix, we define three candidate modelin
 ### Core Question: Is raw micro-CT data strictly required to begin biomechanical modeling?
 
 ### Decision:
-> **RAW CT is NOT REQUIRED for the first benchmark experiment, but IS REQUIRED for reproducing the high-fidelity voxel-level density model.**
+> **Raw CT is NOT REQUIRED to construct a useful first-order surface-derived benchmark (Model A), but IS REQUIRED to reproduce the CT-dependent internal material architecture of the published model (Model C).**
 
 ### Formal Justification:
 1. **External Geometry & Boundary Verification**: The acquired 33 MorphoSource STLs provide a high-resolution, validated geometric envelope for *Stegoceras* (UALVP 2) with verified topological integrity and shared native coordinates.
 2. **Macro-Mechanical Force Transmission**: In linear elasticity, global stress trajectories from the dorsal dome apex to the occipital condyle and basicranium are governed primarily by **overall cranial vault geometry, dome curvature, and boundary constraint placement** rather than subtle internal density variations.
 3. **Linear Scaling Property**: As demonstrated by Snively & Theodor (2011, p. 9), linear static stress and strain scale strictly linearly with applied load. A baseline homogeneous model (Model A) and a literature-partitioned sensitivity model (Model B) allow full verification of the computational solver, meshing pipeline, and global stress dissipation patterns prior to introducing raw CT voxel mapping.
-4. **Where Raw CT Becomes Essential**: Raw CT data is strictly necessary only when attempting to map voxel-level Hounsfield heterogeneity (Model C) or resolving micro-trabecular orientation within Zone 2.
+4. **Where Raw CT Becomes Essential**: Raw CT data is strictly necessary when attempting to reproduce voxel-level Hounsfield heterogeneity (Model C), resolving micro-trabecular orientation within Zone 2, or capturing precise specimen-specific cortical thickness variations.
 
 ---
 
 ## 🏁 6. Recommended Phase 4 Direction
 
-We recommend establishing **Model A (Minimal surface-derived homogeneous-material model)** as the **first computational benchmark**, with **Model B** evaluated as an immediate parametric sensitivity tier. This cleanly decouples pipeline verification from internal histological uncertainties.
+We recommend establishing **Model A (Minimal surface-derived homogeneous-material model)** as the **provisional first computational benchmark**, with **Model B** evaluated as an immediate parametric sensitivity tier. Model A represents a surface-derived approximation inspired by the published study, establishing a verified baseline before incorporating complex internal architecture or full uncertainty quantification.
