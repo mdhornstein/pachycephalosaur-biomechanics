@@ -17,7 +17,7 @@
   "num_elements_ar_gt_10": 15325,
   "num_elements_ar_gt_50": 403,
   "num_inverted_elements": 0,
-  "meshing_runtime_seconds": 18.380084991455078,
+  "meshing_runtime_seconds": 0.0,
   "source_surface_file": "data/meshes/cleaned/stegoceras_ualvp2_watertight.stl",
   "source_surface_sha256": "46b11f7e8afbae667ab5ce235714ea790e4d91f0e80eb01263228d41a2ddafd3",
   "is_production_convergence_mesh": true

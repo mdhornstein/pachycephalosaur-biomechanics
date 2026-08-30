@@ -3,6 +3,9 @@ model_name: "stegoceras_ualvp2_phase4_fine"
 base_config: "models/phase4/baseline.yaml"
 resolution_tier: "fine"
 mesh_file: "data/meshes/cleaned/stegoceras_tetmesh_fine.npz"
-target_elements: 2200000
+source_surface_file: "data/meshes/cleaned/stegoceras_ualvp2_watertight.stl"
+source_surface_sha256: "46b11f7e8afbae667ab5ce235714ea790e4d91f0e80eb01263228d41a2ddafd3"
+is_production_convergence_mesh: true
+target_elements: 2267738
 solver: "cg"
 cg_tolerance: 1.0e-7
