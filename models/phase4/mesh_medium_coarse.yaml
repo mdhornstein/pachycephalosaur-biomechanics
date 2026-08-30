@@ -6,5 +6,11 @@ mesh_file: "data/meshes/cleaned/stegoceras_tetmesh_medium_coarse.npz"
 source_surface_file: "data/meshes/cleaned/stegoceras_ualvp2_watertight.stl"
 source_surface_sha256: "46b11f7e8afbae667ab5ce235714ea790e4d91f0e80eb01263228d41a2ddafd3"
 is_production_convergence_mesh: true
-target_elements: 420000
+decimate_reduction: 0.95
+min_dihedral_deg: 10.0
+min_ratio: 1.5
+max_volume_mm3: null
+tetgen_flags: "-pq1.5/10.0"
+actual_nodes: 99542
+actual_elements: 421856
 solver: "direct"

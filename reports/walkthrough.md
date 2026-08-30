@@ -1,6 +1,6 @@
 # Phase 4 Walkthrough: Surface-Derived Finite Element Benchmark (Stegoceras validum, UALVP 2)
 
-We have completed **Phase 4: Surface-Derived Finite Element Benchmark** for *Stegoceras validum* (specimen **UALVP 2**), implementing a fully reproducible, numerically validated, linear-elastic finite element analysis workflow.
+We have completed the numerical verification and discretization sensitivity study for **Phase 4: Surface-Derived Finite Element Benchmark** (*Stegoceras validum*, specimen **UALVP 2**), implementing a fully reproducible, numerically validated, linear-elastic finite element analysis workflow.
 
 ---
 
@@ -24,14 +24,13 @@ We have completed **Phase 4: Surface-Derived Finite Element Benchmark** for *Ste
   - Maximum Surface Deviation: **$4.8531\text{ mm}$** localized to an internal pterygoid/palatal seam, with $>64\text{ mm}$ clearance to the dome load patch and $>69\text{ mm}$ clearance to boundary constraints.
   - Cleaned STL: `data/meshes/cleaned/stegoceras_ualvp2_watertight.stl`.
 
-### 2. Multi-Tier Solid Tetrahedral Mesh Hierarchy & Quality Audit (100% Reconciled)
-- [**`src/stegoceras_biomechanics/fea/meshing.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/meshing.py): Solid 3D tetrahedral meshing via TetGen with strict element quality checks.
-- **Mesh Quality & A/B Findings**:
-  - **Tier 1 Coarse** (`stegoceras_tetmesh_coarse.npz`): 55,728 nodes, 229,427 tets, median $AR = 1.46$, max $AR = 4,277.21$, mean $AR = 2.16$, **0 inverted elements**.
-  - **Tier 2 Med-Coarse** (`stegoceras_tetmesh_medium_coarse.npz`): 99,542 nodes, 421,856 tets, median $AR = 1.44$, max $AR = 21,259.23$, mean $AR = 2.06$, **0 inverted elements**.
-  - **Tier 3 Medium** (`stegoceras_tetmesh_medium.npz`): 147,735 nodes, 606,363 tets, median $AR = 1.50$, max $AR = 674.56$, mean $AR = 2.01$, **0 inverted elements**.
-  - **Tier 4 Fine Direct Baseline** (`stegoceras_tetmesh_fine.npz`): 698,960 nodes, 2,267,738 tets, median $AR = 1.86$, max $AR = 5,477.85$, mean $AR = 2.25$, **0 inverted elements**.
-  - **Decimated Diagnostic Mesh** (`stegoceras_tetmesh_decimated_diagnostic.npz`): 189,696 nodes, 601,025 tets, median $AR = 5.53$, max $AR = 25,327.12$, mean $AR = 10.88$, $26.50\%$ elements with $AR > 10$.
+### 2. Multi-Tier Solid Tetrahedral Mesh Hierarchy & Exact Regeneration Parameters
+- [**`src/stegoceras_biomechanics/fea/meshing.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/meshing.py): Solid 3D tetrahedral meshing via TetGen with explicit reproduction parameters:
+  - **Tier 1 Coarse** (`models/phase4/mesh_coarse.yaml`): `reduction=0.97`, `mindihedral=10.0`, `minratio=1.5` $\to$ 55,728 nodes, 229,427 tets, median $AR = 1.46$, max $AR = 4,277.21$, mean $AR = 2.16$, **0 inverted elements**.
+  - **Tier 2 Med-Coarse** (`models/phase4/mesh_medium_coarse.yaml`): `reduction=0.95`, `mindihedral=10.0`, `minratio=1.5` $\to$ 99,542 nodes, 421,856 tets, median $AR = 1.44$, max $AR = 21,259.23$, mean $AR = 2.06$, **0 inverted elements**.
+  - **Tier 3 Medium** (`models/phase4/mesh_medium.yaml`): `reduction=0.92`, `mindihedral=10.0`, `minratio=1.5` $\to$ 147,735 nodes, 606,363 tets, median $AR = 1.50$, max $AR = 674.56$, mean $AR = 2.01$, **0 inverted elements**.
+  - **Tier 4 Fine Direct Baseline** (`models/phase4/mesh_fine.yaml`): `reduction=0.00` $\to$ 698,960 nodes, 2,267,738 tets, median $AR = 1.86$, max $AR = 5,477.85$, mean $AR = 2.25$, **0 inverted elements** (16 GB memory limit).
+  - **Decimated Diagnostic Mesh**: `reduction=0.85` (standard quadric) $\to$ 189,696 nodes, 601,025 tets, median $AR = 5.53$, max $AR = 25,327.12$, mean $AR = 10.88$, $26.50\%$ elements with $AR > 10$.
   - **A/B Diagnostic Finding**: Proved surface decimation creates needle-thin boundary triangles that force TetGen to create boundary slivers. Excluded from production convergence models.
 
 ### 3. Epistemic YAML Model Configurations
@@ -57,22 +56,20 @@ We have completed **Phase 4: Surface-Derived Finite Element Benchmark** for *Ste
 
 ## 📊 3-Tier Discretization Sensitivity Progression (UALVP 2, 1.0 kN Broad Load)
 
-| Metric | Tier 1 (Coarse, 229k) | Tier 2 (Med-Coarse, 422k) | Tier 3 (Medium, 606k) | Total Net Progression |
-| :--- | :--- | :--- | :--- | :--- |
-| **Total Strain Energy ($U$)** | **$8.0075\text{ mJ}$** | **$8.1841\text{ mJ}$** | **$7.7902\text{ mJ}$** | **$-2.71\%$** |
-| **Apex Displacement ($u_{\text{apex}}$)** | **$27.66\ \mu\text{m}$** | **$30.13\ \mu\text{m}$** | **$29.10\ \mu\text{m}$** | **$+5.19\%$** |
-| **Max Displacement ($\delta_{\max}$)**| **$35.46\ \mu\text{m}$** | **$38.40\ \mu\text{m}$** | **$39.62\ \mu\text{m}$** | **$+11.73\%$** |
-| **Global 95th% von Mises Stress** | **$1.6688\text{ MPa}$** | **$1.7200\text{ MPa}$** | **$1.7575\text{ MPa}$** | **$+5.31\%$** |
-| **Dome Apex 95th% Stress** | **$2.2932\text{ MPa}$** | **$2.3436\text{ MPa}$** | **$2.4962\text{ MPa}$** | **$+8.85\%$** |
-| **Braincase Roof 95th% Stress**| **$1.9703\text{ MPa}$** | **$2.1036\text{ MPa}$** | **$2.3258\text{ MPa}$** | **$+18.04\%$** |
-| **Normalized Force Residual ($r_F$)** | **`7.03e-13`** | **`3.85e-13`** | **`1.52e-12`** | Machine precision |
-| **Normalized Moment Residual ($r_M$)**| **`2.38e-12`** | **`1.38e-12`** | **`5.70e-12`** | Machine precision |
+| Metric | Tier 1 (Coarse, 229k) | Tier 2 (Med-Coarse, 422k) | Tier 3 (Medium, 606k) | Step $\Delta_{h_1 \to h_2}$ | Step $\Delta_{h_2 \to h_3}$ | Convergence Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Total Strain Energy ($U$)** | **$8.0075\text{ mJ}$** | **$8.1841\text{ mJ}$** | **$7.7902\text{ mJ}$** | $+2.21\%$ | $-4.81\%$ | **STABILIZED** ($\le 5\%$) |
+| **Apex Displacement ($u_{\text{apex}}$)** | **$27.66\ \mu\text{m}$** | **$30.13\ \mu\text{m}$** | **$29.10\ \mu\text{m}$** | $+8.93\%$ | $-3.42\%$ | **STABILIZED** ($\le 5\%$) |
+| **Max Displacement ($\delta_{\max}$)**| **$35.46\ \mu\text{m}$** | **$38.40\ \mu\text{m}$** | **$39.62\ \mu\text{m}$** | $+8.29\%$ | $+3.18\%$ | **STABILIZED** ($\le 5\%$) |
+| **Global 95th% von Mises Stress** | **$1.6688\text{ MPa}$** | **$1.7200\text{ MPa}$** | **$1.7575\text{ MPa}$** | $+3.07\%$ | $+2.18\%$ | **MONOTONIC CONVERGENCE** ($\Delta_2 < \Delta_1$) |
+| **Dome Apex 95th% Stress** | **$2.2932\text{ MPa}$** | **$2.3436\text{ MPa}$** | **$2.4962\text{ MPa}$** | $+2.20\%$ | $+6.51\%$ | **UNCONVERGED / SENSITIVE** ($\Delta_2 > \Delta_1$) |
+| **Braincase Roof 95th% Stress**| **$1.9703\text{ MPa}$** | **$2.1036\text{ MPa}$** | **$2.3258\text{ MPa}$** | $+6.77\%$ | $+10.56\%$ | **UNCONVERGED / SENSITIVE** ($\Delta_2 > \Delta_1$) |
+| **Normalized Force Residual ($r_F$)** | **`7.03e-13`** | **`3.85e-13`** | **`1.52e-12`** | Exact | Exact | Machine precision |
+| **Normalized Moment Residual ($r_M$)**| **`2.38e-12`** | **`1.38e-12`** | **`5.70e-12`** | Exact | Exact | Machine precision |
 
 ---
 
-## 🛑 Phase 4 Gate Stop Directive
-In accordance with project guidelines:
-* No internal CT material heterogeneity has been assigned.
-* No dynamic impact or transient dynamic simulation has been performed.
-* No Monte Carlo / UQ sampling has been executed.
-* All work is strictly confined to Phase 4 deliverables.
+## 🛑 Phase 4 Gate Status: OPEN (Carried Forward to Phase 5 UQ)
+- **Gate Finding**: Phase 4 numerical verification, solver integrity, static equilibrium, and discretization sensitivity characterization are fully completed and verified.
+- **Convergence Decision**: In strict accordance with scientific standards, **the Phase 4 convergence gate is held OPEN** because asymptotic convergence is not yet established for localized cranial stresses (dome $+8.85\%$, braincase $+18.04\%$).
+- **Transition Protocol**: Rather than chasing unresolvable multi-million-element meshes on available hardware, this localized discretization sensitivity is formally designated as an **active numerical uncertainty component** ($\epsilon_{\text{discretization}}$) to be explicitly propagated into the Phase 5 Uncertainty Quantification framework.

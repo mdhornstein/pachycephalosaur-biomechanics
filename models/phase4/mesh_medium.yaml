@@ -1,4 +1,4 @@
-# Phase 4 Medium Mesh FE Model Configuration
+# Phase 4 Medium Mesh FE Model Configuration (Primary Benchmark)
 model_name: "stegoceras_ualvp2_phase4_medium"
 base_config: "models/phase4/baseline.yaml"
 resolution_tier: "medium"
@@ -6,5 +6,11 @@ mesh_file: "data/meshes/cleaned/stegoceras_tetmesh_medium.npz"
 source_surface_file: "data/meshes/cleaned/stegoceras_ualvp2_watertight.stl"
 source_surface_sha256: "46b11f7e8afbae667ab5ce235714ea790e4d91f0e80eb01263228d41a2ddafd3"
 is_production_convergence_mesh: true
-target_elements: 600000
+decimate_reduction: 0.92
+min_dihedral_deg: 10.0
+min_ratio: 1.5
+max_volume_mm3: null
+tetgen_flags: "-pq1.5/10.0"
+actual_nodes: 147735
+actual_elements: 606363
 solver: "direct"
