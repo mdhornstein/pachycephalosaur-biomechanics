@@ -1,0 +1,10 @@
+# Phase 4 Medium-Coarse Mesh FE Model Configuration
+model_name: "stegoceras_ualvp2_phase4_medium_coarse"
+base_config: "models/phase4/baseline.yaml"
+resolution_tier: "medium_coarse"
+mesh_file: "data/meshes/cleaned/stegoceras_tetmesh_medium_coarse.npz"
+source_surface_file: "data/meshes/cleaned/stegoceras_ualvp2_watertight.stl"
+source_surface_sha256: "46b11f7e8afbae667ab5ce235714ea790e4d91f0e80eb01263228d41a2ddafd3"
+is_production_convergence_mesh: true
+target_elements: 420000
+solver: "direct"

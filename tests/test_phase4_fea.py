@@ -214,8 +214,34 @@ def test_mesh_source_surface_sha256_provenance():
         expected_sha = hashlib.sha256(f.read()).hexdigest()
         
     meta_coarse = json.loads(Path("data/metadata/phase4_mesh_metrics_coarse.json").read_text())
+    meta_mc = json.loads(Path("data/metadata/phase4_mesh_metrics_medium_coarse.json").read_text())
+    meta_med = json.loads(Path("data/metadata/phase4_mesh_metrics_medium.json").read_text())
     meta_fine = json.loads(Path("data/metadata/phase4_mesh_metrics_fine.json").read_text())
     
     assert meta_coarse.get("source_surface_sha256") == expected_sha
+    assert meta_mc.get("source_surface_sha256") == expected_sha
+    assert meta_med.get("source_surface_sha256") == expected_sha
     assert meta_fine.get("source_surface_sha256") == expected_sha
     assert meta_fine.get("is_production_convergence_mesh") is True
+
+
+def test_report_json_mesh_quality_consistency():
+    """Verifies exact 100% numerical consistency between metadata JSON files and convergence results."""
+    import json
+    
+    conv_path = Path("results/phase4/mesh_convergence_comparison.json")
+    assert conv_path.exists()
+    conv = json.loads(conv_path.read_text())
+    
+    for tier in ["coarse", "medium_coarse", "medium"]:
+        meta = json.loads(Path(f"data/metadata/phase4_mesh_metrics_{tier}.json").read_text())
+        assert tier in conv, f"Tier {tier} missing from convergence comparison JSON"
+        c_tier = conv[tier]
+        
+        assert c_tier["num_nodes"] == meta["num_nodes"]
+        assert c_tier["num_elements"] == meta["num_elements"]
+        assert np.isclose(c_tier["p50_aspect_ratio"], meta["p50_aspect_ratio"])
+        assert np.isclose(c_tier["p95_aspect_ratio"], meta["p95_aspect_ratio"])
+        assert np.isclose(c_tier["max_aspect_ratio"], meta["max_aspect_ratio"])
+        assert c_tier["source_surface_sha256"] == meta["source_surface_sha256"]
+

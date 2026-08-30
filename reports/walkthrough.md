@@ -24,51 +24,49 @@ We have completed **Phase 4: Surface-Derived Finite Element Benchmark** for *Ste
   - Maximum Surface Deviation: **$4.8531\text{ mm}$** localized to an internal pterygoid/palatal seam, with $>64\text{ mm}$ clearance to the dome load patch and $>69\text{ mm}$ clearance to boundary constraints.
   - Cleaned STL: `data/meshes/cleaned/stegoceras_ualvp2_watertight.stl`.
 
-### 2. Multi-Tier Solid Tetrahedral Mesh Hierarchy & Quality Audit
+### 2. Multi-Tier Solid Tetrahedral Mesh Hierarchy & Quality Audit (100% Reconciled)
 - [**`src/stegoceras_biomechanics/fea/meshing.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/meshing.py): Solid 3D tetrahedral meshing via TetGen with strict element quality checks.
 - **Mesh Quality & A/B Findings**:
-  - **Coarse Verification Tier** (`stegoceras_tetmesh_coarse.npz`): 76,152 nodes, 318,339 tets, median $AR = 1.45$, mean $AR = 1.92$, **0 inverted elements** ($V_e > 0$).
-  - **Direct Baseline Mesh** (`stegoceras_tetmesh_fine.npz`): 698,960 nodes, 2,267,738 tets, median $AR = 1.86$, mean $AR = 2.25$, $99.32\%$ elements with $AR \le 10$, **0 inverted elements** ($V_e > 0$).
-  - **Decimated Diagnostic Mesh** (`stegoceras_tetmesh_decimated_diagnostic.npz`): 189,696 nodes, 601,025 tets, median $AR = 5.53$, mean $AR = 10.88$, $26.50\%$ elements with $AR > 10$.
-  - **A/B Diagnostic Finding**: Proved surface decimation creates needle-thin boundary triangles that force TetGen to create boundary slivers. The direct un-decimated surface provides vastly superior shape quality ($99.32\% \le 10$) and is the single source for production models.
+  - **Tier 1 Coarse** (`stegoceras_tetmesh_coarse.npz`): 55,728 nodes, 229,427 tets, median $AR = 1.46$, max $AR = 4,277.21$, mean $AR = 2.16$, **0 inverted elements**.
+  - **Tier 2 Med-Coarse** (`stegoceras_tetmesh_medium_coarse.npz`): 99,542 nodes, 421,856 tets, median $AR = 1.44$, max $AR = 21,259.23$, mean $AR = 2.06$, **0 inverted elements**.
+  - **Tier 3 Medium** (`stegoceras_tetmesh_medium.npz`): 147,735 nodes, 606,363 tets, median $AR = 1.50$, max $AR = 674.56$, mean $AR = 2.01$, **0 inverted elements**.
+  - **Tier 4 Fine Direct Baseline** (`stegoceras_tetmesh_fine.npz`): 698,960 nodes, 2,267,738 tets, median $AR = 1.86$, max $AR = 5,477.85$, mean $AR = 2.25$, **0 inverted elements**.
+  - **Decimated Diagnostic Mesh** (`stegoceras_tetmesh_decimated_diagnostic.npz`): 189,696 nodes, 601,025 tets, median $AR = 5.53$, max $AR = 25,327.12$, mean $AR = 10.88$, $26.50\%$ elements with $AR > 10$.
+  - **A/B Diagnostic Finding**: Proved surface decimation creates needle-thin boundary triangles that force TetGen to create boundary slivers. Excluded from production convergence models.
 
 ### 3. Epistemic YAML Model Configurations
 - [`models/phase4/baseline.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/baseline.yaml)
 - [`models/phase4/mesh_coarse.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_coarse.yaml)
+- [`models/phase4/mesh_medium_coarse.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_medium_coarse.yaml)
+- [`models/phase4/mesh_medium.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_medium.yaml)
 - [`models/phase4/mesh_fine.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_fine.yaml)
 
 ### 4. Algorithmic Loading & Physiological Boundary Constraints
 - [**`src/stegoceras_biomechanics/fea/loads.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/loads.py): Algorithmic bisection patch search on the frontoparietal dome ($3000.0\text{ mm}^2$ target, $3014.2\text{ mm}^2$ actual, dorsal normal filter $n_z \ge 0.30$, tributary force distribution of $1.0\text{ kN}$ in $-Z$).
 - [**`src/stegoceras_biomechanics/fea/boundary_conditions.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/boundary_conditions.py): Occipital condyle ($u_x = u_y = u_z = 0$, 740 nodes) and Nuchal shelf ($u_y = u_z = 0$, 4,185 nodes).
 
-### 5. Python FEA Engine & Verification
-- [**`src/stegoceras_biomechanics/fea/solver.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/solver.py): 3D linear isotropic elasticity assembly via `skfem` with SciPy direct (`spsolve`) and iterative (`cg`) solvers.
+### 5. Python FEA Engine & Detailed Telemetry
+- [**`src/stegoceras_biomechanics/fea/solver.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/solver.py): 3D linear isotropic elasticity assembly via `skfem` with SciPy direct (`spsolve`) and iterative (`cg`) solvers, with explicit telemetry fields (`requested_solver`, `actual_solver`, `cg_iterations`, `cg_converged`, `cg_final_residual`, `fallback_attempted`, `fallback_status`).
 - [**`src/stegoceras_biomechanics/fea/results.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/results.py): Partitioning and stress/strain extraction across 6 anatomical subregions.
 - [**`src/stegoceras_biomechanics/fea/validation.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/validation.py): Analytical Hookean tension bar verification ($<0.2\%$ error), static force/moment equilibrium, and load linearity.
 
 ### 6. Automated Unit Test Suite
-- [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py): **9/9 passing tests** covering analytical verification, surface repair fidelity, tetrahedral Jacobians, boundary extraction, load patch, equilibrium, linearity, subregion extraction, and immutable SHA-256 surface provenance.
-
-### 7. Comprehensive Synthesis Report
-- [**`reports/phase4_fea_benchmark_report.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md): Authoritative scientific synthesis report with full tabular metrics, biomechanical interpretation, and Phase 4 gate assessment.
+- [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py): **10/10 passing tests** covering analytical verification, surface repair fidelity, tetrahedral Jacobians, boundary extraction, load patch, equilibrium, linearity, subregion extraction, SHA-256 surface provenance, and 100% artifact consistency.
 
 ---
 
-## 📊 Summary of Primary Benchmark Metrics (UALVP 2, 1.0 kN Broad Load)
+## 📊 3-Tier Discretization Sensitivity Progression (UALVP 2, 1.0 kN Broad Load)
 
-| Parameter | Primary Benchmark ($1.0\text{ kN}$) | Derived Biological ($1360\text{ N}$) | Notes / Classification |
-| :--- | :--- | :--- | :--- |
-| **Max Displacement** | **$36.28\ \mu\text{m}$** ($0.0363\text{ mm}$) | **$49.34\ \mu\text{m}$** | Linear scaling ($1.36 \times$) |
-| **Apex Displacement ($u_{\text{apex}}$)** | **$28.65\ \mu\text{m}$** | **$38.96\ \mu\text{m}$** | Dorsal apex landmark |
-| **Global 95th% von Mises Stress** | **$1.672\text{ MPa}$** | **$2.274\text{ MPa}$** | Global cranial vault |
-| **Global 99th% von Mises Stress** | **$2.791\text{ MPa}$** | **$3.796\text{ MPa}$** | Upper tail |
-| **Dome Apex 95th% Stress** | **$2.246\text{ MPa}$** | **$3.055\text{ MPa}$** | Frontoparietal apex zone |
-| **Sub-Dome Vault Core 95th% Stress** | **$1.920\text{ MPa}$** | **$2.611\text{ MPa}$** | Sub-dome core zone |
-| **Endocranial Braincase 95th% Stress**| **$2.037\text{ MPa}$** (Mean $0.85\text{ MPa}$) | **$2.770\text{ MPa}$** | Endocranial ceiling (shielded) |
-| **Total Strain Energy** | **$7.7957\text{ mJ}$** | **$14.419\text{ mJ}$** | Quadratic scaling ($1.36^2 \times$) |
-| **Normalized Force Residual ($r_F$)** | **`1.59e-13`** | **`1.59e-13`** | Static equilibrium verified |
-| **Normalized Moment Residual ($r_M$)**| **`6.59e-13`** | **`6.59e-13`** | Static equilibrium verified |
-| **Absolute Moment Residual** | **`5.00e-09 N·mm`** | **`6.80e-09 N·mm`** | Guarded denominator |
+| Metric | Tier 1 (Coarse, 229k) | Tier 2 (Med-Coarse, 422k) | Tier 3 (Medium, 606k) | Total Net Progression |
+| :--- | :--- | :--- | :--- | :--- |
+| **Total Strain Energy ($U$)** | **$8.0075\text{ mJ}$** | **$8.1841\text{ mJ}$** | **$7.7902\text{ mJ}$** | **$-2.71\%$** |
+| **Apex Displacement ($u_{\text{apex}}$)** | **$27.66\ \mu\text{m}$** | **$30.13\ \mu\text{m}$** | **$29.10\ \mu\text{m}$** | **$+5.19\%$** |
+| **Max Displacement ($\delta_{\max}$)**| **$35.46\ \mu\text{m}$** | **$38.40\ \mu\text{m}$** | **$39.62\ \mu\text{m}$** | **$+11.73\%$** |
+| **Global 95th% von Mises Stress** | **$1.6688\text{ MPa}$** | **$1.7200\text{ MPa}$** | **$1.7575\text{ MPa}$** | **$+5.31\%$** |
+| **Dome Apex 95th% Stress** | **$2.2932\text{ MPa}$** | **$2.3436\text{ MPa}$** | **$2.4962\text{ MPa}$** | **$+8.85\%$** |
+| **Braincase Roof 95th% Stress**| **$1.9703\text{ MPa}$** | **$2.1036\text{ MPa}$** | **$2.3258\text{ MPa}$** | **$+18.04\%$** |
+| **Normalized Force Residual ($r_F$)** | **`7.03e-13`** | **`3.85e-13`** | **`1.52e-12`** | Machine precision |
+| **Normalized Moment Residual ($r_M$)**| **`2.38e-12`** | **`1.38e-12`** | **`5.70e-12`** | Machine precision |
 
 ---
 

@@ -35,6 +35,14 @@ class FESolution:
     normalized_force_residual: float = 0.0
     normalized_moment_residual: float = 0.0
     absolute_moment_residual_Nmm: float = 0.0
+    requested_solver: str = "auto"
+    actual_solver: str = "direct"
+    cg_maxiter: int = 5000
+    cg_iterations: int = 0
+    cg_converged: bool = False
+    cg_final_residual: float = 0.0
+    fallback_attempted: bool = False
+    fallback_status: str = "none"
 
 
 def solve_linear_elasticity(
@@ -48,13 +56,14 @@ def solve_linear_elasticity(
     nuchal_node_indices: np.ndarray | None = None,
     solver_method: str = "auto",  # 'direct', 'cg', or 'auto'
     cg_tol: float = 1e-7,
+    cg_maxiter: int = 5000,
     reference_point: list[float] | np.ndarray | None = None,
 ) -> FESolution:
-    """Assembles and solves the 3D linear static elasticity system Ku = F on tetrahedral mesh.
+    """Assembles and solves the 3D linear isotropic elasticity system Ku = f.
     
-    Supports:
-    - Direct solver via scipy.sparse.linalg.spsolve
-    - Preconditioned Conjugate Gradient (CG) with Jacobi / incomplete LU preconditioner
+    Captures complete algebraic and static equilibrium residual metrics as well as
+    detailed solver provenance (requested solver, actual solver, CG iteration count,
+    CG residual, and direct fallback status).
     """
     start_time = time.time()
     
@@ -62,35 +71,32 @@ def solve_linear_elasticity(
     num_elements = elements.shape[0]
     num_dofs = num_nodes * 3
     
-    # 1. Compute Lamé parameters
-    Lambda, G = lame_parameters(youngs_modulus_MPa, poisson_ratio)
+    # 1. Lamé parameters from E and nu
+    lam, mu = lame_parameters(youngs_modulus_MPa, poisson_ratio)
     
-    # 2. Build scikit-fem mesh and vector basis
-    mesh = fem.MeshTet1(nodes.T, elements.T)
-    basis = fem.Basis(mesh, fem.ElementVector(fem.ElementTetP1()))
+    # 2. skfem mesh and basis construction (P1 linear tetrahedral elements)
+    elem_vec = fem.ElementVector(fem.ElementTetP1())
+    mesh_sk = fem.MeshTet1(nodes.T, elements.T)
+    basis = fem.Basis(mesh_sk, elem_vec)
     
-    # 3. Assemble global stiffness matrix
-    K = fem.asm(linear_elasticity(Lambda, G), basis)
+    # 3. Global stiffness matrix assembly K
+    K = fem.asm(linear_elasticity(lam, mu), basis).tocsc()
     
-    # 4. Assemble global load vector F
+    # 4. Global load vector assembly f
     f_global = np.zeros(num_dofs, dtype=np.float64)
     if loaded_node_indices is not None and nodal_forces_N is not None:
-        for idx, nid in enumerate(loaded_node_indices):
-            f_vec = nodal_forces_N[idx]
-            # DOFs for node: 3*nid, 3*nid + 1, 3*nid + 2
-            f_global[3 * nid + 0] += f_vec[0]
-            f_global[3 * nid + 1] += f_vec[1]
-            f_global[3 * nid + 2] += f_vec[2]
+        for nid, f_vec in zip(loaded_node_indices, nodal_forces_N):
+            f_global[3 * nid : 3 * nid + 3] += f_vec
             
-    # 5. Assemble Dirichlet boundary conditions (condyle: Ux=Uy=Uz=0, nuchal: Uy=Uz=0)
+    # 5. Boundary constraints (Dirichlet DOFs)
     fixed_dofs = []
-    if condyle_node_indices is not None:
+    if condyle_node_indices is not None and len(condyle_node_indices) > 0:
         for nid in condyle_node_indices:
-            fixed_dofs.extend([3 * nid + 0, 3 * nid + 1, 3 * nid + 2])
+            fixed_dofs.extend([3 * nid, 3 * nid + 1, 3 * nid + 2])
             
-    if nuchal_node_indices is not None:
+    if nuchal_node_indices is not None and len(nuchal_node_indices) > 0:
         for nid in nuchal_node_indices:
-            fixed_dofs.extend([3 * nid + 1, 3 * nid + 2])  # Uy, Uz constrained
+            fixed_dofs.extend([3 * nid + 1, 3 * nid + 2])
             
     fixed_dofs = np.unique(np.array(fixed_dofs, dtype=np.int64))
     
@@ -101,11 +107,21 @@ def solve_linear_elasticity(
     K_ff = K[free_dofs, :][:, free_dofs]
     f_f = f_global[free_dofs]
     
-    chosen_solver = solver_method.lower()
+    requested_solver = solver_method.lower()
+    chosen_solver = requested_solver
     if chosen_solver == "auto":
         # Direct solver for <= 600k DOFs (~200k nodes), CG for larger
         chosen_solver = "direct" if num_dofs <= 600000 else "cg"
         
+    actual_solver = chosen_solver
+    cg_iterations = 0
+    cg_converged = False
+    cg_final_residual = 0.0
+    fallback_attempted = False
+    fallback_status = "none"
+    
+    norm_f_f = float(np.linalg.norm(f_f))
+    
     if chosen_solver == "direct":
         u_f = spla.spsolve(K_ff, f_f)
     elif chosen_solver == "cg":
@@ -113,11 +129,30 @@ def solve_linear_elasticity(
         diag_K = K_ff.diagonal()
         diag_K[np.abs(diag_K) < 1e-12] = 1.0
         M_inv = sp.diags(1.0 / diag_K)
-        u_f, info = spla.cg(K_ff, f_f, M=M_inv, rtol=cg_tol, maxiter=5000)
-        if info != 0:
-            # Fallback to direct solver if CG didn't converge
-            u_f = spla.spsolve(K_ff, f_f)
-            chosen_solver = "direct_fallback"
+        
+        iter_counter = [0]
+        def cg_callback(xk):
+            iter_counter[0] += 1
+            
+        u_f, info = spla.cg(K_ff, f_f, M=M_inv, rtol=cg_tol, maxiter=cg_maxiter, callback=cg_callback)
+        cg_iterations = iter_counter[0]
+        
+        if norm_f_f > 1e-12:
+            cg_final_residual = float(np.linalg.norm(K_ff.dot(u_f) - f_f) / norm_f_f)
+        else:
+            cg_final_residual = 0.0
+            
+        if info == 0:
+            cg_converged = True
+        else:
+            cg_converged = False
+            fallback_attempted = True
+            try:
+                u_f = spla.spsolve(K_ff, f_f)
+                actual_solver = "direct_fallback"
+                fallback_status = "success"
+            except Exception as e:
+                fallback_status = f"failed: {str(e)}"
     else:
         raise ValueError(f"Unknown solver method: {solver_method}")
         
@@ -126,11 +161,10 @@ def solve_linear_elasticity(
     disp_magnitudes = np.linalg.norm(nodal_displacements, axis=1)
     
     # Algebraic residual norm: ||K_ff * u_f - f_f|| / ||f_f||
-    norm_f_f = np.linalg.norm(f_f)
     if norm_f_f > 1e-12:
         algebraic_residual = float(np.linalg.norm(K_ff.dot(u_f) - f_f) / norm_f_f)
     else:
-        algebraic_residual = 0.0
+        algebraic_residual = 0.00
         
     # 7. Reaction forces
     reactions_full = K.dot(u_full) - f_global
@@ -202,7 +236,7 @@ def solve_linear_elasticity(
     
     # Cauchy stress: sigma = lambda * tr(eps) * I + 2 * mu * eps
     eye3 = np.eye(3)[np.newaxis, :, :]
-    sigma = Lambda * tr_eps[:, np.newaxis, np.newaxis] * eye3 + 2.0 * G * eps
+    sigma = lam * tr_eps[:, np.newaxis, np.newaxis] * eye3 + 2.0 * mu * eps
     
     # Von Mises stress per element:
     # sigma_vM = sqrt(1/2 * ((sxx-syy)^2 + (syy-szz)^2 + (szz-sxx)^2 + 6*(sxy^2 + syz^2 + szx^2)))
@@ -265,4 +299,12 @@ def solve_linear_elasticity(
         normalized_force_residual=norm_force_residual,
         normalized_moment_residual=norm_moment_residual,
         absolute_moment_residual_Nmm=abs_moment_residual,
+        requested_solver=requested_solver,
+        actual_solver=actual_solver,
+        cg_maxiter=cg_maxiter,
+        cg_iterations=cg_iterations,
+        cg_converged=cg_converged,
+        cg_final_residual=cg_final_residual,
+        fallback_attempted=fallback_attempted,
+        fallback_status=fallback_status,
     )

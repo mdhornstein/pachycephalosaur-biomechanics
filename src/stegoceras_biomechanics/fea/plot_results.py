@@ -22,7 +22,9 @@ def generate_all_phase4_results_and_plots():
     
     # 1. Load Coarse and Medium Solutions (and solve if needed)
     print("Loading mesh and solution data...")
+    # Load all 3 production meshes and solutions
     coarse_data = np.load("data/meshes/cleaned/stegoceras_tetmesh_coarse.npz")
+    mc_data = np.load("data/meshes/cleaned/stegoceras_tetmesh_medium_coarse.npz")
     med_data = np.load("data/meshes/cleaned/stegoceras_tetmesh_medium.npz")
     
     # Run solves to ensure full FESolution objects
@@ -32,6 +34,14 @@ def generate_all_phase4_results_and_plots():
     sol_coarse = solve_linear_elasticity(
         coarse_data["nodes"], coarse_data["elements"], 17000.0, 0.30,
         l_nodes_c, f_c, c_nodes_c, n_nodes_c, "direct"
+    )
+    
+    surf_mc = extract_boundary_surface(mc_data["nodes"], mc_data["elements"])
+    l_nodes_mc, f_mc, _, load_spec_mc = generate_dome_load_patch(surf_mc, 3000.0, 1000.0)
+    c_nodes_mc, n_nodes_mc, _ = generate_boundary_constraints(surf_mc)
+    sol_mc = solve_linear_elasticity(
+        mc_data["nodes"], mc_data["elements"], 17000.0, 0.30,
+        l_nodes_mc, f_mc, c_nodes_mc, n_nodes_mc, "direct"
     )
     
     surf_med = extract_boundary_surface(med_data["nodes"], med_data["elements"])
@@ -46,32 +56,38 @@ def generate_all_phase4_results_and_plots():
     csv_path = results_dir / "ualvp2_1kn_subregion_metrics.csv"
     json_path = results_dir / "ualvp2_1kn_subregion_metrics.json"
     metrics_med = extract_subregion_metrics(sol_med, csv_path, json_path)
+    metrics_c = extract_subregion_metrics(sol_coarse)
+    metrics_mc = extract_subregion_metrics(sol_mc)
     print(f"✓ Saved subregion metrics to {csv_path}")
     
     # --- Figure 08: Mesh Resolutions Comparison ---
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6), dpi=300)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6), dpi=300)
     
     # Histogram of element volumes
     v_coarse = coarse_data["volumes"]
+    v_mc = mc_data["volumes"]
     v_med = med_data["volumes"]
-    ax1.hist(v_coarse, bins=50, color="#3498db", alpha=0.6, label=f"Coarse Mesh (N={len(v_coarse):,})", density=True)
-    ax1.hist(v_med, bins=50, color="#e74c3c", alpha=0.6, label=f"Medium Mesh (N={len(v_med):,})", density=True)
+    ax1.hist(v_coarse, bins=50, color="#3498db", alpha=0.5, label=f"Coarse (N={len(v_coarse):,})", density=True)
+    ax1.hist(v_mc, bins=50, color="#f39c12", alpha=0.5, label=f"Med-Coarse (N={len(v_mc):,})", density=True)
+    ax1.hist(v_med, bins=50, color="#e74c3c", alpha=0.5, label=f"Medium (N={len(v_med):,})", density=True)
     ax1.set_xlabel("Tetrahedral Element Volume (mm³)", fontsize=10)
     ax1.set_ylabel("Probability Density", fontsize=10)
-    ax1.set_title("Element Volume Distribution Across Mesh Tiers", fontsize=11, fontweight="bold")
+    ax1.set_title("Element Volume Distribution Across Production Tiers", fontsize=11, fontweight="bold")
     ax1.set_xlim(0, 15)
     ax1.grid(True, linestyle="--", alpha=0.3)
     ax1.legend(frameon=True)
     
     # Element Aspect Ratio Distribution
     ar_coarse = coarse_data["aspect_ratios"]
+    ar_mc = mc_data["aspect_ratios"]
     ar_med = med_data["aspect_ratios"]
-    ax2.hist(ar_coarse[ar_coarse < 15], bins=50, color="#3498db", alpha=0.6, label=f"Coarse (Mean: {np.mean(ar_coarse):.2f})", density=True)
-    ax2.hist(ar_med[ar_med < 15], bins=50, color="#e74c3c", alpha=0.6, label=f"Medium (Mean: {np.mean(ar_med):.2f})", density=True)
+    ax2.hist(ar_coarse[ar_coarse < 10], bins=50, color="#3498db", alpha=0.5, label=f"Coarse (Mean: {np.mean(ar_coarse):.2f})", density=True)
+    ax2.hist(ar_mc[ar_mc < 10], bins=50, color="#f39c12", alpha=0.5, label=f"Med-Coarse (Mean: {np.mean(ar_mc):.2f})", density=True)
+    ax2.hist(ar_med[ar_med < 10], bins=50, color="#e74c3c", alpha=0.5, label=f"Medium (Mean: {np.mean(ar_med):.2f})", density=True)
     ax2.set_xlabel("Element Aspect Ratio [1.0 = Regular Tet]", fontsize=10)
     ax2.set_ylabel("Probability Density", fontsize=10)
     ax2.set_title("Element Aspect Ratio Distribution (Quality Check)", fontsize=11, fontweight="bold")
-    ax2.set_xlim(1.0, 10.0)
+    ax2.set_xlim(1.0, 8.0)
     ax2.grid(True, linestyle="--", alpha=0.3)
     ax2.legend(frameon=True)
     
@@ -138,7 +154,7 @@ def generate_all_phase4_results_and_plots():
     sc1 = ax1.scatter(pts[:, 1], pts[:, 2], c=disp, cmap="plasma", s=1.5, alpha=0.8)
     cbar1 = plt.colorbar(sc1, ax=ax1, fraction=0.046, pad=0.04)
     cbar1.set_label("Displacement Magnitude (μm)", fontsize=10)
-    ax1.set_title("Cranial Displacement Field (Max: 35.5 μm)", fontsize=12, fontweight="bold")
+    ax1.set_title("Cranial Displacement Field (Max: 39.6 μm)", fontsize=12, fontweight="bold")
     ax1.set_xlabel("Anteroposterior Axis: Y (mm)", fontsize=10)
     ax1.set_ylabel("Dorsoventral Axis: Z (mm)", fontsize=10)
     ax1.set_aspect("equal")
@@ -148,7 +164,7 @@ def generate_all_phase4_results_and_plots():
     sc2 = ax2.scatter(pts[:, 1], pts[:, 2], c=eps1, cmap="inferno", s=1.5, vmin=0, vmax=250, alpha=0.8)
     cbar2 = plt.colorbar(sc2, ax=ax2, fraction=0.046, pad=0.04)
     cbar2.set_label("Maximum Principal Strain ε₁ (με)", fontsize=10)
-    ax2.set_title("Principal Tensile Strain Field (95th %ile: 93.6 με)", fontsize=12, fontweight="bold")
+    ax2.set_title("Principal Tensile Strain Field (95th %ile: 98.2 με)", fontsize=12, fontweight="bold")
     ax2.set_xlabel("Anteroposterior Axis: Y (mm)", fontsize=10)
     ax2.set_ylabel("Dorsoventral Axis: Z (mm)", fontsize=10)
     ax2.set_aspect("equal")
@@ -161,32 +177,47 @@ def generate_all_phase4_results_and_plots():
     plt.close()
     print(f"✓ Saved Figure 10 to {fig10_path}")
     
-    # --- Figure 11: Mesh Convergence Curves ---
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5), dpi=300)
+    # --- Figure 11: 3-Point Mesh Discretization Sensitivity Curves ---
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5.5), dpi=300)
     
-    elem_counts = [318339, 601025]
-    node_counts = [76152, 189696]
-    max_disps = [float(np.max(sol_coarse.displacement_magnitudes_mm)), float(np.max(sol_med.displacement_magnitudes_mm))]
-    p95_stresses = [float(np.percentile(sol_coarse.nodal_von_mises_MPa, 95)), float(np.percentile(sol_med.nodal_von_mises_MPa, 95))]
-    energies = [sol_coarse.total_strain_energy_mJ, sol_med.total_strain_energy_mJ]
+    elem_counts = [len(coarse_data["elements"]), len(mc_data["elements"]), len(med_data["elements"])]
+    energies = [sol_coarse.total_strain_energy_mJ, sol_mc.total_strain_energy_mJ, sol_med.total_strain_energy_mJ]
     
-    ax1.plot(elem_counts, max_disps, "o-", color="#2980b9", linewidth=2, markersize=8, label="Max Displacement (mm)")
+    sub_c_map = {m.region_name: m.p95_von_mises_MPa for m in metrics_c}
+    sub_mc_map = {m.region_name: m.p95_von_mises_MPa for m in metrics_mc}
+    sub_m_map = {m.region_name: m.p95_von_mises_MPa for m in metrics_med}
+    
+    p95_global = [float(np.percentile(sol_coarse.element_von_mises_MPa, 95)),
+                  float(np.percentile(sol_mc.element_von_mises_MPa, 95)),
+                  float(np.percentile(sol_med.element_von_mises_MPa, 95))]
+    p95_dome = [sub_c_map.get("Frontoparietal Dome Apex", 0.0),
+                sub_mc_map.get("Frontoparietal Dome Apex", 0.0),
+                sub_m_map.get("Frontoparietal Dome Apex", 0.0)]
+    p95_braincase = [sub_c_map.get("Endocranial Braincase Roof", 0.0),
+                     sub_mc_map.get("Endocranial Braincase Roof", 0.0),
+                     sub_m_map.get("Endocranial Braincase Roof", 0.0)]
+                     
+    # Left: Total Strain Energy and Apex Displacement
+    ax1.plot(elem_counts, energies, "o-", color="#2980b9", linewidth=2, markersize=8, label="Total Strain Energy (mJ)")
     ax1.set_xlabel("Number of Tetrahedral Elements", fontsize=10)
-    ax1.set_ylabel("Max Displacement (mm)", fontsize=10, color="#2980b9")
-    ax1.set_title(f"Max Displacement Convergence (Δ = {abs(max_disps[1]-max_disps[0])/max_disps[1]*100:.1f}%)", fontsize=11, fontweight="bold")
+    ax1.set_ylabel("Total Strain Energy (mJ)", fontsize=10, color="#2980b9")
+    ax1.set_title("Global Strain Energy Trajectory U(h)", fontsize=11, fontweight="bold")
     ax1.grid(True, linestyle="--", alpha=0.3)
-    d_min, d_max = min(max_disps), max(max_disps)
-    ax1.set_ylim(d_min * 0.85, d_max * 1.15)
+    ax1.set_ylim(7.0, 9.0)
+    ax1.legend(loc="upper right")
     
-    ax2.plot(elem_counts, p95_stresses, "s-", color="#e74c3c", linewidth=2, markersize=8, label="95th %ile von Mises (MPa)")
+    # Right: Regional Stress Trajectories
+    ax2.plot(elem_counts, p95_global, "s-", color="#27ae60", linewidth=2, markersize=7, label="Global 95th% Stress")
+    ax2.plot(elem_counts, p95_dome, "^-", color="#e74c3c", linewidth=2, markersize=7, label="Dome Apex 95th% Stress")
+    ax2.plot(elem_counts, p95_braincase, "d-", color="#8e44ad", linewidth=2, markersize=7, label="Braincase Roof 95th% Stress")
     ax2.set_xlabel("Number of Tetrahedral Elements", fontsize=10)
-    ax2.set_ylabel("95th Percentile Stress (MPa)", fontsize=10, color="#e74c3c")
-    ax2.set_title(f"95th %ile Stress Convergence (Δ = {abs(p95_stresses[1]-p95_stresses[0])/p95_stresses[1]*100:.1f}%)", fontsize=11, fontweight="bold")
+    ax2.set_ylabel("95th Percentile Stress (MPa)", fontsize=10)
+    ax2.set_title("Regional Stress Sensitivity: Global vs. Dome vs. Braincase", fontsize=11, fontweight="bold")
     ax2.grid(True, linestyle="--", alpha=0.3)
-    s_min, s_max = min(p95_stresses), max(p95_stresses)
-    ax2.set_ylim(s_min * 0.85, s_max * 1.15)
+    ax2.set_ylim(1.4, 2.8)
+    ax2.legend(loc="upper left")
     
-    plt.suptitle("Mesh Convergence Analysis: Coarse vs. Medium Resolution Tiers", fontsize=13, fontweight="bold", y=0.98)
+    plt.suptitle("3-Tier Discretization Sensitivity Progression (Same Geometry, 229k -> 422k -> 606k Elements)", fontsize=13, fontweight="bold", y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.94])
     fig11_path = figures_dir / "11_mesh_convergence_curves.png"
     plt.savefig(fig11_path, dpi=300)
