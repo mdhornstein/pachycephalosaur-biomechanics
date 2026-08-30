@@ -17,9 +17,8 @@
   "num_elements_ar_gt_10": 159290,
   "num_elements_ar_gt_50": 15090,
   "num_inverted_elements": 0,
-  "meshing_runtime_seconds": 7.05,
+  "meshing_runtime_seconds": 8.853286027908325,
   "source_surface_file": "data/meshes/cleaned/stegoceras_ualvp2_watertight.stl",
   "source_surface_sha256": "46b11f7e8afbae667ab5ce235714ea790e4d91f0e80eb01263228d41a2ddafd3",
-  "is_production_convergence_mesh": false,
-  "notes": "Decimated surface branch strictly used for standalone A/B diagnostic on boundary-layer aspect ratio distortion."
+  "is_production_convergence_mesh": false
 }

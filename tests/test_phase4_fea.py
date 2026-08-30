@@ -201,3 +201,21 @@ def test_subregion_metrics_extraction(coarse_mesh_data, tmp_path):
     assert "Frontoparietal Dome Apex" in region_map
     assert "Endocranial Braincase Roof" in region_map
     assert region_map["Whole Skull (Global)"].max_von_mises_MPa > 0.0
+
+
+def test_mesh_source_surface_sha256_provenance():
+    """Verifies that all mesh metadata files share the exact same immutable source surface SHA-256 hash."""
+    import hashlib
+    import json
+    
+    surf_p = Path("data/meshes/cleaned/stegoceras_ualvp2_watertight.stl")
+    assert surf_p.exists(), f"Source watertight surface missing at {surf_p}"
+    with open(surf_p, "rb") as f:
+        expected_sha = hashlib.sha256(f.read()).hexdigest()
+        
+    meta_coarse = json.loads(Path("data/metadata/phase4_mesh_metrics_coarse.json").read_text())
+    meta_fine = json.loads(Path("data/metadata/phase4_mesh_metrics_fine.json").read_text())
+    
+    assert meta_coarse.get("source_surface_sha256") == expected_sha
+    assert meta_fine.get("source_surface_sha256") == expected_sha
+    assert meta_fine.get("is_production_convergence_mesh") is True
