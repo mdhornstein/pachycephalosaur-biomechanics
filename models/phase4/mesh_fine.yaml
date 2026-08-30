@@ -1,4 +1,4 @@
-# Phase 4 Fine Mesh FE Model Configuration (Computational Limit Baseline)
+# Phase 4 Fine Mesh FE Model Configuration (Volume Refinement a=1.0 at Fixed q=1.5, Computational Boundary)
 model_name: "stegoceras_ualvp2_phase4_fine"
 base_config: "models/phase4/baseline.yaml"
 resolution_tier: "fine"
@@ -11,7 +11,7 @@ min_dihedral_deg: 10.0
 min_ratio: 1.5
 max_volume_mm3: 1.0
 tetgen_flags: "-pq1.5/10a1.0"
-actual_nodes: 262823
-actual_elements: 1393324
+actual_nodes: 261858
+actual_elements: 1389116
 solver: "direct"
 solver_status: "computational_memory_boundary_16gb_ram"

@@ -1,4 +1,4 @@
-# Phase 4 Medium Mesh FE Model Configuration (Primary Benchmark)
+# Phase 4 Medium Mesh FE Model Configuration (Primary Benchmark: Volume Refinement a=2.0 at Fixed q=1.5)
 model_name: "stegoceras_ualvp2_phase4_medium"
 base_config: "models/phase4/baseline.yaml"
 resolution_tier: "medium"

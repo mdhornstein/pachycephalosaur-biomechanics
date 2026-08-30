@@ -1,4 +1,4 @@
-# Phase 4 Medium-Coarse Mesh FE Model Configuration
+# Phase 4 Medium-Coarse Mesh FE Model Configuration (Volume Refinement a=5.0 at Fixed q=1.5)
 model_name: "stegoceras_ualvp2_phase4_medium_coarse"
 base_config: "models/phase4/baseline.yaml"
 resolution_tier: "medium_coarse"
@@ -9,8 +9,8 @@ is_production_convergence_mesh: true
 decimate_reduction: 0.0
 min_dihedral_deg: 10.0
 min_ratio: 1.5
-max_volume_mm3: null
-tetgen_flags: "-pq1.5/10"
-actual_nodes: 99614
-actual_elements: 422573
+max_volume_mm3: 5.0
+tetgen_flags: "-pq1.5/10a5.0"
+actual_nodes: 118577
+actual_elements: 540310
 solver: "direct"

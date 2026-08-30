@@ -1,4 +1,4 @@
-# Phase 4 Coarse Mesh FE Model Configuration
+# Phase 4 Coarse Mesh FE Model Configuration (Natural Delaunay Base at Fixed q=1.5)
 model_name: "stegoceras_ualvp2_phase4_coarse"
 base_config: "models/phase4/baseline.yaml"
 resolution_tier: "coarse"
@@ -8,9 +8,9 @@ source_surface_sha256: "5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7
 is_production_convergence_mesh: true
 decimate_reduction: 0.0
 min_dihedral_deg: 10.0
-min_ratio: 2.0
+min_ratio: 1.5
 max_volume_mm3: null
-tetgen_flags: "-pq2.0/10"
-actual_nodes: 86561
-actual_elements: 347031
+tetgen_flags: "-pq1.5/10"
+actual_nodes: 99614
+actual_elements: 422573
 solver: "direct"

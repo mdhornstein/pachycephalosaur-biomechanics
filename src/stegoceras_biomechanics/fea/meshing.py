@@ -137,10 +137,10 @@ def generate_tetrahedral_mesh(
     decimation, ensuring that only volumetric discretization changes.
     
     Supported resolution tiers on canonical master surface:
-    - 'coarse': switches="pq2.0/10" -> ~347k tets (86.5k nodes)
-    - 'medium_coarse': switches="pq1.5/10" -> ~422k tets (99.6k nodes)
-    - 'medium': switches="pq1.5/10a2.0" -> ~825k tets (166.0k nodes)
-    - 'fine': switches="pq1.5/10a1.0" -> ~1.39M tets (computational memory boundary)
+    - 'coarse': switches="pq1.5/10" -> ~423k tets (99.6k nodes, natural Delaunay base)
+    - 'medium_coarse': switches="pq1.5/10a5.0" -> ~540k tets (118.6k nodes, max volume 5.0 mm³)
+    - 'medium': switches="pq1.5/10a2.0" -> ~825k tets (166.0k nodes, max volume 2.0 mm³)
+    - 'fine': switches="pq1.5/10a1.0" -> ~1.39M tets (max volume 1.0 mm³, 16 GB computational memory boundary)
     """
     start_time = time.time()
     
@@ -163,8 +163,8 @@ def generate_tetrahedral_mesh(
     source_sha256 = hashlib.sha256(v.tobytes() + f.tobytes()).hexdigest()
     
     tier_switch_map = {
-        "coarse": "pq2.0/10",
-        "medium_coarse": "pq1.5/10",
+        "coarse": "pq1.5/10",
+        "medium_coarse": "pq1.5/10a5.0",
         "medium": "pq1.5/10a2.0",
         "fine": "pq1.5/10a1.0",
         "direct_fine": "pq1.5/10",

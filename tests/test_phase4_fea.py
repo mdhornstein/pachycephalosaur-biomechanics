@@ -229,6 +229,15 @@ def test_mesh_source_surface_sha256_provenance():
     assert meta_mc.get("decimate_reduction") == 0.0
     assert meta_med.get("decimate_reduction") == 0.0
     assert meta_fine.get("is_production_convergence_mesh") is True
+    # Strict quality constraint invariance: q=1.5 and dihedral=10.0 for ALL tiers
+    assert meta_coarse.get("min_ratio") == 1.5
+    assert meta_mc.get("min_ratio") == 1.5
+    assert meta_med.get("min_ratio") == 1.5
+    assert meta_fine.get("min_ratio") == 1.5
+    assert meta_coarse.get("min_dihedral_deg") == 10.0
+    assert meta_mc.get("min_dihedral_deg") == 10.0
+    assert meta_med.get("min_dihedral_deg") == 10.0
+    assert meta_fine.get("min_dihedral_deg") == 10.0
 
 
 def test_report_json_mesh_quality_consistency():
