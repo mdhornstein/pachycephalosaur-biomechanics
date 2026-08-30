@@ -1,0 +1,14 @@
+{
+  "num_nodes": 76152,
+  "num_elements": 318339,
+  "element_type": "Tet1 (4-node linear solid tetrahedron)",
+  "total_volume_mm3": 646394.696710852,
+  "min_element_volume_mm3": 3.7723416825402473e-07,
+  "max_element_volume_mm3": 505.94048274617734,
+  "mean_element_volume_mm3": 2.030523111245722,
+  "min_aspect_ratio": 1.0010125767174984,
+  "max_aspect_ratio": 527.336333869896,
+  "mean_aspect_ratio": 1.9206092470374887,
+  "num_inverted_elements": 0,
+  "meshing_runtime_seconds": 8.173670053482056
+}

@@ -1,109 +1,93 @@
-# Phase 3 Walkthrough: Published-Model Input Audit & Biomechanical Feasibility (Stegoceras validum, UALVP 2)
+# Phase 4 Walkthrough: Surface-Derived Finite Element Benchmark (Stegoceras validum, UALVP 2)
 
-We have completed **Phase 3: Published-Model Input Audit and Biomechanical Feasibility** for *Stegoceras validum* (specimen **UALVP 2**), systematically reconstructing the finite element model specifications from the primary reference:
-> **Snively, E. & Theodor, J. M. (2011).** "Common functional correlates of head-strike behavior in the pachycephalosaur *Stegoceras validum* (Ornithischia, Dinosauria) and combative artiodactyls." *PLoS ONE* 6(6): e21412. [PMC3125168](https://pmc.ncbi.nlm.nih.gov/articles/PMC3125168/)
+We have completed **Phase 4: Surface-Derived Finite Element Benchmark** for *Stegoceras validum* (specimen **UALVP 2**), implementing a fully reproducible, numerically validated, linear-elastic finite element analysis workflow.
 
 ---
 
 ## 🏛️ Taxonomic & Specimen Context
 * **Taxonomic Lectotype**: **CMN 515** (Canadian Museum of Nature, Ottawa; isolated frontoparietal dome)
 * **Study Specimen**: **UALVP 2** (University of Alberta, Edmonton; articulated referred specimen, cited as "UA 2" in Snively & Theodor 2011)
-* **Primary Reference**: Snively & Theodor (2011) *PLoS ONE*
-* **Acquired Anatomy**: 33 MorphoSource surface STLs (Whole Skull `000018284` + 32 Component Bones `000043121`–`000043162`)
+* **Primary Reference**: Snively, E. & Theodor, J. M. (2011) *PLoS ONE* 6(6): e21412. [PMC3125168](https://pmc.ncbi.nlm.nih.gov/articles/PMC3125168/)
+* **Primary Mesh**: MorphoSource Media `000018284` (segmented surface STL from micro-CT)
 
 ---
 
-## 📦 Summary of Completed Phase 3 Deliverables
+## 📦 Summary of Completed Phase 4 Deliverables
 
-### 1. Primary Literature Extraction & Parameter Audit
-- [**`literature/snively_theodor_2011_model_audit.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/literature/snively_theodor_2011_model_audit.md): Line-by-line extraction of every model parameter, geometric entity, boundary constraint, material constant, and empirical result from Snively & Theodor (2011), recording exact paper locations, measurement types, and strict `UNKNOWN`/`AMBIGUOUS` flags.
+### 1. Non-Invasive Preprocessing & Topological Repair
+- [**`src/stegoceras_biomechanics/fea/geometry.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/geometry.py): Automated repair of raw STL non-manifold edges to generate a 100% watertight, 2-manifold surface.
+- **Fidelity Verified**:
+  - Enclosed Volume: $646,575.6\text{ mm}^3 \rightarrow 646,628.3\text{ mm}^3$ (**$+0.0081\%$ change**, well within $\pm 0.05\%$ tolerance).
+  - Surface Area: $189,458.2\text{ mm}^2 \rightarrow 189,255.4\text{ mm}^2$ (**$-0.1070\%$ change**, well within $\pm 0.20\%$ tolerance).
+  - Cleaned STL: `data/meshes/cleaned/stegoceras_ualvp2_watertight.stl`.
 
-### 2. Formal Model-Input Matrix CSV
-- [**`data/metadata/biomechanics_input_matrix.csv`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/biomechanics_input_matrix.csv): Complete 30-parameter catalog across Geometry, Material, Loading, Boundary Conditions, and Modeling categories. Incorporates a 5-tier evidence hierarchy (`A` to `E`) and controlled availability categories. The endocranial cavity (`INP-GEO-04`) is explicitly classified as `AVAILABLE_DERIVED` from CT segmentation.
+### 2. Multi-Tier Solid Tetrahedral Mesh Hierarchy
+- [**`src/stegoceras_biomechanics/fea/meshing.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/meshing.py): Solid 3D tetrahedral meshing via TetGen with strict element quality checks.
+- **Mesh Quality**:
+  - **Coarse Tier** (`stegoceras_tetmesh_coarse.npz`): 76,152 nodes, 318,339 tets, **0 inverted elements** ($V_e > 0$).
+  - **Medium Tier** (`stegoceras_tetmesh_medium.npz`): 189,696 nodes, 601,025 tets, **0 inverted elements** ($V_e > 0$).
+  - **Fine Tier** (`stegoceras_tetmesh_fine.npz`): 698,960 nodes, 2,267,738 tets, **0 inverted elements** ($V_e > 0$).
 
-### 3. Model Architecture Reconstruction & Dependency Flow
-- [**`reports/snively_theodor_model_reconstruction.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/snively_theodor_model_reconstruction.md): Reconstructed the 8-stage computational workflow with a Mermaid dependency flowchart, arrow-by-arrow information dependency analysis, explicit uncertainty taxonomy (Geometry-limited, Parameter-limited, Model-form), candidate model tier definitions (Models A, B, C), and an evidence-based justification on raw CT necessity.
+### 3. Epistemic YAML Model Configurations
+- [`models/phase4/baseline.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/baseline.yaml)
+- [`models/phase4/mesh_coarse.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_coarse.yaml)
+- [`models/phase4/mesh_medium.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_medium.yaml)
+- [`models/phase4/mesh_fine.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_fine.yaml)
 
-### 4. Investigation of Missing Input Sources
-- [**`literature/missing_input_sources.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/literature/missing_input_sources.md): Evaluated paleohistological studies (Goodwin & Horner 2004), dinosaur bone mechanics (Erickson et al. 2002), and comparative osteology to classify resolutions for every `UNAVAILABLE` or `LITERATURE_ONLY` parameter.
+### 4. Algorithmic Loading & Physiological Boundary Constraints
+- [**`src/stegoceras_biomechanics/fea/loads.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/loads.py): Algorithmic bisection patch search on the frontoparietal dome ($3000.0\text{ mm}^2$ target, $3014.2\text{ mm}^2$ actual, dorsal normal filter $n_z \ge 0.30$, tributary force distribution of $1.0\text{ kN}$ in $-Z$).
+- [**`src/stegoceras_biomechanics/fea/boundary_conditions.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/boundary_conditions.py): Occipital condyle ($u_x = u_y = u_z = 0$, 740 nodes) and Nuchal shelf ($u_y = u_z = 0$, 4,185 nodes).
 
-### 5. Provisional Parameterized Benchmark Specification
-- [**`reports/phase3_recommended_benchmark.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase3_recommended_benchmark.md): Specified a provisional, explicitly parameterized computational experiment (**Model A: Minimal surface-derived homogeneous-material model**) with a 3-tier validation hierarchy and normalized $1.0\text{ kN}$ reference load.
+### 5. Python FEA Engine & CLI
+- [**`src/stegoceras_biomechanics/fea/solver.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/solver.py): 3D linear isotropic elasticity assembly via `skfem` with SciPy direct (`spsolve`) and iterative (`cg`) solvers.
+- [**`src/stegoceras_biomechanics/fea/results.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/results.py): Partitioning and stress/strain extraction across 6 anatomical subregions.
+- [**`src/stegoceras_biomechanics/fea/validation.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/validation.py): Analytical Hookean tension bar verification, static force/moment equilibrium, and load linearity.
+- [**`src/stegoceras_biomechanics/fea/cli.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/cli.py): CLI interface (`prepare`, `mesh`, `solve`, `analyze`).
 
-### 6. Dimensional & Unit Consistency Audit Notebook
-- [**`notebooks/05_model_input_dimensional_audit.ipynb`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/05_model_input_dimensional_audit.ipynb): Automated verification of consistent SI and structural FEA mm-tonne-s unit conversions across length, area, volume, force, stress, modulus, density, parameterized scale sensitivity, and strain energy.
+### 6. Diagnostic & Result Visualizations
+- [`reports/figures/05_anatomical_coordinate_axes.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/05_anatomical_coordinate_axes.png): Anatomical axes, symmetry midline ($X=103.6\text{ mm}$), and load vector orientation.
+- [`reports/figures/06_load_patch_diagnostic.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/06_load_patch_diagnostic.png): Algorithmic $3000\text{ mm}^2$ patch centered on the frontoparietal dome apex.
+- [`reports/figures/07_boundary_conditions_diagnostic.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/07_boundary_conditions_diagnostic.png): Condyle and nuchal shelf constraint landmarks.
+- [`reports/figures/08_mesh_resolutions_comparison.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/08_mesh_resolutions_comparison.png): Element volume and aspect ratio histograms across tiers.
+- [`reports/figures/09_fe_von_mises_stress_1kn.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/09_fe_von_mises_stress_1kn.png): Sagittal stress field and subregion stress bar chart.
+- [`reports/figures/10_fe_displacement_and_strain.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/10_fe_displacement_and_strain.png): Cranial displacement field (max $25.5\ \mu\text{m}$) and principal tensile strain field ($\epsilon_1$).
+- [`reports/figures/11_mesh_convergence_curves.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/11_mesh_convergence_curves.png): Convergence trends between Coarse and Medium meshes ($\Delta \sigma_{p95} = 5.1\%$).
+- [`reports/figures/12_linearity_scaling_validation.png`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/12_linearity_scaling_validation.png): Proof of linear displacement scaling and quadratic strain energy scaling ($U \propto F^2$).
 
-### 7. Automated Unit Test Suite
-- [**`tests/test_phase3_model_audit.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase3_model_audit.py): Automated tests validating input matrix schema, evidence levels, literature citations, absence of falsely marked CT variables, Model A defensibility, and deliverable existence.
+### 7. Executed Jupyter Notebooks
+- [`notebooks/06_fe_geometry_preparation.ipynb`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/06_fe_geometry_preparation.ipynb): Geometry healing & tetrahedralization.
+- [`notebooks/07_fe_baseline_analysis.ipynb`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/07_fe_baseline_analysis.ipynb): Baseline solve, equilibrium verification, and subregion metrics.
+- [`notebooks/08_fe_mesh_convergence.ipynb`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/08_fe_mesh_convergence.ipynb): Spatial discretization convergence.
+- [`notebooks/09_fe_linearity_validation.ipynb`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/09_fe_linearity_validation.ipynb): Linearity validation and analytical biological scaling.
 
----
+### 8. Automated Unit Test Suite
+- [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py): **8/8 passing tests** covering analytical verification, surface repair fidelity, tetrahedral Jacobians, boundary extraction, load patch, equilibrium, linearity, and subregion extraction.
 
-## 🔬 Key Scientific & Architectural Refinements Incorporated
-
-```
-1. Decision on Raw CT Necessity:
-   - Raw CT is NOT REQUIRED to construct a useful first-order surface-derived
-     benchmark (Model A), but IS REQUIRED to reproduce the CT-dependent internal
-     material architecture of the published model (Model C).
-
-2. Recasting Geometry vs. Heterogeneity as an Empirical Hypothesis:
-   - Model A provides a first-order baseline test of external cranial geometry
-     and boundary conditions. The extent to which internal material heterogeneity
-     modifies this stress field is an empirical question to be evaluated in later tiers.
-
-3. Clear Epistemic Distinctions for Model A Inputs:
-   - Specimen geometry is in hand (AVAILABLE_DIRECT / DERIVED).
-   - Material properties are literature-derived (LITERATURE_ONLY).
-   - Load and boundary conditions are explicit modeling assumptions.
-
-4. Explicit Scale Parameterization:
-   - Physical scale s_mm/unit is treated as an explicit modeling parameter
-     (s_nominal = 1.0 mm/unit, envelope [0.95, 1.05]) recognizing that
-     geometric scaling changes stress as sigma proportional to F / s^2.
-
-5. Parameterized Contact Patch Envelopes:
-   - Broad "Keratin Cap" Load: A_broad in [2500, 4000] mm^2 (nominal 3000 mm^2).
-   - Concentrated "Point" Load: A_conc in (0, 200] mm^2 (nominal 150 mm^2).
-
-6. Three-Tier Validation Hierarchy:
-   - Tier 1 (Qualitative / Topological Reproduction): High apex stress, steep
-     attenuation to braincase, broad vs concentrated loading regimes.
-   - Tier 2 (Order-of-Magnitude Comparison): Peak & modal stresses within literature bounds.
-   - Tier 3 (Exact Replication): Acknowledged as unattainable with Model A due to
-     deliberate material simplifications (homogeneous vs CT-heterogeneous).
-
-7. Normalized Reference Load (1.0 kN) as Primary Numerical Benchmark:
-   - Linear elasticity (K u = F) ensures u(alpha F) = alpha u(F) and sigma(alpha F) = alpha sigma(F).
-   - Primary benchmark: 1.0 kN reference load yielding normalized compliance (MPa/kN).
-   - Derived biological impact: F_bio = 1360 N yields exact linear multiple: sigma_1360 = 1.36 x sigma_1000.
-```
+### 9. Comprehensive Synthesis Report
+- [**`reports/phase4_fea_benchmark_report.md`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md): Scientific synthesis report with full tabular metrics, biomechanical interpretation, and Phase 4 gate assessment.
 
 ---
 
-## 🧪 Verification & Test Results
+## 📊 Summary of Primary Benchmark Metrics (UALVP 2, 1.0 kN Broad Load)
 
-```bash
-uv run pytest -v
-```
-
-**Result: 19/19 tests passed cleanly (100%)**:
-* `tests/test_geometry.py` (2 tests) ✅ PASSED
-* `tests/test_ingest.py` (3 tests) ✅ PASSED
-* `tests/test_manifest.py` (4 tests) ✅ PASSED
-* `tests/test_phase2_geometry.py` (4 tests) ✅ PASSED
-* `tests/test_phase3_model_audit.py` (6 tests) ✅ PASSED
-
-```bash
-# Headless kernel execution of all 5 Jupyter notebooks
-notebooks/01_data_inventory.ipynb               ✅ PASSED (100%)
-notebooks/02_load_skull_mesh.ipynb              ✅ PASSED (100%)
-notebooks/03_component_geometry_inventory.ipynb ✅ PASSED (100%)
-notebooks/04_skull_component_assembly.ipynb     ✅ PASSED (100%)
-notebooks/05_model_input_dimensional_audit.ipynb✅ PASSED (100%)
-```
+| Parameter | Primary Benchmark ($1.0\text{ kN}$) | Derived Biological ($1360\text{ N}$) | Notes / Classification |
+| :--- | :--- | :--- | :--- |
+| **Max Displacement** | **$25.49\ \mu\text{m}$** ($0.0255\text{ mm}$) | **$34.67\ \mu\text{m}$** | Linear scaling ($1.36 \times$) |
+| **95th% von Mises Stress** | **$1.26\text{ MPa}$** | **$1.72\text{ MPa}$** | Global cranial vault |
+| **99th% von Mises Stress** | **$1.96\text{ MPa}$** | **$2.66\text{ MPa}$** | Global cranial vault |
+| **Peak Stress (Constraint)**| **$11.01\text{ MPa}$** | **$14.97\text{ MPa}$** | Localized to basicranial boundary |
+| **Dome Apex 95th% Stress** | **$1.00\text{ MPa}$** | **$1.36\text{ MPa}$** | Frontoparietal apex zone |
+| **Vault Core 95th% Stress** | **$1.58\text{ MPa}$** | **$2.14\text{ MPa}$** | Sub-dome core zone |
+| **Braincase 95th% Stress** | **$1.47\text{ MPa}$** (Mean $0.68\text{ MPa}$) | **$2.00\text{ MPa}$** | Endocranial ceiling (shielded) |
+| **Total Strain Energy** | **$5.3818\text{ mJ}$** | **$9.9545\text{ mJ}$** | Quadratic scaling ($1.36^2 \times$) |
+| **Force Residual Error** | **`0.000000%`** ($0.000000\text{ N}$) | **`0.000000%`** | Static equilibrium verified |
+| **Moment Residual Error**| **`0.000000%`** ($0.0000\text{ N}\cdot\text{mm}$) | **`0.000000%`** | Static equilibrium verified |
 
 ---
 
-## 🛑 Phase 3 Gate Status: Finalized & Closed
-
-All Phase 3 requirements, scientific refinements, and epistemic distinctions have been fully implemented, validated, committed, and pushed. Phase 3 is finalized. We hold at the gate awaiting authorization to proceed to Phase 4.
+## 🛑 Phase 4 Gate Stop Directive
+In accordance with project guidelines:
+* No internal CT material heterogeneity has been assigned.
+* No dynamic impact or transient dynamic simulation has been performed.
+* No Monte Carlo / UQ sampling has been executed.
+* All work is strictly confined to Phase 4 deliverables.

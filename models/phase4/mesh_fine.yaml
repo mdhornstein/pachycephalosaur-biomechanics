@@ -1,0 +1,8 @@
+# Phase 4 Fine Mesh FE Model Configuration
+model_name: "stegoceras_ualvp2_phase4_fine"
+base_config: "models/phase4/baseline.yaml"
+resolution_tier: "fine"
+mesh_file: "data/meshes/cleaned/stegoceras_tetmesh_fine.npz"
+target_elements: 2200000
+solver: "cg"
+cg_tolerance: 1.0e-7

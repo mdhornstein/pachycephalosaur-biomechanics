@@ -17,15 +17,19 @@ data/raw/dicom/*
 data/raw/downloads/*
 !data/raw/downloads/.gitkeep
 
-# Large binary mesh files in raw/original
+# Large binary mesh files in raw/original and cleaned
 data/meshes/original/*
 !data/meshes/original/.gitkeep
+data/meshes/cleaned/*
+!data/meshes/cleaned/.gitkeep
 
 # Intermediate simulation files and outputs
 simulations/*
 !simulations/.gitkeep
 results/*
 !results/.gitkeep
+!results/phase4/
+!results/phase4/*
 
 # OS and IDE files
 .DS_Store

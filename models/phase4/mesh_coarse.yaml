@@ -1,0 +1,7 @@
+# Phase 4 Coarse Mesh FE Model Configuration
+model_name: "stegoceras_ualvp2_phase4_coarse"
+base_config: "models/phase4/baseline.yaml"
+resolution_tier: "coarse"
+mesh_file: "data/meshes/cleaned/stegoceras_tetmesh_coarse.npz"
+target_elements: 150000
+solver: "direct"

@@ -1,0 +1,37 @@
+{
+  "original_vertices": 599948,
+  "repaired_vertices": 598960,
+  "original_faces": 1200102,
+  "repaired_faces": 1198180,
+  "original_watertight": false,
+  "repaired_watertight": true,
+  "original_volume": 646576.2300749194,
+  "repaired_volume": 646628.2959438389,
+  "volume_change_pct": 0.008052549181006783,
+  "original_area": 120512.20464706753,
+  "repaired_area": 120383.24029381959,
+  "area_change_pct": -0.10701352085095782,
+  "bounding_box_min_orig": [
+    38.012046813964844,
+    4.268539905548096,
+    0.3753740191459656
+  ],
+  "bounding_box_max_orig": [
+    169.1443634033203,
+    204.76962280273438,
+    128.0867919921875
+  ],
+  "bounding_box_min_repaired": [
+    38.012046813964844,
+    4.268539905548096,
+    0.3753739893436432
+  ],
+  "bounding_box_max_repaired": [
+    169.1443634033203,
+    204.76962280273438,
+    128.0867919921875
+  ],
+  "max_bounding_shift_mm": 2.9802322387695312e-08,
+  "max_surface_deviation_mm": 4.265981943927242,
+  "mean_surface_deviation_mm": 0.7661316988718462
+}

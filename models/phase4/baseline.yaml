@@ -1,0 +1,73 @@
+# Phase 4 Baseline FE Model Configuration: Stegoceras validum (UALVP 2)
+# Milestone: Phase 4 — Surface-Derived Finite Element Benchmark
+
+model_name: "stegoceras_ualvp2_phase4_baseline"
+version: "1.0.0"
+date: "2026-08-29"
+
+provenance_taxonomy:
+  geometry:
+    source_id: "UALVP2-MS-SKULL-STL-01"
+    media_id: "000018284"
+    file: "data/meshes/original/whole_skull/WitmerLab_Stegoceras_UALVP2-000018284.stl"
+    cleaned_file: "data/meshes/cleaned/stegoceras_ualvp2_watertight.stl"
+    status: DERIVED_FROM_SPECIMEN
+    notes: "Derived from primary micro-CT scan; non-manifold edges minimally repaired to watertight manifold solid."
+
+  coordinate_system:
+    x_axis: "mediolateral (symmetry plane X ≈ 97.4 mm)"
+    y_axis: "anteroposterior (snout-to-occiput length ≈ 200.5 mm)"
+    z_axis: "dorsoventral (palate-to-apex height ≈ 127.7 mm)"
+    status: DERIVED_FROM_SPECIMEN
+
+  scale:
+    parameter: "s_mm_per_unit"
+    nominal_value: 1.0
+    sensitivity_envelope: [0.95, 1.05]
+    status: MODELING_ASSUMPTION
+    notes: "Candidate millimeter scale uncalibrated directly from DICOM; s=1.0 treated as explicit assumption."
+
+  material:
+    constitutive_law: "linear_isotropic_elastic"
+    youngs_modulus_MPa:
+      value: 17000.0
+      literature_range_MPa: [10000.0, 20000.0]
+      source: "Cowin (2001); Hellmich et al. (2008); Snively & Theodor (2011)"
+      status: LITERATURE_PARAMETER
+      notes: "Baseline compact bone modulus borrowed from mammalian/bovine literature; not measured on UALVP 2."
+    poisson_ratio:
+      value: 0.30
+      literature_range: [0.28, 0.38]
+      source: "Cowin (2001)"
+      status: LITERATURE_PARAMETER
+
+  loading:
+    primary_benchmark_load_N:
+      value: 1000.0
+      direction_vector: [0.0, 0.0, -1.0]
+      status: MODELING_ASSUMPTION
+      notes: "Normalized 1.0 kN reference load directed dorsoventrally toward basicranium."
+    nominal_contact_area_mm2:
+      value: 3000.0
+      envelope_mm2: [2500.0, 4000.0]
+      selection_algorithm: "apex_geodesic_patch (normal_z >= 0.3)"
+      status: MODELING_ASSUMPTION
+      notes: "Nominal broad contact patch simulating force distribution through a thick keratin shield."
+
+  boundary_conditions:
+    occipital_condyle:
+      formulation: "rigid_translational_fixity (Ux=Uy=Uz=0)"
+      numerical_purpose: "Eliminates 3 translational rigid-body modes"
+      biological_rationale: "Articular interface with atlas (C1) vertebra"
+      status: MODELING_ASSUMPTION
+    nuchal_crest:
+      formulation: "translational_restraint (Uy=Uz=0)"
+      numerical_purpose: "Eliminates pitch/yaw rotational rigid-body modes"
+      biological_rationale: "Tensile restraint from m. transversospinalis capitis and m. complexus"
+      status: MODELING_ASSUMPTION
+
+  numerics:
+    element_type: "Tet1 (4-node linear solid tetrahedron)"
+    assembly_engine: "scikit-fem (v12.0.2)"
+    linear_solver: "scipy.sparse.linalg (spsolve / cg with Jacobi preconditioner)"
+    status: NUMERICAL_CHOICE
