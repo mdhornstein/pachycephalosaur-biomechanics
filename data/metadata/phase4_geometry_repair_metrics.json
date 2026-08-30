@@ -1,37 +1,37 @@
 {
+  "metric_name": "Vertex-to-Surface Nearest Neighbor Euclidean Distance (mm)",
   "original_vertices": 599948,
   "repaired_vertices": 598960,
   "original_faces": 1200102,
   "repaired_faces": 1198180,
   "original_watertight": false,
   "repaired_watertight": true,
-  "original_volume": 646576.2300749194,
-  "repaired_volume": 646628.2959438389,
+  "original_volume_mm3": 646576.2300749194,
+  "repaired_volume_mm3": 646628.2959438389,
   "volume_change_pct": 0.008052549181006783,
-  "original_area": 120512.20464706753,
-  "repaired_area": 120383.24029381959,
+  "original_area_mm2": 120512.20464706753,
+  "repaired_area_mm2": 120383.24029381959,
   "area_change_pct": -0.10701352085095782,
-  "bounding_box_min_orig": [
-    38.012046813964844,
-    4.268539905548096,
-    0.3753740191459656
+  "max_surface_deviation_mm": 4.853089828913661,
+  "max_deviation_coordinate_mm": [
+    105.37118530273438,
+    94.18966674804688,
+    66.73273468017578
   ],
-  "bounding_box_max_orig": [
-    169.1443634033203,
-    204.76962280273438,
-    128.0867919921875
-  ],
-  "bounding_box_min_repaired": [
-    38.012046813964844,
-    4.268539905548096,
-    0.3753739893436432
-  ],
-  "bounding_box_max_repaired": [
-    169.1443634033203,
-    204.76962280273438,
-    128.0867919921875
-  ],
-  "max_bounding_shift_mm": 2.9802322387695312e-08,
-  "max_surface_deviation_mm": 4.265981943927242,
-  "mean_surface_deviation_mm": 0.7661316988718462
+  "mean_surface_deviation_mm": 0.004028886522406183,
+  "median_surface_deviation_mm": 0.0,
+  "p90_surface_deviation_mm": 0.0,
+  "p99_surface_deviation_mm": 4.76837158203125e-07,
+  "p99_9_surface_deviation_mm": 2.188743877536564,
+  "vertices_dev_gt_0_1mm": 987,
+  "vertices_dev_gt_1_0mm": 838,
+  "vertices_dev_gt_2_0mm": 643,
+  "vertices_dev_gt_4_0mm": 60,
+  "pct_vertices_dev_gt_0_1mm": 0.16451425790235152,
+  "pct_vertices_dev_gt_1_0mm": 0.13967877216025387,
+  "pct_vertices_dev_gt_4_0mm": 0.010000866741784289,
+  "distance_max_dev_to_dome_apex_mm": 64.72931999645681,
+  "distance_max_dev_to_condyle_mm": 82.80421213106894,
+  "distance_max_dev_to_nuchal_shelf_mm": 69.53903075508062,
+  "anatomical_location_of_max_dev": "Internal pterygoid/palatal cavity seam (non-load-bearing)"
 }

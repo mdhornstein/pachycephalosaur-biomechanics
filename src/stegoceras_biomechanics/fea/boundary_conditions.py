@@ -30,7 +30,7 @@ def generate_boundary_constraints(
 ) -> tuple[np.ndarray, np.ndarray, BoundaryConditionSpecification]:
     """Algorithmically identifies anatomical constraint surfaces on UALVP 2 skull.
     
-    1. Occipital Condyle: Articular ball located near midsagittal plane (X ≈ 97.4 mm) at the
+    1. Occipital Condyle: Articular ball located near midsagittal plane (X ≈ 103.6 mm) at the
        posterior-ventral neurocranium margin (Y ≈ max, Z ≈ mid-ventral).
     2. Nuchal Crest: Posterodorsal shelf along the squamosal-parietal rim.
     """

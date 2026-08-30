@@ -31,6 +31,10 @@ class FESolution:
     num_dofs: int
     youngs_modulus_MPa: float
     poisson_ratio: float
+    algebraic_residual_norm: float = 0.0
+    normalized_force_residual: float = 0.0
+    normalized_moment_residual: float = 0.0
+    absolute_moment_residual_Nmm: float = 0.0
 
 
 def solve_linear_elasticity(
@@ -105,7 +109,7 @@ def solve_linear_elasticity(
     if chosen_solver == "direct":
         u_f = spla.spsolve(K_ff, f_f)
     elif chosen_solver == "cg":
-        # Jacobi diagonal preconditioner
+        # Jacobi diagonal preconditioner (SPD compatible)
         diag_K = K_ff.diagonal()
         diag_K[np.abs(diag_K) < 1e-12] = 1.0
         M_inv = sp.diags(1.0 / diag_K)
@@ -121,6 +125,13 @@ def solve_linear_elasticity(
     nodal_displacements = u_full.reshape((num_nodes, 3))
     disp_magnitudes = np.linalg.norm(nodal_displacements, axis=1)
     
+    # Algebraic residual norm: ||K_ff * u_f - f_f|| / ||f_f||
+    norm_f_f = np.linalg.norm(f_f)
+    if norm_f_f > 1e-12:
+        algebraic_residual = float(np.linalg.norm(K_ff.dot(u_f) - f_f) / norm_f_f)
+    else:
+        algebraic_residual = 0.0
+        
     # 7. Reaction forces
     reactions_full = K.dot(u_full) - f_global
     reaction_forces = reactions_full.reshape((num_nodes, 3))
@@ -130,6 +141,13 @@ def solve_linear_elasticity(
         
     applied_force_total = np.sum(nodal_forces_N, axis=0) if nodal_forces_N is not None else np.zeros(3)
     
+    # Normalized force residual: ||F_applied + F_reaction|| / ||F_applied||
+    norm_f_app = np.linalg.norm(applied_force_total)
+    if norm_f_app > 1e-12:
+        norm_force_residual = float(np.linalg.norm(applied_force_total + total_reaction_force) / norm_f_app)
+    else:
+        norm_force_residual = 0.0
+        
     # Reaction moment about reference point
     if reference_point is None:
         ref_pt = np.mean(nodes, axis=0)
@@ -142,6 +160,19 @@ def solve_linear_elasticity(
     m_condyle = np.sum(np.cross(r_condyle, reaction_forces[condyle_node_indices]), axis=0) if len(r_condyle) > 0 else np.zeros(3)
     m_nuchal = np.sum(np.cross(r_nuchal, reaction_forces[nuchal_node_indices]), axis=0) if len(r_nuchal) > 0 else np.zeros(3)
     total_reaction_moment = m_condyle + m_nuchal
+    
+    # Applied moment about reference point
+    applied_moment_total = np.zeros(3)
+    if loaded_node_indices is not None and nodal_forces_N is not None:
+        r_loaded = nodes[loaded_node_indices] - ref_pt
+        applied_moment_total = np.sum(np.cross(r_loaded, nodal_forces_N), axis=0)
+        
+    abs_moment_residual = float(np.linalg.norm(applied_moment_total + total_reaction_moment))
+    norm_m_app = float(np.linalg.norm(applied_moment_total))
+    if norm_m_app >= 1e-6:
+        norm_moment_residual = float(abs_moment_residual / norm_m_app)
+    else:
+        norm_moment_residual = float("nan")
     
     # 8. Compute element strain and stress tensors
     # For linear tetrahedra, strain/stress is uniform per element
@@ -230,4 +261,8 @@ def solve_linear_elasticity(
         num_dofs=int(num_dofs),
         youngs_modulus_MPa=float(youngs_modulus_MPa),
         poisson_ratio=float(poisson_ratio),
+        algebraic_residual_norm=algebraic_residual,
+        normalized_force_residual=norm_force_residual,
+        normalized_moment_residual=norm_moment_residual,
+        absolute_moment_residual_Nmm=abs_moment_residual,
     )

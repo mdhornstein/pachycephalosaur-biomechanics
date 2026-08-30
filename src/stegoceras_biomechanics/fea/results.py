@@ -148,13 +148,13 @@ def extract_subregion_metrics(
             regional_strain_energy_mJ=energy_reg,
         ))
         
-    if output_csv_path:
+    if output_csv_path is not None:
         df = pd.DataFrame([asdict(m) for m in metrics_list])
         df_p = Path(output_csv_path)
         df_p.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(df_p, index=False)
         
-    if output_json_path:
+    if output_json_path is not None:
         json_p = Path(output_json_path)
         json_p.parent.mkdir(parents=True, exist_ok=True)
         with open(json_p, "w", encoding="utf-8") as f:

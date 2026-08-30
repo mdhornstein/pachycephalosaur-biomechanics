@@ -49,7 +49,7 @@ def generate_dome_load_patch(
     face_centroids = surface_mesh.triangles_center
     
     # 1. Identify the anatomical frontoparietal dome apex
-    # The frontoparietal dome is located along the midsagittal plane (X ≈ 98.5 mm)
+    # The frontoparietal dome is located along the midsagittal plane (X ≈ 103.6 mm)
     # between anteroposterior limits Y ∈ [80, 150] mm and dorsal elevation Z > 80 mm.
     dome_mask = (v[:, 1] >= 80.0) & (v[:, 1] <= 150.0) & (v[:, 2] >= 80.0)
     dome_center_x = 0.5 * (np.min(v[dome_mask, 0]) + np.max(v[dome_mask, 0]))

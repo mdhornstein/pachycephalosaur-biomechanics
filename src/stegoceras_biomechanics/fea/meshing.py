@@ -38,8 +38,15 @@ class MeshQualityMetrics:
     max_element_volume_mm3: float
     mean_element_volume_mm3: float
     min_aspect_ratio: float
+    p50_aspect_ratio: float
+    p90_aspect_ratio: float
+    p95_aspect_ratio: float
+    p99_aspect_ratio: float
+    p99_9_aspect_ratio: float
     max_aspect_ratio: float
     mean_aspect_ratio: float
+    num_elements_ar_gt_10: int
+    num_elements_ar_gt_50: int
     num_inverted_elements: int
     meshing_runtime_seconds: float
 
@@ -48,10 +55,19 @@ def compute_tetrahedral_element_quality(
     nodes: np.ndarray,
     elements: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray, int]:
-    """Calculates signed element volumes and aspect ratios for 4-node tetrahedral elements.
+    """Calculates signed element volumes and normalized aspect ratios for 4-node tetrahedral elements.
     
-    Element volume: V = (1/6) * det([v1-v0, v2-v0, v3-v0])
-    Aspect ratio: (rms edge length)^3 / (8.48528 * V)
+    Element volume:
+        V = (1/6) * det([v1-v0, v2-v0, v3-v0])
+    
+    Aspect ratio:
+        AR = (r_rms^3) / (8.48528137423857 * |V|)
+        where r_rms = sqrt((1/6) * sum_{i=1}^6 e_i^2)
+        Normalized such that a regular tetrahedron has AR = 1.0.
+    
+    Note: Zero inverted elements (V_e > 0) confirms positive element orientation and non-zero
+    volume, but does not by itself guarantee shape quality, absence of global intersections,
+    or overall FE numerical convergence.
     """
     v0 = nodes[elements[:, 0]]
     v1 = nodes[elements[:, 1]]
@@ -174,8 +190,15 @@ def generate_tetrahedral_mesh(
         max_element_volume_mm3=float(np.max(volumes)),
         mean_element_volume_mm3=float(np.mean(volumes)),
         min_aspect_ratio=float(np.min(aspect_ratios)),
+        p50_aspect_ratio=float(np.percentile(aspect_ratios, 50)),
+        p90_aspect_ratio=float(np.percentile(aspect_ratios, 90)),
+        p95_aspect_ratio=float(np.percentile(aspect_ratios, 95)),
+        p99_aspect_ratio=float(np.percentile(aspect_ratios, 99)),
+        p99_9_aspect_ratio=float(np.percentile(aspect_ratios, 99.9)),
         max_aspect_ratio=float(np.max(aspect_ratios)),
         mean_aspect_ratio=float(np.mean(aspect_ratios)),
+        num_elements_ar_gt_10=int(np.sum(aspect_ratios > 10.0)),
+        num_elements_ar_gt_50=int(np.sum(aspect_ratios > 50.0)),
         num_inverted_elements=int(num_inverted),
         meshing_runtime_seconds=float(runtime),
     )

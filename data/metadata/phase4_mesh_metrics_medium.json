@@ -7,8 +7,15 @@
   "max_element_volume_mm3": 7592.800080456604,
   "mean_element_volume_mm3": 1.0757248783510405,
   "min_aspect_ratio": 1.0052512803354445,
+  "p50_aspect_ratio": 5.532808525502156,
+  "p90_aspect_ratio": 20.710227543952566,
+  "p95_aspect_ratio": 32.52707026918738,
+  "p99_aspect_ratio": 87.68002441729462,
+  "p99_9_aspect_ratio": 294.99334738336194,
   "max_aspect_ratio": 25327.116776344617,
   "mean_aspect_ratio": 10.881333995239576,
+  "num_elements_ar_gt_10": 159290,
+  "num_elements_ar_gt_50": 15090,
   "num_inverted_elements": 0,
-  "meshing_runtime_seconds": 8.944889068603516
+  "meshing_runtime_seconds": 7.05
 }

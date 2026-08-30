@@ -1,0 +1,38 @@
+{
+  "coarse": {
+    "num_nodes": 76152,
+    "num_elements": 318339,
+    "num_dofs": 228456,
+    "solver_type": "direct",
+    "solver_runtime_seconds": 40.23060417175293,
+    "max_displacement_um": 36.283747864735034,
+    "apex_displacement_um": 28.649596517099763,
+    "total_strain_energy_mJ": 7.795722191720738,
+    "global_p95_von_mises_MPa": 1.672068205176246,
+    "global_p99_von_mises_MPa": 2.790899514732398,
+    "dome_p95_von_mises_MPa": 2.2457348020725707,
+    "braincase_p95_von_mises_MPa": 2.0370887375060107,
+    "algebraic_residual_norm": 1.1747446895408567e-11,
+    "normalized_force_residual": 1.5941926906972204e-13,
+    "normalized_moment_residual": 6.588204406656426e-13,
+    "absolute_moment_residual_Nmm": 5.001524970385795e-09
+  },
+  "medium": {
+    "num_nodes": 189696,
+    "num_elements": 601025,
+    "num_dofs": 569088,
+    "solver_type": "direct",
+    "solver_runtime_seconds": 126.71277809143066,
+    "max_displacement_um": 35.53508955136391,
+    "apex_displacement_um": 25.520399206998555,
+    "total_strain_energy_mJ": 6.645429983441554,
+    "global_p95_von_mises_MPa": 1.6805071054409229,
+    "global_p99_von_mises_MPa": 3.011369176998542,
+    "dome_p95_von_mises_MPa": 2.3572127494225117,
+    "braincase_p95_von_mises_MPa": 2.2836731886628954,
+    "algebraic_residual_norm": 7.217160911682993e-11,
+    "normalized_force_residual": 1.3180201786729015e-11,
+    "normalized_moment_residual": 4.0256157183147064e-11,
+    "absolute_moment_residual_Nmm": 2.8099265445290277e-07
+  }
+}
