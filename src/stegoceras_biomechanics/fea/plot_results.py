@@ -114,14 +114,6 @@ def generate_all_phase4_results_and_plots():
     ax1.set_aspect("equal")
     ax1.grid(True, linestyle="--", alpha=0.3)
     
-    # Annotate high stress at dome apex and low stress at braincase
-    ax1.annotate("Frontoparietal Dome Apex\nPeak Stress ≈ 12-15 MPa", xy=(115, 118), xytext=(40, 120),
-                 arrowprops=dict(facecolor="black", shrink=0.08, width=1.2, headwidth=6),
-                 fontsize=8.5, fontweight="bold")
-    ax1.annotate("Endocranial Braincase Roof\nAttenuated Stress < 0.5 MPa", xy=(120, 45), xytext=(35, 25),
-                 arrowprops=dict(facecolor="blue", shrink=0.08, width=1.2, headwidth=6),
-                 fontsize=8.5, fontweight="bold", color="#1a5276")
-                 
     # Regional Bar Chart
     ax2 = fig.add_subplot(1, 2, 2)
     reg_names = [m.region_name.replace(" & ", "\n& ") for m in metrics_med if m.region_name != "Whole Skull (Global)"]
@@ -154,7 +146,7 @@ def generate_all_phase4_results_and_plots():
     sc1 = ax1.scatter(pts[:, 1], pts[:, 2], c=disp, cmap="plasma", s=1.5, alpha=0.8)
     cbar1 = plt.colorbar(sc1, ax=ax1, fraction=0.046, pad=0.04)
     cbar1.set_label("Displacement Magnitude (μm)", fontsize=10)
-    ax1.set_title("Cranial Displacement Field (Max: 39.6 μm)", fontsize=12, fontweight="bold")
+    ax1.set_title(f"Cranial Displacement Field (Max: {np.max(disp):.1f} μm)", fontsize=12, fontweight="bold")
     ax1.set_xlabel("Anteroposterior Axis: Y (mm)", fontsize=10)
     ax1.set_ylabel("Dorsoventral Axis: Z (mm)", fontsize=10)
     ax1.set_aspect("equal")
@@ -164,7 +156,7 @@ def generate_all_phase4_results_and_plots():
     sc2 = ax2.scatter(pts[:, 1], pts[:, 2], c=eps1, cmap="inferno", s=1.5, vmin=0, vmax=250, alpha=0.8)
     cbar2 = plt.colorbar(sc2, ax=ax2, fraction=0.046, pad=0.04)
     cbar2.set_label("Maximum Principal Strain ε₁ (με)", fontsize=10)
-    ax2.set_title("Principal Tensile Strain Field (95th %ile: 98.2 με)", fontsize=12, fontweight="bold")
+    ax2.set_title(f"Principal Tensile Strain Field (95th %ile: {np.percentile(eps1, 95):.1f} με)", fontsize=12, fontweight="bold")
     ax2.set_xlabel("Anteroposterior Axis: Y (mm)", fontsize=10)
     ax2.set_ylabel("Dorsoventral Axis: Z (mm)", fontsize=10)
     ax2.set_aspect("equal")
@@ -203,7 +195,7 @@ def generate_all_phase4_results_and_plots():
     ax1.set_ylabel("Total Strain Energy (mJ)", fontsize=10, color="#2980b9")
     ax1.set_title("Global Strain Energy Trajectory U(h)", fontsize=11, fontweight="bold")
     ax1.grid(True, linestyle="--", alpha=0.3)
-    ax1.set_ylim(7.0, 9.0)
+    ax1.set_ylim(6.0, 7.5)
     ax1.legend(loc="upper right")
     
     # Right: Regional Stress Trajectories
@@ -214,10 +206,10 @@ def generate_all_phase4_results_and_plots():
     ax2.set_ylabel("95th Percentile Stress (MPa)", fontsize=10)
     ax2.set_title("Regional Stress Sensitivity: Global vs. Dome vs. Braincase", fontsize=11, fontweight="bold")
     ax2.grid(True, linestyle="--", alpha=0.3)
-    ax2.set_ylim(1.4, 2.8)
+    ax2.set_ylim(0.8, 1.8)
     ax2.legend(loc="upper left")
     
-    plt.suptitle("3-Tier Discretization Sensitivity Progression (Same Geometry, 229k -> 422k -> 606k Elements)", fontsize=13, fontweight="bold", y=0.98)
+    plt.suptitle("3-Tier Discretization Sensitivity Progression (Same Canonical Geometry G₀, 347k -> 423k -> 825k Elements)", fontsize=13, fontweight="bold", y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.94])
     fig11_path = figures_dir / "11_mesh_convergence_curves.png"
     plt.savefig(fig11_path, dpi=300)
@@ -228,9 +220,8 @@ def generate_all_phase4_results_and_plots():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5), dpi=300)
     
     forces = np.array([500.0, 1000.0, 2000.0])
-    # Exact linear values from linearity check
-    lin_disps = np.array([0.017768, 0.035535, 0.071070])
-    lin_energies = np.array([1.66136, 6.64543, 26.58172])
+    lin_disps = np.array([0.016498, 0.032996, 0.065992])
+    lin_energies = np.array([1.69177, 6.76707, 27.06829])
     
     # Displacement vs Load (linear fit)
     ax1.plot(forces, lin_disps, "o", color="#27ae60", markersize=8, label="FEM Solves (500, 1000, 2000 N)")

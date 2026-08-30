@@ -126,20 +126,21 @@ def generate_tetrahedral_mesh(
     max_volume: float | None = None,
     min_dihedral: float = 10.0,
     min_ratio: float = 1.5,
+    switches: str | None = None,
     output_mesh_path: str | Path | None = None,
     metadata_json_path: str | Path | None = None,
 ) -> tuple[np.ndarray, np.ndarray, MeshQualityMetrics]:
-    """Generates a solid 3D tetrahedral FE mesh directly from a single watertight surface geometry.
+    """Generates a solid 3D tetrahedral FE mesh directly from an immutable watertight surface geometry.
     
     In strict compliance with discretization-convergence protocols, all production convergence tiers
-    must be generated directly from the identical watertight surface geometry without topology
-    distortion, ensuring that only volumetric discretization changes.
+    are generated directly from the identical canonical surface geometry without per-tier surface
+    decimation, ensuring that only volumetric discretization changes.
     
-    Supported resolution tiers:
-    - 'coarse': decimate_reduction=0.97 (volume-preserving) -> ~229k tets
-    - 'medium_coarse': decimate_reduction=0.95 (volume-preserving) -> ~422k tets
-    - 'medium': decimate_reduction=0.92 (volume-preserving) -> ~606k tets
-    - 'fine': decimate_reduction=0.00 (direct un-decimated) -> ~2.27M tets
+    Supported resolution tiers on canonical master surface:
+    - 'coarse': switches="pq2.0/10" -> ~347k tets (86.5k nodes)
+    - 'medium_coarse': switches="pq1.5/10" -> ~422k tets (99.6k nodes)
+    - 'medium': switches="pq1.5/10a2.0" -> ~825k tets (166.0k nodes)
+    - 'fine': switches="pq1.5/10a1.0" -> ~1.39M tets (computational memory boundary)
     """
     start_time = time.time()
     
@@ -148,58 +149,36 @@ def generate_tetrahedral_mesh(
     if isinstance(surface_mesh, (str, Path)):
         source_file_str = str(surface_mesh)
         p = Path(surface_mesh)
-        if p.exists():
-            with open(p, "rb") as sf:
-                source_sha256 = hashlib.sha256(sf.read()).hexdigest()
         mesh = trimesh.load(surface_mesh)
     else:
         mesh = surface_mesh
-        # Compute SHA-256 from vertex/face binary array
-        buf = mesh.vertices.tobytes() + mesh.faces.tobytes()
-        source_sha256 = hashlib.sha256(buf).hexdigest()
         
     if not isinstance(mesh, trimesh.Trimesh):
         raise ValueError("Expected Trimesh surface geometry")
         
-    v_raw = np.ascontiguousarray(mesh.vertices, dtype=np.float64)
-    f_raw = np.ascontiguousarray(mesh.faces, dtype=np.int32)
+    v = np.ascontiguousarray(mesh.vertices, dtype=np.float64)
+    f = np.ascontiguousarray(mesh.faces, dtype=np.int32)
     
-    tier_map = {
-        "coarse": 0.97,
-        "medium_coarse": 0.95,
-        "medium": 0.92,
-        "fine": 0.0,
-        "direct_fine": 0.0,
+    # Deterministic SHA-256 hash of exact canonical vertex and face arrays passed to TetGen
+    source_sha256 = hashlib.sha256(v.tobytes() + f.tobytes()).hexdigest()
+    
+    tier_switch_map = {
+        "coarse": "pq2.0/10",
+        "medium_coarse": "pq1.5/10",
+        "medium": "pq1.5/10a2.0",
+        "fine": "pq1.5/10a1.0",
+        "direct_fine": "pq1.5/10",
     }
-    red = tier_map.get(resolution_tier.lower(), 0.0)
     
-    if red == 0.0:
-        v, f = v_raw, f_raw
-    else:
-        pv_surf = pv.PolyData(v_raw, np.c_[np.full(len(f_raw), 3), f_raw])
-        d = pv_surf.decimate(red, volume_preservation=True)
-        f_dec = d.faces.reshape(-1, 4)[:, 1:4]
-        v_dec = d.points
-        tin = pymeshfix.PyTMesh()
-        tin.load_array(np.ascontiguousarray(v_dec, dtype=np.float64), np.ascontiguousarray(f_dec, dtype=np.int32))
-        tin.clean()
-        v, f = tin.return_arrays()
+    chosen_switches = switches if switches is not None else tier_switch_map.get(resolution_tier.lower(), f"pq{min_ratio}/{min_dihedral}")
+    if max_volume is not None and "a" not in chosen_switches:
+        chosen_switches += f"a{max_volume}"
         
     tet = tetgen.TetGen(v, f)
-        
-    kwargs = {
-        "order": 1,
-        "mindihedral": min_dihedral,
-        "minratio": min_ratio,
-    }
-    if max_volume is not None:
-        kwargs["maxvolume"] = max_volume
-        
-    tet.tetrahedralize(**kwargs)
+    tet.tetrahedralize(switches=chosen_switches)
     grid = tet.grid
     
     nodes = np.ascontiguousarray(grid.points, dtype=np.float64)
-    # Extract 4-node tetrahedral cell connectivity
     cells = grid.cells.reshape(-1, 5)[:, 1:5]
     elements = np.ascontiguousarray(cells, dtype=np.int64)
     
@@ -212,10 +191,6 @@ def generate_tetrahedral_mesh(
         inv_mask = volumes < 0.0
         elements[inv_mask, 2], elements[inv_mask, 3] = elements[inv_mask, 3].copy(), elements[inv_mask, 2].copy()
         volumes, aspect_ratios, num_inverted = compute_tetrahedral_element_quality(nodes, elements)
-        
-    flags_str = f"-pq{min_ratio}/{min_dihedral}"
-    if max_volume is not None:
-        flags_str += f"a{max_volume}"
         
     metrics = MeshQualityMetrics(
         num_nodes=int(nodes.shape[0]),
@@ -240,11 +215,11 @@ def generate_tetrahedral_mesh(
         source_surface_file=source_file_str,
         source_surface_sha256=source_sha256,
         is_production_convergence_mesh=True,
-        decimate_reduction=float(red),
+        decimate_reduction=0.0,
         min_dihedral_deg=float(min_dihedral),
         min_ratio=float(min_ratio),
         max_volume_mm3=max_volume,
-        tetgen_flags=flags_str,
+        tetgen_flags=f"-{chosen_switches}",
     )
     
     if output_mesh_path:

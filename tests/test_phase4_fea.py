@@ -204,14 +204,17 @@ def test_subregion_metrics_extraction(coarse_mesh_data, tmp_path):
 
 
 def test_mesh_source_surface_sha256_provenance():
-    """Verifies that all mesh metadata files share the exact same immutable source surface SHA-256 hash."""
+    """Verifies that all mesh metadata files share the exact same immutable source surface array SHA-256 hash."""
     import hashlib
     import json
+    import trimesh
     
-    surf_p = Path("data/meshes/cleaned/stegoceras_ualvp2_watertight.stl")
-    assert surf_p.exists(), f"Source watertight surface missing at {surf_p}"
-    with open(surf_p, "rb") as f:
-        expected_sha = hashlib.sha256(f.read()).hexdigest()
+    surf_p = Path("data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl")
+    assert surf_p.exists(), f"Source canonical master surface missing at {surf_p}"
+    m = trimesh.load(surf_p)
+    v = np.ascontiguousarray(m.vertices, dtype=np.float64)
+    f = np.ascontiguousarray(m.faces, dtype=np.int32)
+    expected_sha = hashlib.sha256(v.tobytes() + f.tobytes()).hexdigest()
         
     meta_coarse = json.loads(Path("data/metadata/phase4_mesh_metrics_coarse.json").read_text())
     meta_mc = json.loads(Path("data/metadata/phase4_mesh_metrics_medium_coarse.json").read_text())
@@ -222,6 +225,9 @@ def test_mesh_source_surface_sha256_provenance():
     assert meta_mc.get("source_surface_sha256") == expected_sha
     assert meta_med.get("source_surface_sha256") == expected_sha
     assert meta_fine.get("source_surface_sha256") == expected_sha
+    assert meta_coarse.get("decimate_reduction") == 0.0
+    assert meta_mc.get("decimate_reduction") == 0.0
+    assert meta_med.get("decimate_reduction") == 0.0
     assert meta_fine.get("is_production_convergence_mesh") is True
 
 
