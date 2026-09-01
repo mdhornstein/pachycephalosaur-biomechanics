@@ -260,3 +260,146 @@ def test_report_json_mesh_quality_consistency():
         assert np.isclose(c_tier["max_aspect_ratio"], meta["max_aspect_ratio"])
         assert c_tier["source_surface_sha256"] == meta["source_surface_sha256"]
 
+
+def test_single_tetrahedron_manufactured_displacement_field():
+    """Direct element-level verification: imposes an affine manufactured displacement field
+
+    u(x) = A*x + b on a single 4-node tetrahedron and tests that the element strain and
+    stress postprocessing exactly recovers the analytical infinitesimal strain tensor
+    eps = 0.5*(A + A^T) and Hookean Cauchy stress tensor sigma = lambda*tr(eps)*I + 2*mu*eps.
+    """
+    from stegoceras_biomechanics.fea.solver import lame_parameters
+    
+    # 1. Single non-degenerate tetrahedron
+    nodes = np.array([
+        [0.0, 0.0, 0.0],
+        [2.0, 0.0, 0.0],
+        [0.0, 3.0, 0.0],
+        [0.0, 0.0, 4.0],
+    ], dtype=np.float64)
+    elements = np.array([[0, 1, 2, 3]], dtype=np.int64)
+    
+    # 2. Known constant displacement gradient A (with distinct shear and normal strains) + translation b
+    A = np.array([
+        [0.0010,  0.0004, -0.0002],
+        [0.0003, -0.0005,  0.0006],
+        [0.0001,  0.0002,  0.0008],
+    ], dtype=np.float64)
+    b = np.array([0.05, -0.02, 0.01], dtype=np.float64)
+    
+    # Prescribed nodal displacements: u_i = A * v_i + b
+    u_nodal = (nodes @ A.T) + b
+    
+    # Analytical exact strain and stress
+    eps_exact = 0.5 * (A + A.T)
+    lam, mu = lame_parameters(17000.0, 0.30)
+    sigma_exact = lam * np.trace(eps_exact) * np.eye(3) + 2.0 * mu * eps_exact
+    vm_exact = np.sqrt(
+        0.5 * (
+            (sigma_exact[0, 0] - sigma_exact[1, 1]) ** 2 +
+            (sigma_exact[1, 1] - sigma_exact[2, 2]) ** 2 +
+            (sigma_exact[2, 2] - sigma_exact[0, 0]) ** 2 +
+            6.0 * (sigma_exact[0, 1] ** 2 + sigma_exact[1, 2] ** 2 + sigma_exact[0, 2] ** 2)
+        )
+    )
+    
+    # Compute via the element Jacobian postprocessing formulation
+    v0 = nodes[elements[:, 0]]
+    v1 = nodes[elements[:, 1]]
+    v2 = nodes[elements[:, 2]]
+    v3 = nodes[elements[:, 3]]
+    u0 = u_nodal[elements[:, 0]]
+    u1 = u_nodal[elements[:, 1]]
+    u2 = u_nodal[elements[:, 2]]
+    u3 = u_nodal[elements[:, 3]]
+    
+    J = np.stack([v1 - v0, v2 - v0, v3 - v0], axis=-1)
+    J_inv = np.linalg.inv(J)
+    du = np.stack([u1 - u0, u2 - u0, u3 - u0], axis=-1)
+    grad_u = np.einsum('nij,njk->nik', du, J_inv)
+    eps_num = 0.5 * (grad_u + np.swapaxes(grad_u, 1, 2))
+    tr_eps = np.trace(eps_num, axis1=1, axis2=2)
+    sigma_num = lam * tr_eps[:, None, None] * np.eye(3)[None, :, :] + 2.0 * mu * eps_num
+    
+    vm_num = np.sqrt(
+        0.5 * (
+            (sigma_num[:, 0, 0] - sigma_num[:, 1, 1]) ** 2 +
+            (sigma_num[:, 1, 1] - sigma_num[:, 2, 2]) ** 2 +
+            (sigma_num[:, 2, 2] - sigma_num[:, 0, 0]) ** 2 +
+            6.0 * (sigma_num[:, 0, 1] ** 2 + sigma_num[:, 1, 2] ** 2 + sigma_num[:, 0, 2] ** 2)
+        )
+    )
+    
+    # Assert exact agreement to machine precision
+    assert np.allclose(eps_num[0], eps_exact, atol=1e-15), "Strain recovery failed!"
+    assert np.allclose(sigma_num[0], sigma_exact, atol=1e-12), "Stress recovery failed!"
+    assert np.isclose(vm_num[0], vm_exact, atol=1e-12), "Von Mises recovery failed!"
+
+
+def test_energy_identity_work_balance(coarse_mesh_data):
+    """Verifies the fundamental energy identity 1/2 u^T K u == 1/2 u^T f for the linear elastic FE solve."""
+    nodes = coarse_mesh_data["nodes"]
+    elements = coarse_mesh_data["elements"]
+    surf = extract_boundary_surface(nodes, elements)
+    
+    loaded_nodes, nodal_forces, _, _ = generate_dome_load_patch(surf, 3000.0, 1000.0)
+    condyle_nodes, nuchal_nodes, _ = generate_boundary_constraints(surf)
+    
+    solution = solve_linear_elasticity(
+        nodes, elements, 17000.0, 0.30,
+        loaded_nodes, nodal_forces, condyle_nodes, nuchal_nodes, "direct"
+    )
+    
+    # External work done by applied loads: W_ext = 1/2 * sum_i (u_i . f_i)
+    u_loaded = solution.nodal_displacements_mm[loaded_nodes]
+    external_work_mJ = 0.5 * float(np.sum(u_loaded * nodal_forces))
+    internal_strain_energy_mJ = solution.total_strain_energy_mJ
+    
+    rel_error = abs(external_work_mJ - internal_strain_energy_mJ) / internal_strain_energy_mJ
+    assert rel_error < 1e-6, f"Energy identity failed: W_ext={external_work_mJ} mJ, U={internal_strain_energy_mJ} mJ, rel_err={rel_error}"
+
+
+@pytest.mark.parametrize("tier", ["coarse", "medium_coarse", "medium", "fine"])
+def test_production_mesh_hierarchy_parameterized(tier):
+    """Verifies that each production mesh tier satisfies strict quality, provenance, volume, and inversion constraints."""
+    import hashlib
+    import json
+    import trimesh
+    
+    # 1. Canonical surface hash
+    surf_p = Path("data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl")
+    assert surf_p.exists()
+    m = trimesh.load(surf_p)
+    v = np.ascontiguousarray(m.vertices, dtype=np.float64)
+    f = np.ascontiguousarray(m.faces, dtype=np.int32)
+    expected_sha = hashlib.sha256(v.tobytes() + f.tobytes()).hexdigest()
+    
+    # 2. Metadata file check
+    meta_p = Path(f"data/metadata/phase4_mesh_metrics_{tier}.json")
+    assert meta_p.exists(), f"Metadata missing for tier {tier}"
+    meta = json.loads(meta_p.read_text())
+    
+    assert meta.get("source_surface_sha256") == expected_sha
+    assert meta.get("source_surface_arrays_sha256") == expected_sha
+    assert meta.get("decimate_reduction") == 0.0
+    assert meta.get("min_ratio") == 1.5
+    assert meta.get("min_dihedral_deg") == 10.0
+    assert meta.get("num_inverted_elements") == 0
+    assert meta.get("num_inverted_from_tetgen") == 0
+    assert abs(meta["total_volume_mm3"] - 646422.8) / 646422.8 < 0.0005  # Within 0.05%
+    
+    # 3. If mesh .npz exists on disk, audit actual array data
+    mesh_p = Path(f"data/meshes/cleaned/stegoceras_tetmesh_{tier}.npz")
+    if mesh_p.exists():
+        data = np.load(mesh_p)
+        nodes = data["nodes"]
+        elements = data["elements"]
+        vols, ars, num_inv = compute_tetrahedral_element_quality(nodes, elements)
+        
+        assert num_inv == 0
+        assert np.all(vols > 0.0)
+        assert len(nodes) == meta["num_nodes"]
+        assert len(elements) == meta["num_elements"]
+        assert np.isclose(np.percentile(ars, 50), meta["p50_aspect_ratio"], atol=1e-4)
+
+

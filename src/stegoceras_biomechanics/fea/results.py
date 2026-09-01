@@ -30,7 +30,14 @@ def partition_anatomical_subregions(
     nodes: np.ndarray,
     elements: np.ndarray,
 ) -> dict[str, tuple[np.ndarray, np.ndarray]]:
-    """Partitions the UALVP 2 skull nodes and elements into 6 anatomical subregions."""
+    """Defines geometric proxy Regions of Interest (ROIs) on the UALVP 2 skull.
+    
+    IMPORTANT METHODOLOGICAL NOTE:
+    These subregions are defined via normalized geometric bounding boxes (Y, Z extents and lateral
+    X-deviation) to provide reproducible spatial sampling of cranial zones. They represent
+    independent, overlapping geometric proxy ROIs rather than a mutually exclusive anatomical
+    segmentation or volume partition.
+    """
     elem_centroids = np.mean(nodes[elements], axis=1)
     
     # Bounding extents

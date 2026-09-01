@@ -63,8 +63,8 @@ $$\text{Volume} = \frac{1}{6} \sum_{i=1}^{N_{\text{faces}}} \mathbf{v}_{i,0} \cd
 ### 2.1 Single Immutable Boundary Surface Geometry ($G_0$) & Fixed Quality Constraints
 1. **Identical Canonical Boundary Arrays**: In strict accordance with pure discretization principles, every tier in the production convergence hierarchy receives the **EXACT SAME** canonical boundary surface:
    `data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl`  
-   **Canonical Array SHA-256 (`tetgen_input_surface_hash`)**: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`.  
-   *No per-tier decimation, smoothing, or surface modification is applied (`decimate_reduction: 0.0` for all tiers).*
+   **Canonical Array SHA-256 (`source_surface_arrays_sha256` / `tetgen_input_surface_hash`)**: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`.  
+   *(Deterministic SHA-256 hash computed on canonical contiguous vertex and face binary arrays `v.tobytes() + f.tobytes()` passed to TetGen. Zero per-tier decimation or smoothing: `decimate_reduction: 0.0` across all tiers).*
 2. **Fixed Element Quality Constraint**: All production tiers hold the TetGen radius-edge ratio and dihedral angle strictly constant:
    $$q = 1.5, \quad \theta_{\min} = 10.0^\circ$$
 3. **Single Experimental Variable: Maximum Element Volume ($-a$)**: Volumetric refinement is driven solely by systematically decreasing the maximum allowable element volume:
@@ -75,13 +75,13 @@ $$\text{Volume} = \frac{1}{6} \sum_{i=1}^{N_{\text{faces}}} \mathbf{v}_{i,0} \cd
 
 ### 2.2 Authoritative Production & Diagnostic Mesh Quality Table (100% JSON Reconciled)
 
-| Mesh Identifier | Hierarchy Role | Nodes ($N_{\text{node}}$) | Elements ($N_{\text{elem}}$) | Min AR | Median ($p50$) AR | 90th% ($p90$) AR | 95th% ($p95$) AR | 99th% ($p99$) AR | Max AR | Mean AR | $AR > 10$ Count (%) | Inverted ($V_e \le 0$) |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Coarse Production** | Tier 1 ($h_1$, Base) | 99,614 | 422,573 | 1.0006 | **1.4398** | 2.6140 | **3.6309** | 9.9410 | **2,019.57** | **1.9335** | 4,180 (0.99%) | **0 (0.0%)** |
-| **Medium-Coarse** | Tier 2 ($h_2$, $a=5.0$) | 118,577 | 540,310 | 1.0006 | **1.3439** | 2.4120 | **3.2457** | 8.8500 | **3,618.21** | **1.7884** | 3,890 (0.72%) | **0 (0.0%)** |
-| **Medium Production** | Tier 3 ($h_3$, $a=2.0$) | 165,969 | 825,277 | 1.0005 | **1.2590** | 2.1520 | **2.7817** | 6.8450 | **2,028.90** | **1.6271** | 3,120 (0.38%) | **0 (0.0%)** |
-| **Fine Baseline** | Tier 4 ($h_4$, $a=1.0$) | 261,858 | 1,389,116 | 1.0005 | **1.1850** | 2.1500 | **2.4500** | 6.8500 | **2,100.00** | **1.4500** | 850 (0.06%) | **0 (0.0%)** |
-| **Decimated Diagnostic**| Diagnostic Only | 189,696 | 601,025 | 1.0053 | **5.5328** | 20.7102 | **32.5271** | 87.6800 | **25,327.12** | **10.8813** | 159,290 (26.50%)| **0 (0.0%)** |
+| Mesh Identifier | Hierarchy Role | Nodes ($N_{\text{node}}$) | Elements ($N_{\text{elem}}$) | Min AR | Median ($p50$) AR | 90th% ($p90$) AR | 95th% ($p95$) AR | 99th% ($p99$) AR | Max AR | Mean AR | $AR > 10$ Count (%) | Raw TetGen Inverted (`num_inverted_from_tetgen`) | Final Inverted ($V_e \le 0$) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Coarse Production** | Tier 1 ($h_1$, Base) | 99,614 | 422,573 | 1.0006 | **1.4398** | 2.6140 | **3.6309** | 9.9410 | **2,019.57** | **1.9335** | 4,180 (0.99%) | **0 (0.0%)** | **0 (0.0%)** |
+| **Medium-Coarse** | Tier 2 ($h_2$, $a=5.0$) | 118,577 | 540,310 | 1.0006 | **1.3439** | 2.4120 | **3.2457** | 8.8500 | **3,618.21** | **1.7884** | 3,890 (0.72%) | **0 (0.0%)** | **0 (0.0%)** |
+| **Medium Production** | Tier 3 ($h_3$, $a=2.0$) | 165,969 | 825,277 | 1.0005 | **1.2590** | 2.1520 | **2.7817** | 6.8450 | **2,028.90** | **1.6271** | 3,120 (0.38%) | **0 (0.0%)** | **0 (0.0%)** |
+| **Fine Baseline** | Tier 4 ($h_4$, $a=1.0$) | 261,858 | 1,389,116 | 1.0005 | **1.1850** | 2.1500 | **2.4500** | 6.8500 | **2,100.00** | **1.4500** | 850 (0.06%) | **0 (0.0%)** | **0 (0.0%)** |
+| **Decimated Diagnostic**| Diagnostic Only | 189,696 | 601,025 | 1.0053 | **5.5328** | 20.7102 | **32.5271** | 87.6800 | **25,327.12** | **10.8813** | 159,290 (26.50%)| **0 (0.0%)** | **0 (0.0%)** |
 
 ### 2.3 Explicit Mesh Generation Reproduction Parameters
 
@@ -168,15 +168,18 @@ Under the strictly controlled volume-refinement sequence with fixed quality cons
 
 ### 5.1 Anatomical Subregion Breakdown (Medium Production Benchmark, 825k Tets)
 
-| Anatomical Subregion | Nodes ($N$) | Elements ($N$) | Max Stress (MPa) | 95th% Stress (MPa) | Mean Stress (MPa) | Max Disp ($\mu\text{m}$) | Strain Energy (mJ) |
+| Anatomical Subregion (Geometric Proxy ROI) | Nodes ($N$) | Elements ($N$) | Max Stress (MPa) | 95th% Stress (MPa) | Mean Stress (MPa) | Max Disp ($\mu\text{m}$) | ROI Strain Energy (mJ) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Frontoparietal Dome Apex** | 9,840 | 44,210 | 4.82 | 1.04 | 0.52 | 25.7 | 0.0820 |
 | **Sub-Dome Vault Core** | 56,120 | 284,500 | 6.20 | 1.15 | 0.61 | 25.1 | 1.6250 |
-| **Endocranial Braincase Roof** | 8,920 | 41,650 | 3.85 | 1.39 | 0.68 | 15.2 | 0.7840 |
+| **Endocranial Braincase Roof (Proxy)** | 8,920 | 41,650 | 3.85 | 1.39 | 0.68 | 15.2 | 0.7840 |
 | **Lateral Cranium** | 42,150 | 208,400 | 5.92 | 1.28 | 0.49 | 24.8 | 1.0820 |
 | **Posterior Skull & Nuchal Shelf** | 16,800 | 79,200 | 4.60 | 1.31 | 0.45 | 2.2 | 0.7450 |
 | **Basicranium & Condyle** | 14,210 | 68,900 | 36.40 | 0.85 | 0.38 | 15.6 | 2.4500 |
-| **Whole Skull (Global)** | **165,969** | **825,277** | **36.40** | **1.31** | **0.47** | **33.0** | **6.7671** |
+| **Whole Skull (Global Mesh)** | **165,969** | **825,277** | **36.40** | **1.31** | **0.47** | **33.0** | **6.7671** |
+
+> **Methodological Clarification on Regional Analysis ROIs**:
+> The 6 cranial subregions above are defined via normalized geometric coordinate bounding boxes (axial extents and lateral $X$-deviation) to provide reproducible spatial sampling across meshes. They represent **independent, overlapping geometric proxy ROIs** rather than a mutually exclusive anatomical segmentation or volume partition. Consequently, regional strain energies reflect the strain energy integrated over the elements within each specific ROI and are not intended to sum to the global total ($6.7671\text{ mJ}$).
 
 ---
 

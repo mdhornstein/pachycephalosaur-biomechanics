@@ -51,6 +51,8 @@ class MeshQualityMetrics:
     meshing_runtime_seconds: float
     source_surface_file: str = ""
     source_surface_sha256: str = ""
+    source_surface_arrays_sha256: str = ""
+    num_inverted_from_tetgen: int = 0
     is_production_convergence_mesh: bool = True
     decimate_reduction: float = 0.0
     min_dihedral_deg: float = 10.0
@@ -184,13 +186,15 @@ def generate_tetrahedral_mesh(
     
     runtime = time.time() - start_time
     
-    volumes, aspect_ratios, num_inverted = compute_tetrahedral_element_quality(nodes, elements)
+    volumes, aspect_ratios, num_inverted_raw = compute_tetrahedral_element_quality(nodes, elements)
+    num_inverted_from_tetgen = int(num_inverted_raw)
+    num_inverted_final = num_inverted_from_tetgen
     
     # If any elements have inverted orientation (negative determinant), fix node ordering [0, 1, 2, 3] -> [0, 1, 3, 2]
-    if num_inverted > 0:
+    if num_inverted_raw > 0:
         inv_mask = volumes < 0.0
         elements[inv_mask, 2], elements[inv_mask, 3] = elements[inv_mask, 3].copy(), elements[inv_mask, 2].copy()
-        volumes, aspect_ratios, num_inverted = compute_tetrahedral_element_quality(nodes, elements)
+        volumes, aspect_ratios, num_inverted_final = compute_tetrahedral_element_quality(nodes, elements)
         
     metrics = MeshQualityMetrics(
         num_nodes=int(nodes.shape[0]),
@@ -210,10 +214,12 @@ def generate_tetrahedral_mesh(
         mean_aspect_ratio=float(np.mean(aspect_ratios)),
         num_elements_ar_gt_10=int(np.sum(aspect_ratios > 10.0)),
         num_elements_ar_gt_50=int(np.sum(aspect_ratios > 50.0)),
-        num_inverted_elements=int(num_inverted),
+        num_inverted_elements=int(num_inverted_final),
         meshing_runtime_seconds=float(runtime),
         source_surface_file=source_file_str,
         source_surface_sha256=source_sha256,
+        source_surface_arrays_sha256=source_sha256,
+        num_inverted_from_tetgen=num_inverted_from_tetgen,
         is_production_convergence_mesh=True,
         decimate_reduction=0.0,
         min_dihedral_deg=float(min_dihedral),
