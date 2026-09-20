@@ -1,75 +1,87 @@
 # Phase 4 Walkthrough: Surface-Derived Finite Element Benchmark (Stegoceras validum, UALVP 2)
 
-We have completed the numerical verification and discretization sensitivity study for **Phase 4: Surface-Derived Finite Element Benchmark** (*Stegoceras validum*, specimen **UALVP 2**), implementing a fully reproducible, numerically validated, linear-elastic finite element analysis workflow.
+This document provides a comprehensive walkthrough of the verified **Phase 4: Surface-Derived Finite Element Benchmark** for *Stegoceras validum* (specimen **UALVP 2**), implementing a fully reproducible, decoupled, numerically validated linear-elastic FEA pipeline.
 
 ---
 
 ## 🏛️ Taxonomic & Specimen Context
 * **Taxonomic Lectotype**: **CMN 515** (Canadian Museum of Nature, Ottawa; isolated frontoparietal dome)
-* **Study Specimen**: **UALVP 2** (University of Alberta, Edmonton; articulated referred specimen, cited as "UA 2" in Snively & Theodor 2011)
+* **Study Specimen**: **UALVP 2** (University of Alberta, Edmonton; articulated referred skull, cited as "UA 2" in Snively & Theodor 2011)
 * **Primary Reference**: Snively, E. & Theodor, J. M. (2011) *PLoS ONE* 6(6): e21412. [PMC3125168](https://pmc.ncbi.nlm.nih.gov/articles/PMC3125168/)
-* **Primary Mesh**: MorphoSource Media `000018284` (segmented surface STL from micro-CT)
+* **Primary Scan Mesh**: MorphoSource Media `000018284` (segmented skull surface STL from high-resolution micro-CT)
 
 ---
 
-## 📦 Summary of Completed Phase 4 Deliverables
+## 📦 Pipeline Deliverables & Technical Architecture
 
-### 1. Non-Invasive Preprocessing & Single Immutable Surface Provenance
-- [**`src/stegoceras_biomechanics/fea/geometry.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/geometry.py): Automated repair of raw STL non-manifold edges to generate a 100% watertight, 2-manifold surface.
-- **Source Surface SHA-256**: `46b11f7e8afbae667ab5ce235714ea790e4d91f0e80eb01263228d41a2ddafd3`
-- **Fidelity Verified**:
-  - Enclosed Volume: $646,576.2\text{ mm}^3 \rightarrow 646,628.3\text{ mm}^3$ (**$+0.0081\%$ change**, well within $\pm 0.05\%$ tolerance).
-  - Surface Area: $120,512.2\text{ mm}^2 \rightarrow 120,383.2\text{ mm}^2$ (**$-0.1070\%$ change**, well within $\pm 0.20\%$ tolerance).
-  - Mean Surface Shift: **$0.0040\text{ mm}$ ($4.0\ \mu\text{m}$)**.
-  - Maximum Surface Deviation: **$4.8531\text{ mm}$** localized to an internal pterygoid/palatal seam, with $>64\text{ mm}$ clearance to the dome load patch and $>69\text{ mm}$ clearance to boundary constraints.
-  - Cleaned STL: `data/meshes/cleaned/stegoceras_ualvp2_watertight.stl`.
+### 1. Canonical Master Surface ($G_0$) & Zero Decimation
+- **Immutable Canonical Surface**: [`data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl)
+- **Canonical Array SHA-256**: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`
+- **Zero Decimation Across Production Tiers**: Every production mesh tier is generated directly from the identical canonical surface without quadric simplification (`decimate_reduction = 0.0`), preventing artificial boundary sliver creation.
+- **Topological Integrity**: 100% 2-manifold watertight solid with positive enclosed volume ($+646,423.1\text{ mm}^3$) conserving specimen volume within $0.024\%$.
 
-### 2. Multi-Tier Solid Tetrahedral Mesh Hierarchy & Exact Regeneration Parameters
-- [**`src/stegoceras_biomechanics/fea/meshing.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/meshing.py): Solid 3D tetrahedral meshing via TetGen with explicit reproduction parameters:
-  - **Tier 1 Coarse** (`models/phase4/mesh_coarse.yaml`): `reduction=0.97`, `mindihedral=10.0`, `minratio=1.5` $\to$ 55,728 nodes, 229,427 tets, median $AR = 1.46$, max $AR = 4,277.21$, mean $AR = 2.16$, **0 inverted elements**.
-  - **Tier 2 Med-Coarse** (`models/phase4/mesh_medium_coarse.yaml`): `reduction=0.95`, `mindihedral=10.0`, `minratio=1.5` $\to$ 99,542 nodes, 421,856 tets, median $AR = 1.44$, max $AR = 21,259.23$, mean $AR = 2.06$, **0 inverted elements**.
-  - **Tier 3 Medium** (`models/phase4/mesh_medium.yaml`): `reduction=0.92`, `mindihedral=10.0`, `minratio=1.5` $\to$ 147,735 nodes, 606,363 tets, median $AR = 1.50$, max $AR = 674.56$, mean $AR = 2.01$, **0 inverted elements**.
-  - **Tier 4 Fine Direct Baseline** (`models/phase4/mesh_fine.yaml`): `reduction=0.00` $\to$ 698,960 nodes, 2,267,738 tets, median $AR = 1.86$, max $AR = 5,477.85$, mean $AR = 2.25$, **0 inverted elements** (16 GB memory limit).
-  - **Decimated Diagnostic Mesh**: `reduction=0.85` (standard quadric) $\to$ 189,696 nodes, 601,025 tets, median $AR = 5.53$, max $AR = 25,327.12$, mean $AR = 10.88$, $26.50\%$ elements with $AR > 10$.
-  - **A/B Diagnostic Finding**: Proved surface decimation creates needle-thin boundary triangles that force TetGen to create boundary slivers. Excluded from production convergence models.
+### 2. Multi-Tier Production Mesh Hierarchy
+Generated via TetGen holding quality constraints strictly invariant ($q = 1.5, \theta_{\min} = 10.0^\circ$) and systematically varying only maximum allowable element volume:
+1. **Tier 1 (Coarse, $h_1$)**: `-pq1.5/10` (natural Delaunay volume base) $\to$ 99,614 nodes, 422,573 tets, 298,842 DOFs.
+2. **Tier 2 (Med-Coarse, $h_2$)**: `-pq1.5/10a5.0` ($a_{\max} = 5.0\text{ mm}^3$) $\to$ 118,577 nodes, 540,310 tets, 355,731 DOFs.
+3. **Tier 3 (Medium, $h_3$)**: `-pq1.5/10a2.0` ($a_{\max} = 2.0\text{ mm}^3$) $\to$ 165,969 nodes, 825,277 tets, 497,907 DOFs (Primary Benchmark).
+4. **Tier 4 (Fine Baseline, $h_4$)**: `-pq1.5/10a1.0` ($a_{\max} = 1.0\text{ mm}^3$) $\to$ 261,858 nodes, 1,389,116 tets (computational upper boundary, exceeds 16 GB direct solver memory).
+- **Element Quality**: **0 inverted elements** ($V_e > 0$ for all elements across all tiers). Median aspect ratios refine smoothly from $1.44 \to 1.34 \to 1.26$.
 
-### 3. Epistemic YAML Model Configurations
-- [`models/phase4/baseline.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/baseline.yaml)
-- [`models/phase4/mesh_coarse.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_coarse.yaml)
-- [`models/phase4/mesh_medium_coarse.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_medium_coarse.yaml)
-- [`models/phase4/mesh_medium.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_medium.yaml)
-- [`models/phase4/mesh_fine.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/mesh_fine.yaml)
+### 3. Anatomical Coordinates & Verified Load Formulation
+- **Coordinate Alignment**: Midsagittal symmetry plane at $X \approx 103.6\text{ mm}$ (span $[38.0, 169.1]$ mm); anteroposterior snout-to-occiput span $Y \in [4.3, 204.8]\text{ mm}$; dorsoventral palate-to-apex span $Z \in [0.4, 128.1]\text{ mm}$.
+- **Physiological Boundary Conditions**: Occipital condyle constrained in 3 translational DOFs ($u_x = u_y = u_z = 0$); nuchal shelf constrained in 2 translational DOFs ($u_y = u_z = 0$).
+- **Dual-Graph Geodesic Wavefront Load Patch**:
+  - Seed facet identified at dorsal apex along midsagittal plane ($X \approx 103.6\text{ mm}, Y \in [80, 150]\text{ mm}$).
+  - Dijkstra wavefront search over the face-adjacency dual graph using facet centroid distances.
+  - Strict topological single-component connectivity (0 fragmentation).
+  - Strict dorsal summit floor: 100% of loaded nodes have $Z \ge 80.0\text{ mm}$ (**0% ventral cranium penetration**).
+  - Target area: $3000.0\text{ mm}^2$; Achieved area: $3000.6\text{ mm}^2$ ($+0.02\%$).
 
-### 4. Algorithmic Loading & Physiological Boundary Constraints
-- [**`src/stegoceras_biomechanics/fea/loads.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/loads.py): Algorithmic bisection patch search on the frontoparietal dome ($3000.0\text{ mm}^2$ target, $3014.2\text{ mm}^2$ actual, dorsal normal filter $n_z \ge 0.30$, tributary force distribution of $1.0\text{ kN}$ in $-Z$).
-- [**`src/stegoceras_biomechanics/fea/boundary_conditions.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/boundary_conditions.py): Occipital condyle ($u_x = u_y = u_z = 0$, 740 nodes) and Nuchal shelf ($u_y = u_z = 0$, 4,185 nodes).
-
-### 5. Python FEA Engine & Detailed Telemetry
-- [**`src/stegoceras_biomechanics/fea/solver.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/solver.py): 3D linear isotropic elasticity assembly via `skfem` with SciPy direct (`spsolve`) and iterative (`cg`) solvers, with explicit telemetry fields (`requested_solver`, `actual_solver`, `cg_iterations`, `cg_converged`, `cg_final_residual`, `fallback_attempted`, `fallback_status`).
-- [**`src/stegoceras_biomechanics/fea/results.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/results.py): Partitioning and stress/strain extraction across 6 anatomical subregions.
-- [**`src/stegoceras_biomechanics/fea/validation.py`**](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/validation.py): Analytical Hookean tension bar verification ($<0.2\%$ error), static force/moment equilibrium, and load linearity.
-
-### 6. Automated Unit Test Suite
-- [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py): **10/10 passing tests** covering analytical verification, surface repair fidelity, tetrahedral Jacobians, boundary extraction, load patch, equilibrium, linearity, subregion extraction, SHA-256 surface provenance, and 100% artifact consistency.
+### 4. Decoupled Simulation & Visualization Architecture
+- **Hard Invariant**: [`src/stegoceras_biomechanics/fea/plot_results.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/plot_results.py) never calls `solve_linear_elasticity()` and never generates meshes. It strictly loads saved `.npz` and `.json` artifacts from disk (<10 seconds, <250 MB RAM).
+- **Standalone Simulation Driver**: [`src/stegoceras_biomechanics/fea/solve_production.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/solve_production.py) solves one tier at a time in an isolated process, writing immutable numerical artifacts directly to `simulations/phase4/solution_{tier}.npz` and `results/phase4/metrics_{tier}.json` before terminating to return 100% of RAM to the operating system.
 
 ---
 
-## 📊 3-Tier Discretization Sensitivity Progression (UALVP 2, 1.0 kN Broad Load)
+## 📊 Discretization Progression & Sensitivity Analysis ($1.0\text{ kN}$ Broad Load)
 
-| Metric | Tier 1 (Coarse, 229k) | Tier 2 (Med-Coarse, 422k) | Tier 3 (Medium, 606k) | Step $\Delta_{h_1 \to h_2}$ | Step $\Delta_{h_2 \to h_3}$ | Convergence Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Total Strain Energy ($U$)** | **$8.0075\text{ mJ}$** | **$8.1841\text{ mJ}$** | **$7.7902\text{ mJ}$** | $+2.21\%$ | $-4.81\%$ | **STABILIZED** ($\le 5\%$) |
-| **Apex Displacement ($u_{\text{apex}}$)** | **$27.66\ \mu\text{m}$** | **$30.13\ \mu\text{m}$** | **$29.10\ \mu\text{m}$** | $+8.93\%$ | $-3.42\%$ | **STABILIZED** ($\le 5\%$) |
-| **Max Displacement ($\delta_{\max}$)**| **$35.46\ \mu\text{m}$** | **$38.40\ \mu\text{m}$** | **$39.62\ \mu\text{m}$** | $+8.29\%$ | $+3.18\%$ | **STABILIZED** ($\le 5\%$) |
-| **Global 95th% von Mises Stress** | **$1.6688\text{ MPa}$** | **$1.7200\text{ MPa}$** | **$1.7575\text{ MPa}$** | $+3.07\%$ | $+2.18\%$ | **MONOTONIC CONVERGENCE** ($\Delta_2 < \Delta_1$) |
-| **Dome Apex 95th% Stress** | **$2.2932\text{ MPa}$** | **$2.3436\text{ MPa}$** | **$2.4962\text{ MPa}$** | $+2.20\%$ | $+6.51\%$ | **UNCONVERGED / SENSITIVE** ($\Delta_2 > \Delta_1$) |
-| **Braincase Roof 95th% Stress**| **$1.9703\text{ MPa}$** | **$2.1036\text{ MPa}$** | **$2.3258\text{ MPa}$** | $+6.77\%$ | $+10.56\%$ | **UNCONVERGED / SENSITIVE** ($\Delta_2 > \Delta_1$) |
-| **Normalized Force Residual ($r_F$)** | **`7.03e-13`** | **`3.85e-13`** | **`1.52e-12`** | Exact | Exact | Machine precision |
-| **Normalized Moment Residual ($r_M$)**| **`2.38e-12`** | **`1.38e-12`** | **`5.70e-12`** | Exact | Exact | Machine precision |
+All three production tiers were solved independently with the reference direct sparse solver:
+
+| Observable ($Q$) | Coarse ($h_1$, 423k) | Med-Coarse ($h_2$, 540k) | Medium ($h_3$, 825k) | Step $\Delta_{h_1 \to h_2}$ | Step $\Delta_{h_2 \to h_3}$ | Total Net $\Delta_{h_1 \to h_3}$ | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Nodes ($N_{\text{node}}$)** | 99,614 | 118,577 | 165,969 | $+19.0\%$ | $+40.0\%$ | $+66.6\%$ | Production grid |
+| **Elements ($N_{\text{elem}}$)** | 422,573 | 540,310 | 825,277 | $+27.9\%$ | $+52.7\%$ | $+95.3\%$ | Pure $h$-refinement |
+| **Free DOFs** | 298,842 | 355,731 | 497,907 | $+19.0\%$ | $+40.0\%$ | $+66.6\%$ | Direct solve |
+| **Total Strain Energy ($U$)** | **$15.614\text{ mJ}$** | **$15.713\text{ mJ}$** | **$15.746\text{ mJ}$** | **$+0.64\%$** | **$+0.21\%$** | **$+0.85\%$** | **STABILIZED** ($\le 1\%$) |
+| **Apex Disp. ($u_{\text{apex}}$)** | **$37.41\ \mu\text{m}$** | **$37.68\ \mu\text{m}$** | **$37.93\ \mu\text{m}$** | **$+0.72\%$** | **$+0.66\%$** | **$+1.39\%$** | **STABILIZED** ($\le 2\%$) |
+| **Max Disp. ($\delta_{\max}$)** | **$59.07\ \mu\text{m}$** | **$59.12\ \mu\text{m}$** | **$59.75\ \mu\text{m}$** | **$+0.08\%$** | **$+1.07\%$** | **$+1.15\%$** | **STABILIZED** ($\le 2\%$) |
+| **Dome Apex 95th% Stress** | **$3.399\text{ MPa}$** | **$3.355\text{ MPa}$** | **$3.334\text{ MPa}$** | **$-1.30\%$** | **$-0.63\%$** | **$-1.92\%$** | **STABILIZED** (Shrinking $\Delta$) |
+| **Global 95th% Stress** | **$2.493\text{ MPa}$** | **$2.290\text{ MPa}$** | **$2.042\text{ MPa}$** | **$-8.14\%$** | **$-10.84\%$** | **$-18.10\%$** | **DISCRETIZATION-SENSITIVE** |
+| **Braincase Roof 95th% Stress** | **$2.823\text{ MPa}$** | **$2.383\text{ MPa}$** | **$2.015\text{ MPa}$** | **$-15.59\%$** | **$-15.46\%$** | **$-28.64\%$** | **DISCRETIZATION-SENSITIVE** |
+| **Force Residual ($r_F$)** | **$8.91 \times 10^{-13}$** | **$9.20 \times 10^{-13}$** | **$1.53 \times 10^{-12}$** | Machine prec. | Machine prec. | Machine prec. | **EXACT EQUILIBRIUM** |
+| **Moment Residual ($r_M$)**| **$3.13 \times 10^{-12}$** | **$7.87 \times 10^{-13}$** | **$7.23 \times 10^{-13}$** | Machine prec. | Machine prec. | Machine prec. | **EXACT EQUILIBRIUM** |
+| **Solver Runtime** | **$72.7\text{ s}$** | **$310.9\text{ s}$** | **$2,055.3\text{ s}$ (34 min)**| $4.28\times$ | $6.61\times$ | $28.28\times$ | Clean isolated process |
 
 ---
 
-## 🛑 Phase 4 Gate Status: OPEN (Carried Forward to Phase 5 UQ)
-- **Gate Finding**: Phase 4 numerical verification, solver integrity, static equilibrium, and discretization sensitivity characterization are fully completed and verified.
-- **Convergence Decision**: In strict accordance with scientific standards, **the Phase 4 convergence gate is held OPEN** because asymptotic convergence is not yet established for localized cranial stresses (dome $+8.85\%$, braincase $+18.04\%$).
-- **Transition Protocol**: Rather than chasing unresolvable multi-million-element meshes on available hardware, this localized discretization sensitivity is formally designated as an **active numerical uncertainty component** ($\epsilon_{\text{discretization}}$) to be explicitly propagated into the Phase 5 Uncertainty Quantification framework.
+## 🔬 Scientific Interpretation & Findings
+
+1. **Global Compliance & Dorsal Impact Zone**:
+   - Total strain energy ($U$) exhibits classic monotonic convergence from below ($15.614 \to 15.713 \to 15.746\text{ mJ}$), with the step delta dropping from $+0.64\%$ to $+0.21\%$.
+   - Apex displacement and cranial maximum displacement are tightly bounded ($<1.4\%$ net variation).
+   - Frontoparietal dome apex 95th percentile stress converges smoothly with shrinking step differences ($-1.30\% \to -0.63\%$), stabilizing at $3.33\text{ MPa}$.
+2. **Internal Cranial Stress Gradients (Braincase Roof & Global)**:
+   - In contrast to the dome, internal cranial stresses remain sensitive to mesh resolution across this range.
+   - Braincase roof 95th percentile stress decreases systematically ($2.823 \to 2.383 \to 2.015\text{ MPa}$, $-28.64\%$ net shift) with step differences that do not shrink ($-15.59\%$ and $-15.46\%$).
+   - This reflects ongoing resolution of intricate internal bony geometries and stress gradients away from the broad dorsal contact zone.
+
+---
+
+## 🎯 Phase 4 Gate Status: Baseline Verified & Frozen for Phase 5 UQ Transition
+
+> **Deterministic FEM baseline verified; displacement/energy and dorsal dome stress stabilized; localized internal stress remains discretization-sensitive and is carried forward into Phase 5 UQ as characterized numerical model-form uncertainty.**
+
+Rather than asserting premature global stress convergence or attempting intractable multi-million-element direct solves on laptop hardware:
+- **Phase 4 is verified and frozen**: Static equilibrium is exact, the load formulation is geometrically verified, and same-geometry discretization sensitivity is rigorously quantified.
+- **Phase 5 UQ Transition**: The observed numerical discretization sensitivities ($\approx 1.9\%$ dome stress, $\approx 18.1\%$ global stress, $\approx 28.6\%$ braincase stress) are carried forward into the global sensitivity analysis to formally assess whether biological uncertainties (e.g. dome thickness, keratin elasticity, bone modulus) dominate over or interact with residual numerical discretization effects.

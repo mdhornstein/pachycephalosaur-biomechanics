@@ -419,3 +419,51 @@ def test_production_mesh_hierarchy_parameterized(tier):
         assert np.isclose(np.percentile(ars, 50), meta["p50_aspect_ratio"], atol=1e-4)
 
 
+def test_report_and_metrics_data_integrity():
+    """Verifies that Phase 4 reports and JSON metrics are strictly synchronized with zero stale artifacts."""
+    import json
+    from pathlib import Path
+    
+    conv_path = Path("results/phase4/mesh_convergence_comparison.json")
+    metrics_path = Path("results/phase4/ualvp2_1kn_subregion_metrics.json")
+    report_path = Path("reports/phase4_fea_benchmark_report.md")
+    walkthrough_path = Path("reports/walkthrough.md")
+    
+    assert conv_path.exists(), "mesh_convergence_comparison.json missing"
+    assert metrics_path.exists(), "ualvp2_1kn_subregion_metrics.json missing"
+    assert report_path.exists(), "phase4_fea_benchmark_report.md missing"
+    assert walkthrough_path.exists(), "reports/walkthrough.md missing"
+    
+    conv = json.loads(conv_path.read_text())
+    metrics = json.loads(metrics_path.read_text())
+    report_text = report_path.read_text()
+    walkthrough_text = walkthrough_path.read_text()
+    
+    # 1. Authoritative Medium Benchmark values
+    med_energy = conv["medium"]["total_strain_energy_mJ"]
+    assert np.isclose(med_energy, 15.7462, atol=1e-3)
+    
+    med_dome_p95 = conv["medium"]["dome_p95_von_mises_MPa"]
+    assert np.isclose(med_dome_p95, 3.3339, atol=1e-3)
+    
+    med_braincase_p95 = conv["medium"]["braincase_p95_von_mises_MPa"]
+    assert np.isclose(med_braincase_p95, 2.0146, atol=1e-3)
+    
+    # 2. Strict absence of superseded / stale artifact numbers
+    stale_tokens = ["6.7671", "1.0412", "1.3063", "46b11f7e"]
+    for token in stale_tokens:
+        assert token not in report_text, f"Found stale artifact token '{token}' in benchmark report!"
+        assert token not in walkthrough_text, f"Found stale artifact token '{token}' in walkthrough!"
+        
+    # 3. Canonical hash presence in walkthrough and report
+    canonical_hash = "5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2"
+    assert canonical_hash in walkthrough_text, "Canonical master hash missing from walkthrough!"
+    assert canonical_hash in report_text, "Canonical master hash missing from benchmark report!"
+    
+    # 4. Regional subregion metrics consistency
+    region_map = {m["region_name"]: m for m in metrics}
+    assert np.isclose(region_map["Whole Skull (Global)"]["regional_strain_energy_mJ"], med_energy, atol=1e-4)
+    assert np.isclose(region_map["Frontoparietal Dome Apex"]["p95_von_mises_MPa"], med_dome_p95, atol=1e-4)
+    assert np.isclose(region_map["Endocranial Braincase Roof"]["p95_von_mises_MPa"], med_braincase_p95, atol=1e-4)
+
+
