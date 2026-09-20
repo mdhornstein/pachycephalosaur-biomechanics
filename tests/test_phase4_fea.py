@@ -419,23 +419,28 @@ def test_production_mesh_hierarchy_parameterized(tier):
         assert np.isclose(np.percentile(ars, 50), meta["p50_aspect_ratio"], atol=1e-4)
 
 
-def test_report_and_metrics_data_integrity():
-    """Verifies that Phase 4 reports and JSON metrics are strictly synchronized with zero stale artifacts."""
+def test_targeted_report_synchronization_and_stale_data_regression():
+    """Targeted regression test verifying that Phase 4 reports contain the canonical hash,
+    match authoritative Medium benchmark solve metrics, reconcile fine mesh telemetry,
+    and contain zero superseded/stale artifact tokens."""
     import json
     from pathlib import Path
     
     conv_path = Path("results/phase4/mesh_convergence_comparison.json")
     metrics_path = Path("results/phase4/ualvp2_1kn_subregion_metrics.json")
+    fine_mesh_path = Path("data/metadata/phase4_mesh_metrics_fine.json")
     report_path = Path("reports/phase4_fea_benchmark_report.md")
     walkthrough_path = Path("reports/walkthrough.md")
     
     assert conv_path.exists(), "mesh_convergence_comparison.json missing"
     assert metrics_path.exists(), "ualvp2_1kn_subregion_metrics.json missing"
+    assert fine_mesh_path.exists(), "phase4_mesh_metrics_fine.json missing"
     assert report_path.exists(), "phase4_fea_benchmark_report.md missing"
     assert walkthrough_path.exists(), "reports/walkthrough.md missing"
     
     conv = json.loads(conv_path.read_text())
     metrics = json.loads(metrics_path.read_text())
+    fine_mesh = json.loads(fine_mesh_path.read_text())
     report_text = report_path.read_text()
     walkthrough_text = walkthrough_path.read_text()
     
@@ -465,5 +470,10 @@ def test_report_and_metrics_data_integrity():
     assert np.isclose(region_map["Whole Skull (Global)"]["regional_strain_energy_mJ"], med_energy, atol=1e-4)
     assert np.isclose(region_map["Frontoparietal Dome Apex"]["p95_von_mises_MPa"], med_dome_p95, atol=1e-4)
     assert np.isclose(region_map["Endocranial Braincase Roof"]["p95_von_mises_MPa"], med_braincase_p95, atol=1e-4)
+
+    # 5. Fine mesh metadata synchronization with report
+    assert "1,389,116" in report_text
+    assert "1,116.10" in report_text
+    assert "6,854 (0.49%)" in report_text
 
 

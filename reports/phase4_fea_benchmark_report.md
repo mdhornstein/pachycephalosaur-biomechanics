@@ -67,7 +67,7 @@ $$\text{Volume} = \frac{1}{6} \sum_{i=1}^{N_{\text{faces}}} \mathbf{v}_{i,0} \cd
    *(Deterministic SHA-256 hash computed on canonical contiguous vertex and face binary arrays `v.tobytes() + f.tobytes()` passed to TetGen. Zero per-tier decimation or smoothing: `decimate_reduction: 0.0` across all tiers).*
 2. **Fixed Element Quality Constraint**: All production tiers hold the TetGen radius-edge ratio and dihedral angle strictly constant:
    $$q = 1.5, \quad \theta_{\min} = 10.0^\circ$$
-3. **Single Experimental Variable: Maximum Element Volume ($-a$)**: Volumetric refinement is driven solely by systematically decreasing the maximum allowable element volume:
+3. **Refinement Driver: Maximum Element Volume ($-a$)**: Volumetric refinement beyond the base coarse mesh is driven by systematically decreasing the maximum allowable element volume constraint:
    - **Coarse ($h_1$)**: `-pq1.5/10` (natural unconstrained Delaunay volume base) $\rightarrow$ 422,573 elements.
    - **Medium-Coarse ($h_2$)**: `-pq1.5/10a5.0` ($a_{\max} = 5.0\text{ mm}^3$) $\rightarrow$ 540,310 elements.
    - **Medium ($h_3$)**: `-pq1.5/10a2.0` ($a_{\max} = 2.0\text{ mm}^3$) $\rightarrow$ 825,277 elements.
@@ -77,10 +77,10 @@ $$\text{Volume} = \frac{1}{6} \sum_{i=1}^{N_{\text{faces}}} \mathbf{v}_{i,0} \cd
 
 | Mesh Identifier | Hierarchy Role | Nodes ($N_{\text{node}}$) | Elements ($N_{\text{elem}}$) | Min AR | Median ($p50$) AR | 90th% ($p90$) AR | 95th% ($p95$) AR | 99th% ($p99$) AR | Max AR | Mean AR | $AR > 10$ Count (%) | Raw TetGen Inverted (`num_inverted_from_tetgen`) | Final Inverted ($V_e \le 0$) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Coarse Production** | Tier 1 ($h_1$, Base) | 99,614 | 422,573 | 1.0006 | **1.4398** | 2.6140 | **3.6309** | 9.9410 | **2,019.57** | **1.9335** | 4,180 (0.99%) | **0 (0.0%)** | **0 (0.0%)** |
-| **Medium-Coarse** | Tier 2 ($h_2$, $a=5.0$) | 118,577 | 540,310 | 1.0006 | **1.3439** | 2.4120 | **3.2457** | 8.8500 | **3,618.21** | **1.7884** | 3,890 (0.72%) | **0 (0.0%)** | **0 (0.0%)** |
-| **Medium Production** | Tier 3 ($h_3$, $a=2.0$) | 165,969 | 825,277 | 1.0005 | **1.2590** | 2.1520 | **2.7817** | 6.8450 | **2,028.90** | **1.6271** | 3,120 (0.38%) | **0 (0.0%)** | **0 (0.0%)** |
-| **Fine Baseline** | Tier 4 ($h_4$, $a=1.0$) | 261,858 | 1,389,116 | 1.0005 | **1.1850** | 2.1500 | **2.4500** | 6.8500 | **2,100.00** | **1.4500** | 850 (0.06%) | **0 (0.0%)** | **0 (0.0%)** |
+| **Coarse Production** | Tier 1 ($h_1$, Base) | 99,614 | 422,573 | 1.0003 | **1.4398** | 2.6186 | **3.6309** | 9.7302 | **2,019.57** | **1.9335** | 4,051 (0.96%) | **0 (0.0%)** | **0 (0.0%)** |
+| **Medium-Coarse** | Tier 2 ($h_2$, $a=5.0$) | 118,577 | 540,310 | 1.0005 | **1.3439** | 2.3821 | **3.2457** | 8.5202 | **3,618.21** | **1.7884** | 4,202 (0.78%) | **0 (0.0%)** | **0 (0.0%)** |
+| **Medium Production** | Tier 3 ($h_3$, $a=2.0$) | 165,969 | 825,277 | 1.0006 | **1.2590** | 2.1004 | **2.7817** | 6.9265 | **2,028.90** | **1.6271** | 4,860 (0.59%) | **0 (0.0%)** | **0 (0.0%)** |
+| **Fine Baseline** | Tier 4 ($h_4$, $a=1.0$) | 261,858 | 1,389,116 | 1.0003 | **1.2194** | 1.9013 | **2.4590** | 5.9251 | **1,116.10** | **1.5154** | 6,854 (0.49%) | **0 (0.0%)** | **0 (0.0%)** |
 | **Decimated Diagnostic**| Diagnostic Only | 189,696 | 601,025 | 1.0053 | **5.5328** | 20.7102 | **32.5271** | 87.6800 | **25,327.12** | **10.8813** | 159,290 (26.50%)| **0 (0.0%)** | **0 (0.0%)** |
 
 ### 2.3 Explicit Mesh Generation Reproduction Parameters
