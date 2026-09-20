@@ -40,7 +40,6 @@ pachycephalosaurus-biomechanics/
 │   ├── raw/
 │   │   ├── dicom/                      # Raw DICOM slices (immutable, not committed to git)
 │   │   └── downloads/                  # Staging area for user-downloaded archive files
-│   ├── intermediate/                   # Segmented masks & threshold volumes
 │   ├── meshes/
 │   │   ├── original/                   # Original un-altered 3D surface files
 │   │   ├── cleaned/                    # Standardized, watertight, scale-verified meshes

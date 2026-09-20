@@ -102,7 +102,7 @@ Level 4: HISTORICAL RECORD & SCIENTIFIC ARCHIVE
 
 ---
 
-## 📜 4. The Eight Core Documentation Rules
+## 📜 4. The Nine Core Documentation Rules
 
 1. **Rule 1: One Technical Authority**  
    Code, configuration, and data artifacts are authoritative for technical facts. Current-state documents interpret and summarize them for orientation; they do not independently invent or redefine them.
@@ -120,3 +120,5 @@ Level 4: HISTORICAL RECORD & SCIENTIFIC ARCHIVE
    `HANDOFF.md` provides orientation, not proof. Review agents must independently inspect the code, execute tests, and verify JSON/NPZ data artifacts before approving work.
 8. **Rule 8: Milestone Commits Update the State System**  
    Every milestone transition commit must be self-contained, updating `HANDOFF.md`, `docs/CURRENT_STATE.md`, logging any new decisions in `docs/DECISIONS.md`, and generating a snapshot in `docs/snapshots/`.
+9. **Rule 9: Architecture-Bearing Docstrings Must Align with Master Roadmap**  
+   Architecture-bearing package and module docstrings that declare phases, roadmap roles, or deferred statuses are part of the repository's navigational state. They must not contradict `PLAN.md`. When a roadmap change makes such a docstring stale, the docstring must be updated or pruned as part of the same change.

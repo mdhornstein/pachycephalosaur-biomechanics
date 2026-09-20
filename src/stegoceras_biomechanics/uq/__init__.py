@@ -1,8 +1,7 @@
-"""Uncertainty Quantification (UQ), global sensitivity analysis, and surrogate modeling.
+"""Uncertainty Quantification (UQ) and probabilistic parameter modeling.
 
-Phase 10/16/17/18 roadmap:
-- Parameter distributions (Young's modulus, Poisson's ratio, force magnitude/direction)
-- Sampling strategies (Monte Carlo, Latin Hypercube Sampling via SciPy/SALib)
-- Sensitivity analysis (Sobol indices, Morris screening)
-- Gaussian Process surrogate models & active learning acquisition functions
+Current and scheduled roadmap roles:
+- Phase 5: Uncertainty Quantification & Model Sensitivity Design
+- Phase 6: Global Sensitivity Analysis & Hypothesis Testing (Sobol indices)
+- Phase 7: Gaussian Process Surrogate Modeling & Active Learning
 """
