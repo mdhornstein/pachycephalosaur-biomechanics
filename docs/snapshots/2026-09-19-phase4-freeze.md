@@ -65,8 +65,8 @@ Static equilibrium is satisfied to machine precision ($r_F \le 1.53 \times 10^{-
 ---
 
 ## 6. Authoritative Artifacts at Freeze
-- Model Baseline Config: [`models/phase4/baseline.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/baseline.yaml)
-- Mesh Convergence JSON: [`results/phase4/mesh_convergence_comparison.json`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/results/phase4/mesh_convergence_comparison.json)
-- Subregion Metrics JSON: [`results/phase4/ualvp2_1kn_subregion_metrics.json`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/results/phase4/ualvp2_1kn_subregion_metrics.json)
-- Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md)
+- Model Baseline Config: [`models/phase4/baseline.yaml`](../../models/phase4/baseline.yaml)
+- Mesh Convergence JSON: [`results/phase4/mesh_convergence_comparison.json`](../../results/phase4/mesh_convergence_comparison.json)
+- Subregion Metrics JSON: [`results/phase4/ualvp2_1kn_subregion_metrics.json`](../../results/phase4/ualvp2_1kn_subregion_metrics.json)
+- Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](../../reports/phase4_fea_benchmark_report.md)
 - Solution Arrays: `simulations/phase4/solution_{coarse,medium_coarse,medium}.npz`

@@ -80,14 +80,14 @@ The project currently executes **Model A**:
   - Decimation reduction: `0.0` (zero surface approximation across tiers).
   - Refinement driver: Max element volume constraint ($a_{\max} = \infty \to 5.0 \to 2.0 \to 1.0\text{ mm}^3$).
 - **Software Architecture**:
-  - [`solve_production.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/solve_production.py): Standalone CLI executing one tier per isolated process. Writes `.npz` and `.json` artifacts, then terminates.
-  - [`plot_results.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/plot_results.py): Pure post-processing consumer. Never invokes the solver or Gmsh/TetGen.
+  - [`solve_production.py`](../src/stegoceras_biomechanics/fea/solve_production.py): Standalone CLI executing one tier per isolated process. Writes `.npz` and `.json` artifacts, then terminates.
+  - [`plot_results.py`](../src/stegoceras_biomechanics/fea/plot_results.py): Pure post-processing consumer. Never invokes the solver or Gmsh/TetGen.
 
 ---
 
 ## 8. Authoritative Empirical Results (1.0 kN Broad Load)
 
-From [`results/phase4/mesh_convergence_comparison.json`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/results/phase4/mesh_convergence_comparison.json):
+From [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_convergence_comparison.json):
 
 | Observable ($Q$) | Coarse ($h_1$, 423k) | Med-Coarse ($h_2$, 540k) | Medium ($h_3$, 825k) | Step $\Delta_{1 \to 2}$ | Step $\Delta_{2 \to 3}$ | Total Net $\Delta$ | Numerical Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |

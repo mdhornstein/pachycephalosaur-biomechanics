@@ -2,12 +2,12 @@
 
 **Date**: 2026-09-19  
 **HEAD Commit**: `15a342f` (Transition from Phase 4 to Phase 5)  
-**Current Phase**: Phase 4 **FROZEN**; Phase 5 (Uncertainty Quantification & Sensitivity Design) **ACTIVE NEXT**  
+**Current Phase**: Phase 4 **FROZEN**; Phase 5 (Uncertainty Quantification & Sensitivity Design) **DESIGN PENDING — NEXT GATE**  
 **Lead Specimen**: *Stegoceras validum* UALVP 2 (Cast from micro-CT reconstructed cranium)
 
 > [!IMPORTANT]
 > **Authority & Orientation Notice**:
-> This document is the fast, living operational entry point for incoming humans and AI agents. It reflects current reality at HEAD. For historical milestones, see [`docs/snapshots/`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/). For repository documentation conventions and rules, see [`docs/DOCUMENTATION_SYSTEM.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DOCUMENTATION_SYSTEM.md). Do not infer the current computational implementation from historical phase reports. For scientific review, independently inspect current code, configurations, and numerical artifacts rather than treating this handoff text as proof.
+> This document is the fast, living operational entry point for incoming humans and AI agents. It reflects current reality at HEAD. For historical milestones, see [`docs/snapshots/`](docs/snapshots/). For repository documentation conventions and rules, see [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md). Do not infer the current computational implementation from historical phase reports. For scientific review, independently inspect current code, configurations, and numerical artifacts rather than treating this handoff text as proof.
 
 ---
 
@@ -33,9 +33,9 @@ Quantify cranial stress distribution, compliance, and energy absorption in *Steg
 - **Dorsal Dome Stress Stabilization**:
   - Frontoparietal dome apex 95th% von Mises stress: $3.399 \to 3.355 \to 3.334\text{ MPa}$ ($-1.92\%$ net, $-0.63\%$ final step, converging smoothly).
 - **Pipeline Architecture Decoupled**:
-  - [`src/stegoceras_biomechanics/fea/solve_production.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/solve_production.py): Standalone CLI driver executing one solve per isolated subprocess, writing `.npz` and `.json` artifacts before exiting.
-  - [`src/stegoceras_biomechanics/fea/plot_results.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/plot_results.py): Pure visualization consumer (<10s, <250 MB RAM). Hard invariant: never calls the solver or generates meshes.
-- **Automated Tests**: 100% passing test suite in [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py).
+  - [`src/stegoceras_biomechanics/fea/solve_production.py`](src/stegoceras_biomechanics/fea/solve_production.py): Standalone CLI driver executing one solve per isolated subprocess, writing `.npz` and `.json` artifacts before exiting.
+  - [`src/stegoceras_biomechanics/fea/plot_results.py`](src/stegoceras_biomechanics/fea/plot_results.py): Pure visualization consumer (<10s, <250 MB RAM). Hard invariant: never calls the solver or generates meshes.
+- **Automated Tests**: 100% passing test suite in [`tests/test_phase4_fea.py`](tests/test_phase4_fea.py).
 
 ---
 
@@ -59,28 +59,28 @@ Author the formal **Phase 5 UQ & Sensitivity Specification** (`docs/phase5_uq_sp
 ---
 
 ## 📚 Information Architecture & Authority Hierarchy
-*(Detailed specifications in [`docs/DOCUMENTATION_SYSTEM.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DOCUMENTATION_SYSTEM.md))*
+*(Detailed specifications in [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md))*
 
 Never make the same technical fact authoritative in two places:
 1. **Level 1: Technical Truth (Code, Configs, & Data Artifacts)**:
-   - Executable baseline: [`models/phase4/baseline.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/baseline.yaml)
-   - Mesh metadata: [`data/metadata/phase4_mesh_metrics_*.json`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/)
-   - Authoritative solve results: [`results/phase4/mesh_convergence_comparison.json`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/results/phase4/mesh_convergence_comparison.json)
+   - Executable baseline: [`models/phase4/baseline.yaml`](models/phase4/baseline.yaml)
+   - Mesh metadata: [`data/metadata/phase4_mesh_metrics_*.json`](data/metadata/)
+   - Authoritative solve results: [`results/phase4/mesh_convergence_comparison.json`](results/phase4/mesh_convergence_comparison.json)
    - Solution arrays: `simulations/phase4/solution_*.npz`
 2. **Level 2: Current Scientific Interpretation**:
-   - Comprehensive living state: [`docs/CURRENT_STATE.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/CURRENT_STATE.md)
+   - Comprehensive living state: [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
 3. **Level 3: Operational Handoff & Roadmap**:
-   - Living entry point: [`HANDOFF.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/HANDOFF.md)
-   - Forward research roadmap: [`PLAN.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/PLAN.md)
+   - Living entry point: [`HANDOFF.md`](HANDOFF.md)
+   - Forward research roadmap: [`PLAN.md`](PLAN.md)
 4. **Level 4: Historical Record & Scientific Archive**:
-   - Append-only decision log: [`docs/DECISIONS.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DECISIONS.md)
-   - Milestone snapshots: [`docs/snapshots/2026-09-19-phase4-freeze.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/2026-09-19-phase4-freeze.md)
-   - Formal milestone reports: [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md)
-   - Preserved archives: [`reports/archive/phase4_walkthrough_legacy.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/archive/phase4_walkthrough_legacy.md)
+   - Append-only decision log: [`docs/DECISIONS.md`](docs/DECISIONS.md)
+   - Milestone snapshots: [`docs/snapshots/2026-09-19-phase4-freeze.md`](docs/snapshots/2026-09-19-phase4-freeze.md)
+   - Formal milestone reports: [`reports/phase4_fea_benchmark_report.md`](reports/phase4_fea_benchmark_report.md)
+   - Preserved archives: [`reports/archive/phase4_walkthrough_legacy.md`](reports/archive/phase4_walkthrough_legacy.md)
 
 ---
 
 ## 👥 How to Work
-- **Coding Agent**: Start by reading [`HANDOFF.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/HANDOFF.md), then check [`docs/CURRENT_STATE.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/CURRENT_STATE.md). Always ensure tests pass. When completing a milestone, update `CURRENT_STATE.md`, `HANDOFF.md`, log decisions in `docs/DECISIONS.md`, and generate a snapshot in `docs/snapshots/`.
+- **Coding Agent**: Start by reading [`HANDOFF.md`](HANDOFF.md), then check [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). Always ensure tests pass. When completing a milestone, update `CURRENT_STATE.md`, `HANDOFF.md`, log decisions in `docs/DECISIONS.md`, and generate a snapshot in `docs/snapshots/`.
 - **Review Agent**: Treat `HANDOFF.md` as orientation, not ground truth. Independently verify claims against current git HEAD, test executions, and JSON/NPZ data artifacts. Check for stale numbers and internal consistency.
 - **Human**: Direct high-level priorities and review proposed specifications in `docs/` before authorizing new simulation campaigns.

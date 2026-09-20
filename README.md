@@ -104,18 +104,15 @@ uv run jupyter lab
 
 ---
 
-## 🔬 4. Current Milestone: Phase 4 Verified & Closed (Deterministic FEA Benchmark Complete)
+## 🔬 4. Current Status & State Architecture
 
-This repository has completed **Phase 4 (Surface-Derived Finite Element Benchmark)** and is transitioning to **Phase 5 (Uncertainty Quantification)**:
-- **Phase 1 (Data & Provenance)**: 33 MorphoSource scans cataloged with SHA-256 manifests in [`DATA_SOURCES.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/DATA_SOURCES.md) and [`data/metadata/dataset_manifest.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml).
-- **Phase 2 (Digital Anatomy)**: Quantitative geometry inventory, bilateral symmetry, and coordinate alignment in [`reports/phase2_digital_anatomy_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase2_digital_anatomy_report.md).
-- **Phase 3 (Model Audit & Feasibility)**: Formal parameter audit of Snively & Theodor (2011) and baseline specification in [`reports/phase3_recommended_benchmark.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase3_recommended_benchmark.md).
-- **Phase 4 (FEA Benchmark & Discretization Sensitivity)**:
-  - Canonical watertight master surface ($G_0$, SHA-256 `5adcf5369626...`).
-  - Production tetrahedral mesh hierarchy with zero decimation and fixed TetGen quality ($q=1.5, \theta_{\min}=10^\circ$).
-  - Single-component algorithmic geodesic dorsal load patch ($3000\text{ mm}^2, 1000\text{ N}$) on frontoparietal dome.
-  - Linear-elastic direct solves verified for Hookean scaling, static equilibrium, and work-energy identity.
-  - Full benchmark synthesis documented in [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md) and [`reports/walkthrough.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/walkthrough.md).
-  - 16/16 automated unit tests passing in [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py).
+To eliminate documentation drift and maintain a verifiable scientific audit trail across multi-session research, this repository separates high-level project documentation from living computational state:
 
-*The next milestone is Phase 5: Propagating characterized discretization sensitivities alongside biological and material uncertainties into global sensitivity analysis (Sobol indices) and surrogate active learning.*
+- **Operational Entry Point**: [`HANDOFF.md`](HANDOFF.md) — What the active research milestone is, what is verified, and the single immediate next action.
+- **Canonical Living State**: [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) — The active scientific, geometric, boundary condition, and numerical model definition.
+- **Documentation Conventions**: [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) — The two-dimensional state system and authority hierarchy.
+- **Decision History**: [`docs/DECISIONS.md`](docs/DECISIONS.md) — Append-only scientific and architectural rationale log.
+- **Milestone Snapshots**: [`docs/snapshots/`](docs/snapshots/) — Immutable historical time-capsules tied to milestone commit SHAs.
+- **Master Research Roadmap**: [`PLAN.md`](PLAN.md) — Forward-looking multi-phase computational roadmap.
+
+*For current project phase, computational status, and recent empirical results, refer to [`HANDOFF.md`](HANDOFF.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md).*

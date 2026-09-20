@@ -44,7 +44,7 @@ A total of **33 STL surface meshes** and **4 provenance manifest documents** wer
 * **Whole-Skull Surface Mesh**:
   * `WitmerLab_Stegoceras_UALVP2-000018284.stl` (MorphoSource Media `000018284`, $60,005,184$ bytes, SHA-256: `aa994f41df3a7763a048f93339345dd68ea91f475386b8ae129ec80fd226c7c3`).
 * **32 Cranial Element Meshes**:
-  * MorphoSource Media `000043121` through `000043162` ($71,505,746$ bytes total archive size). Full SHA-256 digests and metrics for every file are cataloged in [`data/metadata/geometry_inventory.csv`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/geometry_inventory.csv).
+  * MorphoSource Media `000043121` through `000043162` ($71,505,746$ bytes total archive size). Full SHA-256 digests and metrics for every file are cataloged in [`data/metadata/geometry_inventory.csv`](../data/metadata/geometry_inventory.csv).
 * **Provenance Manifest Documents**:
   * `data/raw/morphosource_manifests/000018284_media-manifest-6e155e61-d521-4140-99c0-766f1c0eb6e4.csv`
   * `data/raw/morphosource_manifests/32_components_media-manifest-a0955802-2722-4b00-99da-d879bf6991b4.csv`
@@ -127,7 +127,7 @@ The meshes are predominantly manifold surface representations with varying degre
 
 **Yes.** Concatenating the 32 component meshes without applying any rotation, translation, scaling, or registration yields a complete, articulated cranium that geometrically coincides with the deposited whole-skull mesh.
 
-![32-Component Cranial Assembly Render](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/02_component_assembly_render.png)
+![32-Component Cranial Assembly Render](../reports/figures/02_component_assembly_render.png)
 
 ---
 
@@ -151,7 +151,7 @@ Sampled Nearest-Point Distance Metrics (Independently sampled N = 50,000 points)
 - Sampled Bidirectional Hausdorff-Like Approx: 16.330 coordinate units
 ```
 
-![Assembly vs. Whole Skull Overlay](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/figures/03_assembly_whole_overlay.png)
+![Assembly vs. Whole Skull Overlay](../reports/figures/03_assembly_whole_overlay.png)
 
 #### Interpretation of Geometric Observations
 1. **Surface Area Difference**: The sum of individual component areas is $42.5\%$ greater than the whole skull, consistent with the presence of internal sutural contact surfaces and cavity walls that are exposed in the segmented individual elements but disappear/fuse in the unified whole-skull representation.

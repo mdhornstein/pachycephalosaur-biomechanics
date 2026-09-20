@@ -24,10 +24,10 @@ The objective of this project is to construct a fully reproducible, open-source 
    Numerical discretization error (mesh convergence) is strictly separated from biological uncertainty (material properties, in vivo muscle force) and model-form uncertainty (boundary conditions).
 5. **Phase Gating & State Architecture**:
    Each milestone serves as an explicit gate. Downstream simulation phases do not proceed without formal empirical validation. State and decisions are maintained hierarchically:
-   - **Operational Entry Point**: [`HANDOFF.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/HANDOFF.md)
-   - **Canonical Living State**: [`docs/CURRENT_STATE.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/CURRENT_STATE.md)
-   - **Decision Log**: [`docs/DECISIONS.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DECISIONS.md)
-   - **Milestone Snapshots**: [`docs/snapshots/`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/)
+   - **Operational Entry Point**: [`HANDOFF.md`](HANDOFF.md)
+   - **Canonical Living State**: [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
+   - **Decision Log**: [`docs/DECISIONS.md`](docs/DECISIONS.md)
+   - **Milestone Snapshots**: [`docs/snapshots/`](docs/snapshots/)
 
 ---
 
@@ -56,25 +56,25 @@ flowchart TD
 ### Phase 1: Data Acquisition & Provenance Manifest *(Infrastructure Complete - Gate)*
 - Comprehensive inventory of public UALVP 2 digital records identified across MorphoSource, WitmerLab, and Sketchfab.
 - Implementation of 4-tier provenance taxonomy (`primary_scan`, `segmented_from_primary_scan`, `researcher_derived`, `secondary_reference`).
-- Machine-readable manifest [`data/metadata/dataset_manifest.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/dataset_manifest.yaml).
+- Machine-readable manifest [`data/metadata/dataset_manifest.yaml`](data/metadata/dataset_manifest.yaml).
 - Checksum validation and safe ingestion tooling (`scripts/ingest_data.py`).
-- Publication of Phase 1 Synthesis Report ([`reports/phase1_data_and_geometry_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase1_data_and_geometry_report.md)).
+- Publication of Phase 1 Synthesis Report ([`reports/phase1_data_and_geometry_report.md`](reports/phase1_data_and_geometry_report.md)).
 
 ### Phase 2: Digital Anatomy Inventory & Geometry Validation *(Completed)*
 - Ingested and inventoried 33 MorphoSource surface STLs (Whole Skull `000018284` + 32 Component Bones `000043121-000043162`).
-- Generated quantitative inventory catalog [`data/metadata/geometry_inventory.csv`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/geometry_inventory.csv) with SHA-256 digests, vertex/face counts, and topology.
+- Generated quantitative inventory catalog [`data/metadata/geometry_inventory.csv`](data/metadata/geometry_inventory.csv) with SHA-256 digests, vertex/face counts, and topology.
 - Verified common native coordinate system alignment ($\Delta \le 0.029$ coordinate units) and zero-transformation assembly.
 - Characterized 14 bilateral symmetry pairs and sampled nearest-point distance distributions.
-- Published Phase 2 Synthesis Report ([`reports/phase2_digital_anatomy_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase2_digital_anatomy_report.md)).
+- Published Phase 2 Synthesis Report ([`reports/phase2_digital_anatomy_report.md`](reports/phase2_digital_anatomy_report.md)).
 
 ### Phase 3: Published-Model Input Audit & Biomechanical Feasibility *(Completed - Gate)*
-- Line-by-line model parameter and methodology extraction from primary reference Snively & Theodor (2011) ([`literature/snively_theodor_2011_model_audit.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/literature/snively_theodor_2011_model_audit.md)).
-- Constructed formal Biomechanics Input Matrix ([`data/metadata/biomechanics_input_matrix.csv`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/biomechanics_input_matrix.csv)) with 5-tier evidence levels and 7 availability categories.
-- Reconstructed published computational workflow and separated geometry-limited, parameter-limited, and model-form uncertainties ([`reports/snively_theodor_model_reconstruction.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/snively_theodor_model_reconstruction.md)).
+- Line-by-line model parameter and methodology extraction from primary reference Snively & Theodor (2011) ([`literature/snively_theodor_2011_model_audit.md`](literature/snively_theodor_2011_model_audit.md)).
+- Constructed formal Biomechanics Input Matrix ([`data/metadata/biomechanics_input_matrix.csv`](data/metadata/biomechanics_input_matrix.csv)) with 5-tier evidence levels and 7 availability categories.
+- Reconstructed published computational workflow and separated geometry-limited, parameter-limited, and model-form uncertainties ([`reports/snively_theodor_model_reconstruction.md`](reports/snively_theodor_model_reconstruction.md)).
 - Formally justified that raw CT is NOT required for the first baseline benchmark, but required for voxel-level density mapping.
-- Specified concrete first benchmark experiment with explicit quantitative validation targets ([`reports/phase3_recommended_benchmark.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase3_recommended_benchmark.md)).
-- Automated dimensional consistency audit notebook ([`notebooks/05_model_input_dimensional_audit.ipynb`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/05_model_input_dimensional_audit.ipynb)).
-- Automated verification tests ([`tests/test_phase3_model_audit.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase3_model_audit.py)).
+- Specified concrete first benchmark experiment with explicit quantitative validation targets ([`reports/phase3_recommended_benchmark.md`](reports/phase3_recommended_benchmark.md)).
+- Automated dimensional consistency audit notebook ([`notebooks/05_model_input_dimensional_audit.ipynb`](notebooks/05_model_input_dimensional_audit.ipynb)).
+- Automated verification tests ([`tests/test_phase3_model_audit.py`](tests/test_phase3_model_audit.py)).
 
 ### Phase 4: Surface-Derived FEA Benchmark & Discretization Sensitivity *(Completed - Gate)*
 - Immutable canonical master surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, SHA-256 `5adcf5369626...`).
@@ -87,8 +87,8 @@ flowchart TD
 - Anatomical boundary restraints: Occipital condyle ($u_x = u_y = u_z = 0$) and nuchal crest ($u_y = u_z = 0$).
 - 3D linear isotropic elasticity engine (`skfem` + SciPy) with direct sparse solves.
 - Discretization sensitivity characterized and explicitly propagated as numerical uncertainty.
-- 17/17 passing automated tests in [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py).
-- Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md).
+- 17/17 passing automated tests in [`tests/test_phase4_fea.py`](tests/test_phase4_fea.py).
+- Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](reports/phase4_fea_benchmark_report.md).
 
 ### Phase 5: Biological, Material, & Boundary Uncertainty Quantification *(Active Next Phase)*
 - Propagate characterized numerical discretization uncertainty ($\epsilon_{\text{num}}$) alongside epistemic and aleatory inputs:

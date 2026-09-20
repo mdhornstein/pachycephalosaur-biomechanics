@@ -3,10 +3,10 @@
 > [!NOTE]
 > **ARCHIVED HISTORICAL ARTIFACT**:
 > This walkthrough document has been retired and preserved for historical reference as of 2026-09-19 (Commit `e3ba976`).
-> - For the living operational entry point, see [`HANDOFF.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/HANDOFF.md).
-> - For the current canonical design and scientific state, see [`docs/CURRENT_STATE.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/CURRENT_STATE.md).
-> - For the milestone snapshot, see [`docs/snapshots/2026-09-19-phase4-freeze.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/2026-09-19-phase4-freeze.md).
-> - For the formal scientific benchmark report, see [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md).
+> - For the living operational entry point, see [`HANDOFF.md`](../../HANDOFF.md).
+> - For the current canonical design and scientific state, see [`docs/CURRENT_STATE.md`](../../docs/CURRENT_STATE.md).
+> - For the milestone snapshot, see [`docs/snapshots/2026-09-19-phase4-freeze.md`](../../docs/snapshots/2026-09-19-phase4-freeze.md).
+> - For the formal scientific benchmark report, see [`phase4_fea_benchmark_report.md`](../phase4_fea_benchmark_report.md).
 
 ---
 
@@ -25,7 +25,7 @@ This document provides a comprehensive walkthrough of the verified **Phase 4: Su
 ## 📦 Pipeline Deliverables & Technical Architecture
 
 ### 1. Canonical Master Surface ($G_0$) & Zero Decimation
-- **Immutable Canonical Surface**: [`data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl)
+- **Immutable Canonical Surface**: [`data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl`](../../data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl)
 - **Canonical Array SHA-256**: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`
 - **Zero Decimation Across Production Tiers**: Every production mesh tier is generated directly from the identical canonical surface without quadric simplification (`decimate_reduction = 0.0`), preventing artificial boundary sliver creation.
 - **Topological Integrity**: 100% 2-manifold watertight solid with positive enclosed volume ($+646,423.1\text{ mm}^3$) conserving specimen volume within $0.024\%$.
@@ -49,8 +49,8 @@ Generated via TetGen holding quality constraints strictly invariant ($q = 1.5, \
   - Target area: $3000.0\text{ mm}^2$; Achieved area: $3000.6\text{ mm}^2$ ($+0.02\%$).
 
 ### 4. Decoupled Simulation & Visualization Architecture
-- **Hard Invariant**: [`src/stegoceras_biomechanics/fea/plot_results.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/plot_results.py) never calls `solve_linear_elasticity()` and never generates meshes. It strictly loads saved `.npz` and `.json` artifacts from disk (<10 seconds, <250 MB RAM).
-- **Standalone Simulation Driver**: [`src/stegoceras_biomechanics/fea/solve_production.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/src/stegoceras_biomechanics/fea/solve_production.py) solves one tier at a time in an isolated process, writing immutable numerical artifacts directly to `simulations/phase4/solution_{tier}.npz` and `results/phase4/metrics_{tier}.json` before terminating to return 100% of RAM to the operating system.
+- **Hard Invariant**: [`src/stegoceras_biomechanics/fea/plot_results.py`](../../src/stegoceras_biomechanics/fea/plot_results.py) never calls `solve_linear_elasticity()` and never generates meshes. It strictly loads saved `.npz` and `.json` artifacts from disk (<10 seconds, <250 MB RAM).
+- **Standalone Simulation Driver**: [`src/stegoceras_biomechanics/fea/solve_production.py`](../../src/stegoceras_biomechanics/fea/solve_production.py) solves one tier at a time in an isolated process, writing immutable numerical artifacts directly to `simulations/phase4/solution_{tier}.npz` and `results/phase4/metrics_{tier}.json` before terminating to return 100% of RAM to the operating system.
 
 ---
 
