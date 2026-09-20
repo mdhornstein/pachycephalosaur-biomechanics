@@ -22,8 +22,12 @@ The objective of this project is to construct a fully reproducible, open-source 
    A deterministic, transparent, and reproducible FEA benchmark is established and validated prior to deploying non-linear contacts, complex anisotropic tensors, or machine learning surrogates.
 4. **Distinction of Uncertainty Sources**:
    Numerical discretization error (mesh convergence) is strictly separated from biological uncertainty (material properties, in vivo muscle force) and model-form uncertainty (boundary conditions).
-5. **Phase Gating**:
-   Each milestone serves as an explicit gate. Downstream simulation phases do not proceed without formal empirical validation and review of upstream data and geometry.
+5. **Phase Gating & State Architecture**:
+   Each milestone serves as an explicit gate. Downstream simulation phases do not proceed without formal empirical validation. State and decisions are maintained hierarchically:
+   - **Operational Entry Point**: [`HANDOFF.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/HANDOFF.md)
+   - **Canonical Living State**: [`docs/CURRENT_STATE.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/CURRENT_STATE.md)
+   - **Decision Log**: [`docs/DECISIONS.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DECISIONS.md)
+   - **Milestone Snapshots**: [`docs/snapshots/`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/)
 
 ---
 

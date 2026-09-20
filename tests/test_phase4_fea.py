@@ -430,19 +430,24 @@ def test_targeted_report_synchronization_and_stale_data_regression():
     metrics_path = Path("results/phase4/ualvp2_1kn_subregion_metrics.json")
     fine_mesh_path = Path("data/metadata/phase4_mesh_metrics_fine.json")
     report_path = Path("reports/phase4_fea_benchmark_report.md")
-    walkthrough_path = Path("reports/walkthrough.md")
+    legacy_walkthrough_path = Path("reports/archive/phase4_walkthrough_legacy.md")
+    current_state_path = Path("docs/CURRENT_STATE.md")
+    handoff_path = Path("HANDOFF.md")
     
     assert conv_path.exists(), "mesh_convergence_comparison.json missing"
     assert metrics_path.exists(), "ualvp2_1kn_subregion_metrics.json missing"
     assert fine_mesh_path.exists(), "phase4_mesh_metrics_fine.json missing"
     assert report_path.exists(), "phase4_fea_benchmark_report.md missing"
-    assert walkthrough_path.exists(), "reports/walkthrough.md missing"
+    assert legacy_walkthrough_path.exists(), "reports/archive/phase4_walkthrough_legacy.md missing"
+    assert current_state_path.exists(), "docs/CURRENT_STATE.md missing"
+    assert handoff_path.exists(), "HANDOFF.md missing"
     
     conv = json.loads(conv_path.read_text())
     metrics = json.loads(metrics_path.read_text())
     fine_mesh = json.loads(fine_mesh_path.read_text())
     report_text = report_path.read_text()
-    walkthrough_text = walkthrough_path.read_text()
+    legacy_walkthrough_text = legacy_walkthrough_path.read_text()
+    current_state_text = current_state_path.read_text()
     
     # 1. Authoritative Medium Benchmark values
     med_energy = conv["medium"]["total_strain_energy_mJ"]
@@ -458,11 +463,13 @@ def test_targeted_report_synchronization_and_stale_data_regression():
     stale_tokens = ["6.7671", "1.0412", "1.3063", "46b11f7e"]
     for token in stale_tokens:
         assert token not in report_text, f"Found stale artifact token '{token}' in benchmark report!"
-        assert token not in walkthrough_text, f"Found stale artifact token '{token}' in walkthrough!"
+        assert token not in legacy_walkthrough_text, f"Found stale artifact token '{token}' in legacy walkthrough!"
+        assert token not in current_state_text, f"Found stale artifact token '{token}' in CURRENT_STATE.md!"
         
-    # 3. Canonical hash presence in walkthrough and report
+    # 3. Canonical hash presence in legacy walkthrough, current state, and report
     canonical_hash = "5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2"
-    assert canonical_hash in walkthrough_text, "Canonical master hash missing from walkthrough!"
+    assert canonical_hash in legacy_walkthrough_text, "Canonical master hash missing from legacy walkthrough!"
+    assert canonical_hash in current_state_text, "Canonical master hash missing from CURRENT_STATE.md!"
     assert canonical_hash in report_text, "Canonical master hash missing from benchmark report!"
     
     # 4. Regional subregion metrics consistency
