@@ -32,7 +32,7 @@ This repository enforces a **two-dimensional information architecture** that str
        ┌────────────────────┐    ┌─────────────────────┐    ┌───────────────────┐
        │    DECISIONS.md    │    │     snapshots/      │    │     reports/      │
        │ "Why we decided it"│    │"What we believed at"│    │"What was formally"│
-       │   (Append-Only)    │    │ (Commit Time-Capsule│    │  (Peer Reviewed)  │
+       │   (Append-Only)    │    │ (Commit Time-Capsule│    │    established    │
        └────────────────────┘    └─────────────────────┘    └───────────────────┘
 ```
 
@@ -54,16 +54,16 @@ This repository enforces a **two-dimensional information architecture** that str
    - **Role**: Forward-looking master research roadmap, computational gates, and phase definitions.
    - **Rule**: Defines where we are going; does not redefine current implementation details.
 
-### B. Historical Documents (Permanent & Immutable)
+### B. Historical & Scientific Records (Permanent, Append-Only, or Milestone Records)
 4. **[`docs/DECISIONS.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DECISIONS.md)**:
    - **Role**: Append-only scientific and architectural decision log.
    - **Rule**: Never rewritten. When a prior decision is revised, a new decision is appended that explicitly supersedes the old one (e.g. `D004` supersedes `D002`).
 5. **[`docs/snapshots/*.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/)**:
-   - **Role**: Immutable time-capsules capturing the exact research and model state at a specific milestone commit (e.g., `2026-09-19-phase4-freeze.md`).
+   - **Role**: Truly immutable historical snapshots capturing the exact research and model state at a specific milestone commit (e.g., `2026-09-19-phase4-freeze.md`).
    - **Rule**: Tied to a specific git commit SHA; never modified after creation.
 6. **[`reports/*.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/)**:
-   - **Role**: Formal scientific milestone and synthesis reports (e.g., [`phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md)).
-   - **Rule**: Serves as the comprehensive scientific publication record. Does not serve as the living operational handoff.
+   - **Role**: Formal project and milestone scientific reports (e.g., [`phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md)).
+   - **Rule**: Records what each completed milestone investigation formally established. Normally stable upon phase completion, but correctable (for errata or precision fixes) with revision history preserved by Git. Does not serve as the living operational handoff.
 7. **[`reports/archive/*.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/archive/)**:
    - **Role**: Preserved legacy documentation (e.g., [`phase4_walkthrough_legacy.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/archive/phase4_walkthrough_legacy.md)).
    - **Rule**: Clearly marked with an archival banner indicating that it has been superseded.
@@ -89,9 +89,9 @@ Level 3: OPERATIONAL HANDOFF & ROADMAP
          • PLAN.md
          ▼
 Level 4: HISTORICAL RECORD & SCIENTIFIC ARCHIVE
-         • docs/DECISIONS.md
-         • docs/snapshots/*.md
-         • reports/*.md
+         • docs/snapshots/*.md (Truly immutable historical snapshots)
+         • docs/DECISIONS.md (Append-only rationale log)
+         • reports/*.md (Formal milestone records, correctable via Git)
 ```
 
 - **Technical Fact Invariant**: Never re-declare or hardcode the same technical scalar (e.g. element count, canonical SHA-256 hash, energy value) in multiple competing places. Level 1 defines it; Level 2 interprets it; Level 3 summarizes it.
@@ -110,8 +110,8 @@ Level 4: HISTORICAL RECORD & SCIENTIFIC ARCHIVE
    Never edit past decisions in `docs/DECISIONS.md` to make past choices look cleaner. A revised decision gets a new entry (`D00X`) that explicitly supersedes the earlier entry.
 5. **Rule 5: Snapshots are Immutable**  
    Every major milestone freeze generates a new file in `docs/snapshots/` bearing the date, milestone name, and exact git commit SHA. Once committed, a snapshot is frozen.
-6. **Rule 6: Reports are Not Handoffs**  
-   A scientific report records a formal milestone investigation. It is not an operational handoff and should not be expected to describe subsequent computational updates.
+6. **Rule 6: Reports are Milestone Records, Not Operational Handoffs**  
+   A scientific report formally records what a milestone investigation established. While normally stable upon phase completion, it remains correctable (e.g. for errata or precision adjustments) with revision history preserved by Git, but does not serve as the living operational handoff.
 7. **Rule 7: Agents Must Independently Verify**  
    `HANDOFF.md` provides orientation, not proof. Review agents must independently inspect the code, execute tests, and verify JSON/NPZ data artifacts before approving work.
 8. **Rule 8: Milestone Commits Update the State System**  
