@@ -1,8 +1,8 @@
 # PROJECT HANDOFF
 
 **Date**: 2026-09-19  
-**Current Git HEAD**: `2102f29` (reconciled through post-freeze documentation updates)  
 **Phase Transition Baseline**: `15a342f` (Phase 4 Freeze & Scientific Baseline)  
+**Current Git State**: Dynamic — interrogate directly via `git rev-parse HEAD`  
 **Current Phase**: Phase 4 **FROZEN**; Phase 5 (Uncertainty Quantification & Sensitivity Design) **DESIGN PENDING — NEXT GATE**  
 **Lead Specimen**: *Stegoceras validum* UALVP 2 (Cast from micro-CT reconstructed cranium)
 
