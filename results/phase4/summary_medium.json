@@ -1,0 +1,20 @@
+{
+  "tier": "medium",
+  "num_nodes": 165969,
+  "num_elements": 825277,
+  "num_dofs": 497907,
+  "source_mesh": "data/meshes/cleaned/stegoceras_tetmesh_medium.npz",
+  "solver_type": "direct",
+  "solver_runtime_seconds": 2055.2535650730133,
+  "max_displacement_um": 59.751810577245365,
+  "apex_displacement_um": 37.931299641519516,
+  "total_strain_energy_mJ": 15.746246656872561,
+  "global_p95_von_mises_MPa": 2.0418697668308887,
+  "global_p99_von_mises_MPa": 4.0572611676217285,
+  "dome_p95_von_mises_MPa": 3.333907456646167,
+  "braincase_p95_von_mises_MPa": 2.014619033535033,
+  "algebraic_residual_norm": 1.987225312739892e-11,
+  "normalized_force_residual": 1.5320142535524559e-12,
+  "normalized_moment_residual": 7.225999678714451e-13,
+  "absolute_moment_residual_Nmm": 1.1398636795423153e-08
+}

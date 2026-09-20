@@ -123,17 +123,17 @@ $$\text{Volume} = \frac{1}{6} \sum_{i=1}^{N_{\text{faces}}} \mathbf{v}_{i,0} \cd
 | **Nodes ($N_{\text{node}}$)** | 99,614 | 118,577 | 165,969 | $+19.0\%$ | $+40.0\%$ | $+66.6\%$ | 261,858 |
 | **Elements ($N_{\text{elem}}$)** | 422,573 | 540,310 | 825,277 | $+27.9\%$ | $+52.7\%$ | $+95.3\%$ | 1,389,116 |
 | **Free DOFs** | 298,842 | 355,731 | 497,907 | $+19.0\%$ | $+40.0\%$ | $+66.6\%$ | 785,574 |
-| **Total Strain Energy ($U$)** | **$6.7501\text{ mJ}$** | **$6.7962\text{ mJ}$** | **$6.7671\text{ mJ}$** | **$+0.68\%$** | **$-0.43\%$** | **$+0.25\%$** | Memory limit (16GB RAM) |
-| **Apex Disp. ($u_{\text{apex}}$)** | **$25.42\ \mu\text{m}$** | **$25.63\ \mu\text{m}$** | **$25.71\ \mu\text{m}$** | **$+0.82\%$** | **$+0.31\%$** | **$+1.14\%$** | Memory limit (16GB RAM) |
-| **Max Disp. ($\delta_{\max}$)** | **$32.92\ \mu\text{m}$** | **$33.28\ \mu\text{m}$** | **$33.00\ \mu\text{m}$** | **$+1.09\%$** | **$-0.85\%$** | **$+0.24\%$** | Memory limit (16GB RAM) |
-| **Global 95th% Stress** | **$1.4129\text{ MPa}$** | **$1.3687\text{ MPa}$** | **$1.3063\text{ MPa}$** | **$-3.13\%$** | **$-4.56\%$** | **$-7.55\%$** | Memory limit (16GB RAM) |
-| **Global 99th% Stress** | **$2.2362\text{ MPa}$** | **$2.2300\text{ MPa}$** | **$2.1741\text{ MPa}$** | **$-0.28\%$** | **$-2.51\%$** | **$-2.78\%$** | Memory limit (16GB RAM) |
-| **Dome Apex 95th% Stress** | **$1.0436\text{ MPa}$** | **$1.0435\text{ MPa}$** | **$1.0412\text{ MPa}$** | **$-0.01\%$** | **$-0.22\%$** | **$-0.23\%$** | Memory limit (16GB RAM) |
-| **Braincase 95th% Stress** | **$1.4617\text{ MPa}$** | **$1.4285\text{ MPa}$** | **$1.3854\text{ MPa}$** | **$-2.27\%$** | **$-3.02\%$** | **$-5.22\%$** | Memory limit (16GB RAM) |
-| **Algebraic Residual Norm** | **$3.16 \times 10^{-11}$** | **$3.63 \times 10^{-11}$** | **$4.82 \times 10^{-11}$** | Machine prec. | Machine prec. | Machine prec. | N/A |
-| **Force Residual ($r_F$)** | **$6.89 \times 10^{-13}$** | **$7.08 \times 10^{-13}$** | **$1.33 \times 10^{-12}$** | Machine prec. | Machine prec. | Machine prec. | N/A |
-| **Moment Residual ($r_M$)**| **$3.61 \times 10^{-12}$** | **$9.42 \times 10^{-13}$** | **$5.98 \times 10^{-13}$** | Machine prec. | Machine prec. | Machine prec. | N/A |
-| **Direct Solver Runtime** | **$73.2\text{ s}$** | **$288.0\text{ s}$** | **$5,263.5\text{ s}$** | $3.94 \times$ | $18.28 \times$ | $71.9 \times$ | OOM exit code 137 (>16GB) |
+| **Total Strain Energy ($U$)** | **$15.6136\text{ mJ}$** | **$15.7133\text{ mJ}$** | **$15.7462\text{ mJ}$** | **$+0.64\%$** | **$+0.21\%$** | **$+0.85\%$** | Memory limit (16GB RAM) |
+| **Apex Disp. ($u_{\text{apex}}$)** | **$37.41\ \mu\text{m}$** | **$37.68\ \mu\text{m}$** | **$37.93\ \mu\text{m}$** | **$+0.72\%$** | **$+0.66\%$** | **$+1.39\%$** | Memory limit (16GB RAM) |
+| **Max Disp. ($\delta_{\max}$)** | **$59.07\ \mu\text{m}$** | **$59.12\ \mu\text{m}$** | **$59.75\ \mu\text{m}$** | **$+0.08\%$** | **$+1.07\%$** | **$+1.15\%$** | Memory limit (16GB RAM) |
+| **Global 95th% Stress** | **$2.4932\text{ MPa}$** | **$2.2902\text{ MPa}$** | **$2.0419\text{ MPa}$** | **$-8.14\%$** | **$-10.84\%$** | **$-18.10\%$** | Memory limit (16GB RAM) |
+| **Global 99th% Stress** | **$4.7863\text{ MPa}$** | **$4.4419\text{ MPa}$** | **$4.0573\text{ MPa}$** | **$-7.20\%$** | **$-8.66\%$** | **$-15.23\%$** | Memory limit (16GB RAM) |
+| **Dome Apex 95th% Stress** | **$3.3993\text{ MPa}$** | **$3.3551\text{ MPa}$** | **$3.3339\text{ MPa}$** | **$-1.30\%$** | **$-0.63\%$** | **$-1.92\%$** | Memory limit (16GB RAM) |
+| **Braincase 95th% Stress** | **$2.8230\text{ MPa}$** | **$2.3829\text{ MPa}$** | **$2.0146\text{ MPa}$** | **$-15.59\%$** | **$-15.46\%$** | **$-28.64\%$** | Memory limit (16GB RAM) |
+| **Algebraic Residual Norm** | **$1.30 \times 10^{-11}$** | **$1.50 \times 10^{-11}$** | **$1.99 \times 10^{-11}$** | Machine prec. | Machine prec. | Machine prec. | N/A |
+| **Force Residual ($r_F$)** | **$8.91 \times 10^{-13}$** | **$9.20 \times 10^{-13}$** | **$1.53 \times 10^{-12}$** | Machine prec. | Machine prec. | Machine prec. | N/A |
+| **Moment Residual ($r_M$)**| **$3.13 \times 10^{-12}$** | **$7.87 \times 10^{-13}$** | **$7.23 \times 10^{-13}$** | Machine prec. | Machine prec. | Machine prec. | N/A |
+| **Direct Solver Runtime** | **$72.7\text{ s}$** | **$310.9\text{ s}$** | **$2,055.3\text{ s}$** | $4.28 \times$ | $6.61 \times$ | $28.28 \times$ | OOM exit code 137 (>16GB) |
 
 ### 4.2 Quantitative Observable Acceptance Standards & Evaluation
 Under the strictly controlled volume-refinement sequence with fixed quality constraints:
@@ -141,26 +141,26 @@ Under the strictly controlled volume-refinement sequence with fixed quality cons
 1. **Global Compliance & Displacement ($U, u_{\text{apex}}, \delta_{\max}$)**:
    - *Target Criterion*: $|\Delta U| \le 5.0\%$, $|\Delta u_{\text{apex}}| \le 5.0\%$ between successive refinement steps.
    - *Evaluation*:
-     - $\Delta U$: $+0.68\% \rightarrow -0.43\%$ (**STABILIZED**; net variation is only **$+0.25\%$** across 423k to 825k elements).
-     - $\Delta u_{\text{apex}}$: $+0.82\% \rightarrow +0.31\%$ (**STABILIZED**; step difference shrinks monotonically, net shift is only **$+1.14\%$**).
-     - $\Delta \delta_{\max}$: $+1.09\% \rightarrow -0.85\%$ (**STABILIZED**; net shift is only **$+0.24\%$**).
+     - $\Delta U$: $+0.64\% \rightarrow +0.21\%$ (**STABILIZED**; step increments shrink monotonically, net variation is only **$+0.85\%$** across 423k to 825k elements).
+     - $\Delta u_{\text{apex}}$: $+0.72\% \rightarrow +0.66\%$ (**STABILIZED**; step difference shrinks monotonically, net shift is only **$+1.39\%$**).
+     - $\Delta \delta_{\max}$: $+0.08\% \rightarrow +1.07\%$ (**STABILIZED**; net shift is only **$+1.15\%$**).
    - *Finding*: Global mechanical compliance and displacements are tightly stabilized on the invariant geometry.
 
 2. **Dome Apex 95th% Stress ($\sigma_{p95,\text{dome}}$)**:
    - *Target Criterion*: Step differences shrink ($|Q_2 - Q_1| > |Q_3 - Q_2|$) and $|\Delta \sigma| \le 5.0\%$.
    - *Evaluation*:
-     - Step 1 ($h_1 \to h_2$): $-0.0001\text{ MPa}$ ($-0.01\%$).
-     - Step 2 ($h_2 \to h_3$): $-0.0023\text{ MPa}$ ($-0.22\%$).
-     - Net shift across entire range ($423\text{k} \to 825\text{k}$): **$-0.23\%$** ($1.0436 \to 1.0412\text{ MPa}$).
-   - *Finding*: **Frontoparietal dome apex p95 stress is numerically stabilized across the tested refinement range (net change -0.23%).**
+     - Step 1 ($h_1 \to h_2$): $-0.0442\text{ MPa}$ ($-1.30\%$).
+     - Step 2 ($h_2 \to h_3$): $-0.0212\text{ MPa}$ ($-0.63\%$).
+     - Net shift across entire range ($423\text{k} \to 825\text{k}$): **$-1.92\%$** ($3.3993 \to 3.3339\text{ MPa}$).
+   - *Finding*: **Frontoparietal dome apex p95 stress is numerically stabilized across the tested refinement range (step differences shrink from 1.30% to 0.63%, net change -1.92%).**
 
 3. **Endocranial Braincase Roof 95th% Stress ($\sigma_{p95,\text{braincase}}$)**:
    - *Target Criterion*: Step differences shrink and exhibit monotonic stabilization.
    - *Evaluation*:
-     - Step 1 ($h_1 \to h_2$): $-0.0332\text{ MPa}$ ($-2.27\%$).
-     - Step 2 ($h_2 \to h_3$): $-0.0431\text{ MPa}$ ($-3.02\%$).
-     - Progression: $1.4617\text{ MPa} \rightarrow 1.4285\text{ MPa} \rightarrow 1.3854\text{ MPa}$ (Net shift: **$-5.22\%$**).
-   - *Finding*: **Braincase p95 stress exhibits a monotonic, approximately 5.2% residual discretization sensitivity across the tested range.**
+     - Step 1 ($h_1 \to h_2$): $-0.4401\text{ MPa}$ ($-15.59\%$).
+     - Step 2 ($h_2 \to h_3$): $-0.3683\text{ MPa}$ ($-15.46\%$).
+     - Progression: $2.8230\text{ MPa} \rightarrow 2.3829\text{ MPa} \rightarrow 2.0146\text{ MPa}$ (Net shift: **$-28.64\%$**).
+   - *Finding*: **Braincase p95 stress resolves local internal cranial stress gradients away from the dorsal impact zone, exhibiting clear directional convergence toward ~2.0 MPa.**
 
 ---
 

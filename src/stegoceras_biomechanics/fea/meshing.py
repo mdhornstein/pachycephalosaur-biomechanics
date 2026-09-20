@@ -16,11 +16,12 @@ def extract_boundary_surface(
     elements: np.ndarray,
 ) -> trimesh.Trimesh:
     """Extracts the watertight 2-manifold boundary surface triangular mesh from a 3D tetrahedral mesh."""
+    # Winding orders oriented such that normals point outward away from opposite vertex:
     faces = np.vstack([
-        elements[:, [0, 1, 2]],
-        elements[:, [0, 2, 3]],
-        elements[:, [0, 3, 1]],
-        elements[:, [1, 3, 2]],
+        elements[:, [0, 2, 1]],  # opposite vertex 3
+        elements[:, [0, 3, 2]],  # opposite vertex 1
+        elements[:, [0, 1, 3]],  # opposite vertex 2
+        elements[:, [1, 2, 3]],  # opposite vertex 0
     ])
     faces_sorted = np.sort(faces, axis=1)
     _, idx, counts = np.unique(faces_sorted, axis=0, return_index=True, return_counts=True)

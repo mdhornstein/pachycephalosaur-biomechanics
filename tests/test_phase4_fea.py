@@ -110,7 +110,23 @@ def test_load_patch_and_boundary_constraints(coarse_mesh_data):
     assert len(loaded_nodes) > 0
     assert len(loaded_facets) > 0
     assert np.isclose(load_spec.target_force_magnitude_N, 1000.0, atol=1e-3)
-    assert abs(load_spec.actual_area_mm2 - 3000.0) < 300.0  # within 10% on coarse mesh
+    assert np.isclose(np.linalg.norm(load_spec.actual_force_vector_N), 1000.0, atol=1e-3)
+    assert abs(load_spec.actual_area_mm2 - 3000.0) / 3000.0 <= 0.02  # within 2% area tolerance
+    
+    # 1. Verify single connected component topology (0 fragmentation)
+    submesh = surf.submesh([loaded_facets], append=True)
+    comps = trimesh.graph.connected_components(submesh.face_adjacency)
+    assert len(comps) == 1, f"Load patch fragmented into {len(comps)} disconnected components!"
+    
+    # 2. Verify strict dorsal elevation constraint: 100% of loaded nodes have Z >= 80.0 mm
+    v_loaded = nodes[loaded_nodes]
+    assert np.min(v_loaded[:, 2]) >= 80.0, f"Load patch penetrated below Z=80 mm (min Z = {np.min(v_loaded[:, 2]):.2f} mm)"
+    assert np.sum(v_loaded[:, 2] < 80.0) == 0, "Non-zero load applied to internal/ventral cranium"
+    
+    # 3. Verify midsagittal symmetry alignment: centroid within 6 mm of midline (X ≈ 103.6 mm)
+    assert abs(load_spec.patch_centroid_mm[0] - 103.6) <= 6.0, (
+        f"Patch centroid X={load_spec.patch_centroid_mm[0]:.2f} mm deviates from midline X=103.6 mm"
+    )
     
     condyle_nodes, nuchal_nodes, bc_spec = generate_boundary_constraints(surf)
     assert len(condyle_nodes) > 0

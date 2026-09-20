@@ -11,13 +11,15 @@ provenance_taxonomy:
     media_id: "000018284"
     file: "data/meshes/original/whole_skull/WitmerLab_Stegoceras_UALVP2-000018284.stl"
     cleaned_file: "data/meshes/cleaned/stegoceras_ualvp2_watertight.stl"
+    canonical_master_file: "data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl"
+    canonical_master_sha256: "5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2"
     status: DERIVED_FROM_SPECIMEN
-    notes: "Derived from primary micro-CT scan; non-manifold edges minimally repaired to watertight manifold solid."
+    notes: "Derived from primary micro-CT scan; non-manifold edges minimally repaired to watertight manifold solid G_0."
 
   coordinate_system:
-    x_axis: "mediolateral (symmetry plane X ≈ 97.4 mm)"
-    y_axis: "anteroposterior (snout-to-occiput length ≈ 200.5 mm)"
-    z_axis: "dorsoventral (palate-to-apex height ≈ 127.7 mm)"
+    x_axis: "mediolateral (midsagittal symmetry plane X ≈ 103.6 mm; span [38.0, 169.1] mm)"
+    y_axis: "anteroposterior (snout-to-occiput span Y ∈ [4.3, 204.8] mm)"
+    z_axis: "dorsoventral (palate-to-apex span Z ∈ [0.4, 128.1] mm)"
     status: DERIVED_FROM_SPECIMEN
 
   scale:
@@ -50,9 +52,9 @@ provenance_taxonomy:
     nominal_contact_area_mm2:
       value: 3000.0
       envelope_mm2: [2500.0, 4000.0]
-      selection_algorithm: "apex_geodesic_patch (normal_z >= 0.3)"
+      selection_algorithm: "apex_geodesic_dual_graph_wavefront (Dijkstra along face adjacency; Z >= 80.0 mm)"
       status: MODELING_ASSUMPTION
-      notes: "Nominal broad contact patch simulating force distribution through a thick keratin shield."
+      notes: "Nominal 3000 mm² single-component contact patch simulating distributed impact through a thick keratin shield, 100% restricted to dorsal summit (0% ventral penetration)."
 
   boundary_conditions:
     occipital_condyle:

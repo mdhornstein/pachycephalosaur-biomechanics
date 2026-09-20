@@ -27,24 +27,19 @@ The objective of this project is to construct a fully reproducible, open-source 
 
 ---
 
-## 🗺️ 2. Comprehensive 18-Phase Computational Roadmap
+## 🗺️ 2. Computational Roadmap
 
 ```mermaid
 flowchart TD
-    P0["Phase 0: Environment & Scaffolding"] --> P1["Phase 1: Data Acquisition & Provenance Audit (GATE)"]
-    P1 --> P2["Phase 2: 3D Surface Mesh Topology & Scale Inspection"]
-    P2 --> P3["Phase 3: Raw CT Volume Inspection & Density Profiling"]
-    P3 --> P4["Phase 4: Anatomical Segmentation & Matrix Removal"]
-    P4 --> P5["Phase 5: Geometric Validation & Morphometrics"]
-    P5 --> P6["Phase 6: Analytical Biomechanical Sanity Checks"]
-    P6 --> P7["Phase 7: Finite Element Setup & Linear Elastic Model"]
-    P7 --> P8["Phase 8: Systematic Mesh Convergence Study"]
-    P8 --> P9["Phase 9: Snively & Theodor (2011) Reproduction"]
-    P9 --> P10["Phase 10: Uncertainty Quantification (Monte Carlo / LHS)"]
-    P10 --> P11["Phase 11: Global Sensitivity Analysis (Sobol / Morris)"]
-    P11 --> P12["Phase 12: Gaussian Process Surrogate Modeling"]
-    P12 --> P13["Phase 13: Active Learning / Sequential Sampling"]
-    P13 --> P14["Phase 14: Comparative Pachycephalosaur Morphology"]
+    P0["Phase 0: Environment & Scaffolding (Completed)"] --> P1["Phase 1: Data Acquisition & Provenance Audit (GATE - Completed)"]
+    P1 --> P2["Phase 2: 3D Surface Mesh Topology & Inspection (Completed)"]
+    P2 --> P3["Phase 3: Model Input Audit & Feasibility Gate (Completed)"]
+    P3 --> P4["Phase 4: Surface FEA Benchmark & Discretization Sensitivity (GATE - Completed)"]
+    P4 --> P5["Phase 5: Uncertainty Quantification (Biological & Material Distributions)"]
+    P5 --> P6["Phase 6: Global Sensitivity Analysis (Sobol Indices & Morris Screening)"]
+    P6 --> P7["Phase 7: Gaussian Process Surrogates & Active Learning"]
+    P7 --> P8["Phase 8: High-Resolution Internal CT Segmentation & Zonal Heterogeneity"]
+    P8 --> P9["Phase 9: Comparative Pachycephalosaur Biomechanics"]
 ```
 
 ---
@@ -77,76 +72,51 @@ flowchart TD
 - Automated dimensional consistency audit notebook ([`notebooks/05_model_input_dimensional_audit.ipynb`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/notebooks/05_model_input_dimensional_audit.ipynb)).
 - Automated verification tests ([`tests/test_phase3_model_audit.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase3_model_audit.py)).
 
-### Phase 4: Cranial Segmentation & Cavity Isolation
-- Semi-automated segmentation in 3D Slicer / SimpleITK.
+### Phase 4: Surface-Derived FEA Benchmark & Discretization Sensitivity *(Completed - Gate)*
+- Immutable canonical master surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, SHA-256 `5adcf5369626...`).
+- Volumetric tetrahedral mesh hierarchy generated via TetGen with fixed quality ($q=1.5, \theta_{\min}=10^\circ$) and pure volume refinement:
+  - Coarse ($h_1$): 422,573 tets
+  - Med-Coarse ($h_2$): 540,310 tets
+  - Medium ($h_3$): 825,277 tets
+  - Fine ($h_4$): 1,389,116 tets (computational memory boundary on 16 GB workstation).
+- Algorithmic single-component geodesic load patch on dorsal dome apex ($3000.0\text{ mm}^2$, $1000.0\text{ N}$) via dual-graph Dijkstra wavefront propagation (0% ventral penetration).
+- Anatomical boundary restraints: Occipital condyle ($u_x = u_y = u_z = 0$) and nuchal crest ($u_y = u_z = 0$).
+- 3D linear isotropic elasticity engine (`skfem` + SciPy) with direct sparse solves.
+- Discretization sensitivity characterized and explicitly propagated as numerical uncertainty.
+- 16/16 passing automated tests in [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py).
+- Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md).
+
+### Phase 5: Biological, Material, & Boundary Uncertainty Quantification *(Active Next Phase)*
+- Propagate characterized numerical discretization uncertainty ($\epsilon_{\text{num}}$) alongside epistemic and aleatory inputs:
+  - Bone Young's modulus $E \sim p(E)$ (mammalian/avian compact bone envelope: 10–22 GPa).
+  - Poisson's ratio $\nu \sim p(\nu)$ (0.28–0.38).
+  - Scale factor $s \sim \mathcal{U}(0.95, 1.05)$.
+  - Contact patch area $A \sim \mathcal{U}(2500, 4000)\text{ mm}^2$.
+  - Load inclination angle $\alpha \sim \mathcal{N}(0^\circ, 10^{\circ 2})$.
+- Monte Carlo / Latin Hypercube Sampling (LHS) across parameter distributions.
+- Quantify output distributions: dome apex stress, endocranial braincase safety margin, total strain energy.
+
+### Phase 6: Global Sensitivity Analysis
+- First-order ($S_i$) and total-order ($S_{Ti}$) Sobol sensitivity indices via SALib.
+- Quantify variance decomposition: determine whether biological uncertainty (modulus, scale) or modeling choices (patch area, load angle) dominate cranial stress variance.
+
+### Phase 7: Gaussian Process Surrogate Modeling & Active Learning
+- Train Gaussian Process (GP) regression models on FE simulation ensembles.
+- Evaluate surrogate predictive accuracy on held-out validation simulations ($R^2$, RMSE, interval calibration).
+- Deploy active learning acquisition functions (Expected Improvement / Predictive Variance) for sample-efficient exploration.
+
+### Phase 8: High-Resolution Internal CT Segmentation & Zonal Heterogeneity
+- Semi-automated segmentation from primary micro-CT slices.
 - Distinguish internal anatomical zones:
   - **Zone 1**: Deep compact bone surrounding braincase.
   - **Zone 2**: Vascular cancellous zone with radiating trabeculae.
   - **Zone 3**: Superficial dense compact bone of the dorsal dome.
-- Segment and hollow out the endocranial cavity and neurovascular canals (which exit onto the cranial roof).
-- Maintain complete audit logs of manual thresholding and sculpting operations.
+- Segment endocranial cavity and neurovascular canals.
+- Heterogeneous material property mapping from CT Hounsfield Units.
 
-### Phase 5: Geometry Validation & Comparative Morphometrics
-- Register CT-derived segmented geometry against published 3D surface meshes (ICP / Hausdorff distance).
-- Quantify skull length, width, dome apex height, and cortical thickness profiles.
-- Analyze structural discrepancies between CT reconstructions and external 3D models.
-
-### Phase 6: Analytical Pre-FEA Biomechanics
-- Formulate 2D and 3D analytical beam/dome models before running numerical solvers.
-- Calculate cranial lever arms, out-lever ratios, and equilibrium force balances under dome impact.
-- Identify physically impossible parameter combinations, scale errors, or unit mismatches.
-
-### Phase 7: Deterministic Finite Element Model Setup
-- Evaluate and select open-source FEA solver backend (**CalculiX** vs. **FEBio**).
-- Solid tetrahedral meshing with linear/quadratic elements ($C3D4$ / $C3D10$).
-- Baseline material assignments:
-  - Compact cortical bone: $E = 10 - 18\text{ GPa}$, $\nu = 0.30$, $\rho = 2000\text{ kg/m}^3$.
-  - Trabecular/cancellous bone: $E = 1.0\text{ GPa}$, $\nu = 0.30$.
-  - Keratin pad (when modeled): $E = 3.9\text{ GPa}$, $\nu = 0.28$, $\rho = 1300\text{ kg/m}^3$.
-- Boundary conditions: Full displacement/rotation restraint at the occipital condyle; distributed spring/fixed constraints along the nuchal crest simulating dorsal neck musculature (*m. transversospinalis capitis* / *m. complexus*).
-- Static compressive load: $F = 1360\text{ N}$ applied to the dome apex.
-
-### Phase 8: Systematic Mesh Convergence
-- Generate multiple mesh resolutions (coarse, medium, fine, ultra-fine).
-- Compute convergence curves for:
-  - Maximum von Mises stress $\sigma_{vM}$.
-  - Peak principal strains ($\epsilon_1, \epsilon_3$).
-  - Strain energy density $U$.
-  - Basicranial reaction forces.
-- Establish the discretization asymptotic region before interpreting stress maps.
-
-### Phase 9: Benchmark Reproduction (*Snively & Theodor 2011*)
-- Reproduce the 1360 N dome apex load simulation.
-- Compare predicted von Mises stress distribution (diffuse 1–5 MPa throughout internal cancellous bone, peak 8–46 MPa near geometric concentrators) against published figures (Figures 12 & 13 in Snively & Theodor 2011).
-- Classify differences into geometric, segmentation, material, or constraint origins.
-
-### Phase 10: Uncertainty Quantification (UQ)
-- Define parameter distributions $\mathbf{\theta} \sim p(\mathbf{\theta})$:
-  - Cortical Young's modulus $E_{cort} \sim \mathcal{U}(10, 22)\text{ GPa}$
-  - Cancellous Young's modulus $E_{canc} \sim \mathcal{U}(0.5, 4.5)\text{ GPa}$
-  - Poisson's ratio $\nu \sim \mathcal{U}(0.25, 0.35)$
-  - Keratin modulus $E_{ker} \sim \mathcal{U}(1.5, 5.0)\text{ GPa}$
-  - Impact force magnitude $F \sim \mathcal{N}(1360, 200^2)\text{ N}$
-  - Impact vector inclination angle $\alpha \sim \mathcal{N}(0^\circ, 10^{\circ 2})$
-  - Keratin pad thickness $t_{ker} \sim \mathcal{U}(2, 15)\text{ mm}$
-- Execute Latin Hypercube Sampling (LHS) across parameter space.
-- Quantify output response distributions: peak stress, strain energy, braincase safety factors.
-
-### Phase 11: Global Sensitivity Analysis
-- Compute first-order ($S_i$) and total-order ($S_{Ti}$) Sobol sensitivity indices via SALib.
-- Determine which biological and modeling assumptions dominate mechanical output variance.
-
-### Phase 12: Gaussian Process Surrogate Modeling
-- Train Gaussian Process (GP) regression models on FE simulation ensembles.
-- Evaluate surrogate predictive accuracy on held-out test simulations ($R^2$, RMSE, interval calibration).
-
-### Phase 13: Active Learning & Sequential Experimental Design
-- Implement sequential acquisition functions (Predictive Variance / Expected Improvement).
-- Quantify reduction in required FEA solver runs to achieve targeted predictive fidelity across parameter space.
-
-### Phase 14: Comparative Pachycephalosaur Morphology
-- Expand validated pipeline to comparative taxa:
-  - *Acrotholus audeti* (DigiMorph CT data)
+### Phase 9: Comparative Pachycephalosaur Biomechanics
+- Expand validated UQ pipeline to comparative taxa:
+  - *Acrotholus audeti*
   - *Prenocephale prenes*
   - *Homalocephale calathoceros* (flat-headed morphotype)
-  - Extant combative analogues (*Cephalophus leucogaster*, *Ovibos moschatus*, *Ovis canadensis*).
+  - Extant artiodactyl analogues (*Ovibos moschatus*, *Ovis canadensis*).
