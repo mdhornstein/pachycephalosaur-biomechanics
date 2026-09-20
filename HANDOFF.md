@@ -7,7 +7,7 @@
 
 > [!IMPORTANT]
 > **Authority & Orientation Notice**:
-> This document is the fast, living operational entry point for incoming humans and AI agents. It reflects current reality at HEAD. For historical milestones, see [`docs/snapshots/`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/). Do not infer the current computational implementation from historical phase reports. For scientific review, independently inspect current code, configurations, and numerical artifacts rather than treating this handoff text as proof.
+> This document is the fast, living operational entry point for incoming humans and AI agents. It reflects current reality at HEAD. For historical milestones, see [`docs/snapshots/`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/). For repository documentation conventions and rules, see [`docs/DOCUMENTATION_SYSTEM.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DOCUMENTATION_SYSTEM.md). Do not infer the current computational implementation from historical phase reports. For scientific review, independently inspect current code, configurations, and numerical artifacts rather than treating this handoff text as proof.
 
 ---
 
@@ -59,23 +59,24 @@ Author the formal **Phase 5 UQ & Sensitivity Specification** (`docs/phase5_uq_sp
 ---
 
 ## 📚 Information Architecture & Authority Hierarchy
+*(Detailed specifications in [`docs/DOCUMENTATION_SYSTEM.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DOCUMENTATION_SYSTEM.md))*
 
 Never make the same technical fact authoritative in two places:
-1. **Code, Configurations, & Data Artifacts (Highest Technical Authority)**:
+1. **Level 1: Technical Truth (Code, Configs, & Data Artifacts)**:
    - Executable baseline: [`models/phase4/baseline.yaml`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/models/phase4/baseline.yaml)
    - Mesh metadata: [`data/metadata/phase4_mesh_metrics_*.json`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/)
    - Authoritative solve results: [`results/phase4/mesh_convergence_comparison.json`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/results/phase4/mesh_convergence_comparison.json)
-2. **Living Research & Design State**:
-   - Comprehensive current state: [`docs/CURRENT_STATE.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/CURRENT_STATE.md)
+   - Solution arrays: `simulations/phase4/solution_*.npz`
+2. **Level 2: Current Scientific Interpretation**:
+   - Comprehensive living state: [`docs/CURRENT_STATE.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/CURRENT_STATE.md)
+3. **Level 3: Operational Handoff & Roadmap**:
    - Living entry point: [`HANDOFF.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/HANDOFF.md)
-   - Scientific roadmap: [`PLAN.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/PLAN.md)
-3. **Scientific Decision History**:
-   - Append-only decision rationale: [`docs/DECISIONS.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DECISIONS.md)
-4. **Milestone Snapshots (Immutable Time Capsules)**:
-   - Phase 4 freeze: [`docs/snapshots/2026-09-19-phase4-freeze.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/2026-09-19-phase4-freeze.md)
-5. **Formal Milestone Reports**:
-   - [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md)
-   - Archived walkthrough: [`reports/archive/phase4_walkthrough_legacy.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/archive/phase4_walkthrough_legacy.md)
+   - Forward research roadmap: [`PLAN.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/PLAN.md)
+4. **Level 4: Historical Record & Scientific Archive**:
+   - Append-only decision log: [`docs/DECISIONS.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/DECISIONS.md)
+   - Milestone snapshots: [`docs/snapshots/2026-09-19-phase4-freeze.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/docs/snapshots/2026-09-19-phase4-freeze.md)
+   - Formal milestone reports: [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md)
+   - Preserved archives: [`reports/archive/phase4_walkthrough_legacy.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/archive/phase4_walkthrough_legacy.md)
 
 ---
 
