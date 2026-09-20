@@ -18,11 +18,11 @@ Static equilibrium is satisfied to machine precision ($r_F \le 1.53 \times 10^{-
 - **Geometry**: Canonical master surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, SHA-256: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`).
 - **Material**: Homogeneous isotropic compact bone ($E = 17.0\text{ GPa}, \nu = 0.30$).
 - **Boundary Constraints**:
-  - Occipital condyle: Full translational fixity ($u_x = u_y = u_z = 0$) within $R = 12.0\text{ mm}$ sphere at $[0.0, -95.0, -22.0]\text{ mm}$.
-  - Nuchal crest rim: Vertical and lateral fixity ($u_x = u_z = 0$) at $Y \le -85.0\text{ mm}, Z \ge 10.0\text{ mm}$.
+  - Occipital condyle: Rigid translational fixity ($u_x = u_y = u_z = 0$) across 139 nodes within $R = 12.0\text{ mm}$ sphere at the posterior-ventral articular condyle margin (centroid $[104.64, 178.06, 40.13]\text{ mm}$).
+  - Nuchal crest rim: Translational restraint in longitudinal and vertical DOFs ($u_y = u_z = 0$) across 702 posterior nuchal nodes at the squamosal-parietal shelf (centroid $[116.98, 190.23, 82.40]\text{ mm}$).
 - **Load Patch**:
-  - Dual-graph Dijkstra wavefront starting from dorsal apex seed facet, restricted to candidate facets $Z \ge 60.0\text{ mm}, Y \ge 70.0\text{ mm}$.
-  - Target area: $3,000.0\text{ mm}^2$; realized area: $3,000.6\text{ mm}^2$ (1,324 triangles).
+  - Dual-graph Dijkstra wavefront starting from dorsal apex seed facet ($[106.14, 110.51, 110.37]\text{ mm}$), restricted to candidate facets $Z \ge 60.0\text{ mm}, Y \ge 70.0\text{ mm}$.
+  - Target area: $3,000.0\text{ mm}^2$; realized area: $3,000.02\text{ mm}^2$ (1,406 triangles, 808 loaded nodes; centroid $[108.40, 104.33, 101.97]\text{ mm}$).
   - Hard constraint: 100% of loaded nodes have $Z \ge 80.0\text{ mm}$; 1 connected component; 0% ventral load.
   - Resultant Force: $F_z = -1,000.0\text{ N}$ ($1.0\text{ kN}$ broad compressive load).
 

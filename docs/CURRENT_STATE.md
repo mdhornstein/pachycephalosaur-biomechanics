@@ -2,7 +2,7 @@
 
 **Document Status**: Canonical Living State Document  
 **Last Updated**: 2026-09-19  
-**Corresponding Commit**: `e3ba976`  
+**Corresponding Commit**: `15a342f`  
 **Current Phase**: Phase 4 **FROZEN**; Phase 5 (UQ & Sensitivity Design) **PENDING DESIGN**
 
 ---
@@ -31,17 +31,17 @@ The project currently executes **Model A**:
   - Array SHA-256 (`source_surface_arrays_sha256`): `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`
   - Watertight 2-manifold surface, 0 non-manifold edges, 0 self-intersections.
   - Mesh Extents (mm):
-    - $X \in [-54.49, +51.68]$ (Lateral width $\approx 106.17\text{ mm}$)
-    - $Y \in [-107.03, +104.97]$ (Anteroposterior length $\approx 212.00\text{ mm}$)
-    - $Z \in [-63.60, +95.66]$ (Dorsoventral height $\approx 159.26\text{ mm}$)
-  - Anatomical Apex: $X \approx +0.10\text{ mm}, Y \approx +103.62\text{ mm}, Z \approx +95.66\text{ mm}$.
-  - Coordinate System: $+X$ right, $+Y$ anterior, $+Z$ dorsal.
+    - $X \in [37.91, 169.20]$ (Mediolateral width $\approx 131.30\text{ mm}$, midsagittal symmetry plane centered at $X \approx 103.6\text{ mm}$)
+    - $Y \in [4.20, 204.88]$ (Anteroposterior snout-to-occiput span $\approx 200.68\text{ mm}$; $Y \approx 4.2\text{ mm}$ anterior snout, $Y \approx 204.9\text{ mm}$ posterior condyle)
+    - $Z \in [0.31, 128.15]$ (Dorsoventral palate-to-apex span $\approx 127.84\text{ mm}$; $Z \approx 0.3\text{ mm}$ ventral palate, $Z \approx 128.15\text{ mm}$ dorsal apex)
+  - Anatomical Apex Seed: $X \approx 106.14\text{ mm}, Y \approx 110.51\text{ mm}, Z \approx 110.37\text{ mm}$ (identified within $Y \in [80, 150]\text{ mm}$ along midsagittal plane $X \approx 103.6\text{ mm}$).
+  - Coordinate System: $+X$ right, $+Y$ posterior, $+Z$ dorsal.
 
 ---
 
 ## 4. Boundary Conditions & Support
-- **Occipital Condyle**: Fixed constraint in all three translational DOFs ($u_x = u_y = u_z = 0$) across nodes within a $12.0\text{ mm}$ radius sphere centered at the condyle apex ($[0.0, -95.0, -22.0]\text{ mm}$).
-- **Nuchal Crest Rim**: Fixed constraint in vertical and lateral DOFs ($u_x = u_z = 0$) across posterior nuchal nodes ($Y \le -85.0\text{ mm}, Z \ge 10.0\text{ mm}$) to represent cervical muscular and ligamentous bracing (m. complexus, lig. nuchae).
+- **Occipital Condyle**: Rigid translational fixity in all three DOFs ($u_x = u_y = u_z = 0$) across 139 nodes within a $12.0\text{ mm}$ radius sphere at the posterior-ventral condylar articular margin (centroid: $[104.64, 178.06, 40.13]\text{ mm}$).
+- **Nuchal Crest Rim**: Translational restraint in longitudinal and vertical DOFs ($u_y = u_z = 0$) across 702 posterior nuchal nodes (centroid: $[116.98, 190.23, 82.40]\text{ mm}$) to represent cervical muscular and ligamentous bracing (m. complexus, lig. nuchae).
 - **Equilibrium Verification**: Reaction forces and moments are computed via direct sparse matrix-vector multiplication $\mathbf{R} = \mathbf{K}\mathbf{u} - \mathbf{F}_{\text{ext}}$ across all restrained DOFs.
 
 ---
@@ -55,9 +55,9 @@ The project currently executes **Model A**:
   - Ventral penetration: `0.00%` (verified eliminated).
 - **Patch Properties**:
   - Target Area: $3,000.0\text{ mm}^2$ (Literature broad contact zone).
-  - Selected Area: $3,000.6\text{ mm}^2$ ($+0.02\%$ error).
-  - Selected Faces: 1,324 triangles on canonical surface.
-  - Centroid: $[X=+0.16, Y=+104.42, Z=+87.89]\text{ mm}$.
+  - Selected Area: $3,000.02\text{ mm}^2$ ($+0.0007\%$ error).
+  - Selected Faces: 1,406 triangles (808 loaded nodes on canonical surface).
+  - Centroid: $[X=108.40, Y=104.33, Z=101.97]\text{ mm}$.
 - **Load Vector**:
   - Total Compressive Force: $F_z = -1,000.0\text{ N}$ distributed uniformly by tributary nodal area.
   - Resultant Load: $[F_x = 0, F_y = 0, F_z = -1000.0\text{ N}]$.

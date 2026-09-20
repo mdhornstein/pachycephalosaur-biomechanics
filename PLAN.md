@@ -87,7 +87,7 @@ flowchart TD
 - Anatomical boundary restraints: Occipital condyle ($u_x = u_y = u_z = 0$) and nuchal crest ($u_y = u_z = 0$).
 - 3D linear isotropic elasticity engine (`skfem` + SciPy) with direct sparse solves.
 - Discretization sensitivity characterized and explicitly propagated as numerical uncertainty.
-- 16/16 passing automated tests in [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py).
+- 17/17 passing automated tests in [`tests/test_phase4_fea.py`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/tests/test_phase4_fea.py).
 - Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/reports/phase4_fea_benchmark_report.md).
 
 ### Phase 5: Biological, Material, & Boundary Uncertainty Quantification *(Active Next Phase)*

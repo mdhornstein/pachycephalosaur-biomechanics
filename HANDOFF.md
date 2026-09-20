@@ -1,7 +1,7 @@
 # PROJECT HANDOFF
 
 **Date**: 2026-09-19  
-**HEAD Commit**: `e3ba976` (Transition from Phase 4 to Phase 5)  
+**HEAD Commit**: `15a342f` (Transition from Phase 4 to Phase 5)  
 **Current Phase**: Phase 4 **FROZEN**; Phase 5 (Uncertainty Quantification & Sensitivity Design) **ACTIVE NEXT**  
 **Lead Specimen**: *Stegoceras validum* UALVP 2 (Cast from micro-CT reconstructed cranium)
 
