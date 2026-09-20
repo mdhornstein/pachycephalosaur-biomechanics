@@ -2,7 +2,8 @@
 
 **Document Status**: Canonical Living State Document  
 **Last Updated**: 2026-09-19  
-**Corresponding Commit**: `15a342f`  
+**Current Git HEAD**: `2102f29` (reconciled through post-freeze documentation updates)  
+**Phase Transition Baseline**: `15a342f` (Phase 4 Freeze & Scientific Baseline)  
 **Current Phase**: Phase 4 **FROZEN**; Phase 5 (UQ & Sensitivity Design) **PENDING DESIGN**
 
 ---

@@ -95,6 +95,10 @@ Level 4: HISTORICAL RECORD & SCIENTIFIC ARCHIVE
 ```
 
 - **Technical Fact Invariant**: Never re-declare or hardcode the same technical scalar (e.g. element count, canonical SHA-256 hash, energy value) in multiple competing places. Level 1 defines it; Level 2 interprets it; Level 3 documents may summarize Level 1 technical values for orientation, but must never become an independent authoritative source for those values.
+- **Commit Identity Convention**: Living state documents (`HANDOFF.md`, `docs/CURRENT_STATE.md`) explicitly distinguish between:
+  - **Phase Transition Baseline**: The frozen Git commit SHA representing the verified milestone boundary (e.g. `15a342f` for the Phase 4 baseline freeze).
+  - **Current Git HEAD**: The active commit SHA advancing through post-freeze documentation maintenance, pipeline tooling, and subsequent phase implementation.  
+  This distinction prevents incoming agents running `git rev-parse HEAD` from misdiagnosing living handoff documents as stale when repository documentation reconciliations occur post-freeze.
 
 ---
 
