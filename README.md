@@ -28,13 +28,20 @@ Rather than asserting or disputing behavioral hypotheses (e.g., head-butting vs.
 ```text
 pachycephalosaurus-biomechanics/
 ├── README.md                           # Project overview and quickstart
-├── PLAN.md                             # Master 18-phase implementation roadmap
+├── HANDOFF.md                          # Fast living operational entry point for humans and agents
+├── PLAN.md                             # Master research and implementation roadmap
 ├── DATA_SOURCES.md                     # Comprehensive UALVP 2 data catalog & provenance audit
 ├── LICENSE                             # MIT License
 ├── CITATION.cff                        # Citation File Format metadata
 ├── pyproject.toml                      # Project package & dependency specifications (hatchling build)
 ├── environment.yml                     # Conda/Mamba environment specification
 ├── .gitignore                          # Excludes raw scans, binary meshes, and virtualenvs
+│
+├── docs/                               # Canonical living state, decision logs, snapshots, & documentation system
+│   ├── CURRENT_STATE.md                # Canonical living scientific and numerical model definition
+│   ├── DECISIONS.md                    # Append-only architectural and scientific decision log
+│   ├── DOCUMENTATION_SYSTEM.md         # Two-dimensional authority and documentation governance system
+│   └── snapshots/                      # Immutable milestone freeze records
 │
 ├── data/
 │   ├── raw/
@@ -43,15 +50,12 @@ pachycephalosaurus-biomechanics/
 │   ├── meshes/
 │   │   ├── original/                   # Original un-altered 3D surface files
 │   │   ├── cleaned/                    # Standardized, watertight, scale-verified meshes
-│   │   └── fe/                         # Solid tetrahedral / hexahedral meshes for FEA
+│   │   └── fe/                         # Solid tetrahedral meshes for FEA
 │   ├── reference/                      # 3D PDFs and animation reference files
-│   ├── metadata/
-│   │   ├── dataset_manifest.yaml       # Machine-readable provenance & SHA-256 checksum manifest
-│   │   ├── geometry_inventory.csv      # 33-mesh quantitative topological & coordinate catalog
-│   │   └── biomechanics_input_matrix.csv # Formally audited model input & evidence matrix
-│   │
-│   └── meshes/                         # Raw and cleaned 3D surface models
-│       └── original/                   # 33 acquired MorphoSource STLs
+│   └── metadata/
+│       ├── dataset_manifest.yaml       # Machine-readable provenance & SHA-256 checksum manifest
+│       ├── geometry_inventory.csv      # 33-mesh quantitative topological & coordinate catalog
+│       └── biomechanics_input_matrix.csv # Formally audited model input & evidence matrix
 │
 ├── literature/                         # Parameter audits and methodology logs
 │   ├── snively_theodor_2011_model_audit.md # Line-by-line model input audit
@@ -62,22 +66,30 @@ pachycephalosaurus-biomechanics/
 │   ├── 02_load_skull_mesh.ipynb        # Mesh loading, topology, scale hint, and manifold analysis
 │   ├── 03_component_geometry_inventory.ipynb # Multi-bone inventory & topological audit
 │   ├── 04_skull_component_assembly.ipynb     # Coordinate congruence & bilateral symmetry
-│   └── 05_model_input_dimensional_audit.ipynb # Dimensional & unit consistency verification
+│   ├── 05_model_input_dimensional_audit.ipynb # Dimensional & unit consistency verification
+│   ├── 06_fe_geometry_preparation.ipynb # Watertight repair & volumetric tetrahedralization
+│   ├── 07_fe_baseline_analysis.ipynb   # FEA solve, equilibrium, & von Mises stresses
+│   ├── 08_fe_mesh_convergence.ipynb    # Multi-tier h-refinement & discretization analysis
+│   └── 09_fe_linearity_validation.ipynb # Hookean linearity & strain energy scaling
 │
 ├── src/
 │   └── stegoceras_biomechanics/        # Reusable scientific Python package
 │       ├── io/                         # Manifest parsers, checksum validators, secure ingestion tools
 │       ├── geometry/                   # Inventory engines, assembly metrics, coordinate checkers
-│       └── visualization/              # Publication 3D multi-view PyVista rendering engine
+│       ├── visualization/              # Publication 3D multi-view PyVista rendering engine
+│       ├── fea/                        # 3D finite element elasticity solver, loads, BCs, & metrics
+│       ├── uq/                         # Uncertainty quantification, sampling, & sensitivity (Phase 5–7)
+│       └── segmentation/               # CT volume density masking (Phase 8, deferred to DICOM acquisition)
 │
 ├── reports/                            # Formal milestone synthesis reports & figures
 │   ├── phase1_data_and_geometry_report.md
 │   ├── phase2_digital_anatomy_report.md
 │   ├── snively_theodor_model_reconstruction.md
 │   ├── phase3_recommended_benchmark.md
+│   ├── phase4_fea_benchmark_report.md
 │   ├── walkthrough.md
 │   └── figures/                        # Publication 3D multi-panel renders
-├── tests/                              # Automated Pytest validation suite (19 passing tests)
+├── tests/                              # Automated Pytest validation suite
 ```
 
 ---
