@@ -12,7 +12,11 @@ This directory houses the structured literature review, parameter audits, and em
 * **[`stegoceras_biomechanics_evidence_matrix.csv`](stegoceras_biomechanics_evidence_matrix.csv)**  
   **The Master Evidence Matrix**: Consolidated CSV cataloging all reviewed studies with stable DOIs, modalities, boundary conditions, mesh strategies, epistemic codes, and direct relevance to our model.
 
-### 2. Historical Specimen & Parameter Audits (Phase 3 Baseline)
+### 2. Independent Challenge Audit & Critical Corrections
+* **[`independent_literature_audit.md`](independent_literature_audit.md)**  
+  **Independent Scientific Audit**: Rigorous challenge audit of the synthesis, dossiers, and evidence matrices at commit `473d978`. Evaluates bibliographic veracity (e.g., Sullivan 2003 vs. 2006, Peterson et al. 2013 authorship, Dumont et al. 2009 journal), enforces terminology discipline (comparative functional corroboration vs. physical validation), and establishes conservative parameterization guidelines for Phase 5 UQ.
+
+### 3. Historical Specimen & Parameter Audits (Phase 3 Baseline)
 * **[`snively_theodor_2011_model_audit.md`](snively_theodor_2011_model_audit.md)**  
   Line-by-line model input extraction, material property mapping, and boundary constraint audit from Snively & Theodor (2011). *(Directly tested in `tests/test_phase3_model_audit.py`)*.
 * **[`missing_input_sources.md`](missing_input_sources.md)**  
@@ -29,6 +33,7 @@ literature/
 │   # --- PRIMARY EXECUTIVE SYNTHESIS & AUDITS (Root Level) ---
 ├── stegoceras_biomechanics_literature_synthesis.md    # Master integrated scoping review & gap analysis
 ├── stegoceras_biomechanics_evidence_matrix.csv        # Master consolidated evidence matrix
+├── independent_literature_audit.md                    # Independent challenge audit & corrections
 ├── snively_theodor_2011_model_audit.md                # Phase 3 parameter audit (pytest verified)
 ├── missing_input_sources.md                           # Phase 3 source resolution (pytest verified)
 │
