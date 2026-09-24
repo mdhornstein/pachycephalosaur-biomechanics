@@ -15,6 +15,8 @@ This directory houses the structured literature review, parameter audits, and em
 ### 2. Independent Challenge Audit & Critical Corrections
 * **[`independent_literature_audit.md`](independent_literature_audit.md)**  
   **Independent Scientific Audit**: Rigorous challenge audit of the synthesis, dossiers, and evidence matrices at commit `473d978`. Evaluates bibliographic veracity (e.g., Sullivan 2003 vs. 2006, Peterson et al. 2013 authorship, Dumont et al. 2009 journal), enforces terminology discipline (comparative functional corroboration vs. physical validation), and establishes conservative parameterization guidelines for Phase 5 UQ.
+* **[`LITERATURE_CORRECTIONS.md`](LITERATURE_CORRECTIONS.md)**  
+  **Canonical Audit-to-Correction Tracking Ledger**: Comprehensive traceability matrix mapping every independent audit finding (AF-01 through AF-23) to concrete actions taken, evidentiary citations, and resolution statuses (`corrected`, `partially corrected`, `unresolved`, `rejected with justification`).
 
 ### 3. Historical Specimen & Parameter Audits (Phase 3 Baseline)
 * **[`snively_theodor_2011_model_audit.md`](snively_theodor_2011_model_audit.md)**  
@@ -33,7 +35,8 @@ literature/
 │   # --- PRIMARY EXECUTIVE SYNTHESIS & AUDITS (Root Level) ---
 ├── stegoceras_biomechanics_literature_synthesis.md    # Master integrated scoping review & gap analysis
 ├── stegoceras_biomechanics_evidence_matrix.csv        # Master consolidated evidence matrix
-├── independent_literature_audit.md                    # Independent challenge audit & corrections
+├── independent_literature_audit.md                    # Independent challenge audit (commit 673a222)
+├── LITERATURE_CORRECTIONS.md                          # Canonical audit-to-correction tracking ledger
 ├── snively_theodor_2011_model_audit.md                # Phase 3 parameter audit (pytest verified)
 ├── missing_input_sources.md                           # Phase 3 source resolution (pytest verified)
 │

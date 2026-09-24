@@ -21,20 +21,20 @@ No conclusion below is intended to decide whether headbutting occurred.
 
 ### What is well established
 
-1. **UALVP 2 is a historically important, nearly complete *Stegoceras* specimen.** The University of Alberta fossil-history page records it as found by George F. Sternberg in 1921 during the University of Alberta field program; Sullivan's revision describes UALVP 2 as a nearly complete skull with both lower jaws and parts of the postcranial skeleton and notes that the type specimen conforms to it. **[DO]**
+1. **UALVP 2 is a historically important, nearly complete *Stegoceras* specimen.** The University of Alberta fossil-history page records it as found by George F. Sternberg in 1921 during the University of Alberta field program; Sullivan's (2003) revision describes UALVP 2 as a nearly complete skull with both lower jaws and parts of the postcranial skeleton and notes that the type specimen conforms to it. **[DO]**
 2. **UALVP 2 has been used directly in CT-based biomechanical work.** Snively & Theodor (2011) CT-scanned UALVP 2 and used it in FEA alongside extant artiodactyl crania and another pachycephalosaur. **[DO]**
-3. **Its internal cranial structure is mechanically heterogeneous.** The 2011 CT study reported denser cortical bone toward the dome apex, a lower-density trabecular region, trabeculae broadly oriented perpendicular to the outer surface, a dense deep compact layer, and numerous canals leading toward the cranial surface. **[DO]**
+3. **Its internal cranial structure is mechanically heterogeneous.** The 2011 CT study reported denser cortical bone toward the dome apex, a lower-density trabecular region, trabeculae broadly oriented perpendicular to the outer surface, a dense deep compact layer, and numerous canals leading toward the cranial surface. Nirody et al. (2022) independently quantified this dome vascularity using high-resolution CT. **[DO]**
 4. **Pachycephalosaur dome ontogeny is not simply a binary juvenile/adult switch.** Schott et al. (2011) modeled continuous cranial ontogeny in *Stegoceras validum* and showed substantial variation in dome development across the growth series. The exact biological age of UALVP 2 is not directly established here by a single independent age measurement. **[DO + SYN]**
 5. **The classic biomechanical literature establishes mechanical plausibility, not behavioral proof.** Snively & Cox (2008) and Snively & Theodor (2011) found that modeled pachycephalosaur crania could sustain simulated impacts and exhibited structural correlates comparable to extant head-striking artiodactyls. These are model-based findings about mechanical capability and anatomical similarity, not direct observations of behavior. **[AI/IN]**
-6. **Cranial pathology has been used as independent behavioral evidence, but remains an inference.** Peterson & Vittore (2013) reported dome lesions in 22% of sampled pachycephalosaurid specimens and clustering toward the apex; they interpreted this as consistent with intraspecific butting. **[DO + AI]**
-7. **The modern literature is broader than a binary “headbutting vs no headbutting” framing.** A 2024 review argues that fossil headbutting has been described with imprecise terminology and stresses that osteological preservation of a dome does not by itself establish the exact behavior or degree of brain protection. A 2026 paper proposes a feeding-performance trade-off associated with the dome, reinforcing that dome evolution can have multiple interacting functions and constraints. **[AI]**
+6. **Cranial pathology has been used as independent behavioral evidence, but remains an inference.** Peterson, Dischler & Longrich (2013) reported dome lesions in 22% of sampled pachycephalosaurid specimens and clustering toward the apex; they interpreted this as consistent with intraspecific butting. **[DO + AI]**
+7. **The modern literature is broader than a binary “headbutting vs no headbutting” framing.** A 2024/2026 review argues that fossil headbutting has been described with imprecise terminology and stresses that osteological preservation of a dome does not by itself establish the exact behavior or degree of brain protection (Woodruff & Ackermans 2026). A 2026 paper proposes a feeding-performance trade-off associated with the dome (Bateman & Larsson 2026), reinforcing that dome evolution can have multiple interacting functions and constraints. Postcranial myology indicates stabilizing adaptations during axial force transmission (Moore et al. 2022). **[AI + IN]**
 
 ### Immediate implications for UALVP 2 FEM
 
 - Treat **geometry, internal architecture, material zoning, load direction, and boundary conditions as separate scientific assumptions** rather than as one generic “model uncertainty.”
 - Preserve a distinction between **mechanical competence** and **behavioral inference**.
 - Avoid presenting absolute peak stresses as if they were direct measurements of fossil tissue stress; report the tested load case, stress metric, and sensitivity to assumptions.
-- Use the prior *Stegoceras* model as a benchmark and provenance target, but do not assume its load case or material assignment is uniquely correct.
+- Use the prior *Stegoceras* model as a benchmark and provenance target, but do not assume its load case (1360 N benchmark) or material assignment is uniquely correct.
 - Make the **ontogenetic status of UALVP 2 explicit** and do not silently generalize from the specimen to all pachycephalosaurs.
 
 ---
@@ -45,25 +45,27 @@ No conclusion below is intended to decide whether headbutting occurred.
 |---|---|---|---|---|---|---|
 | UALVP2-01 | UALVP 2 (*Stegoceras validum*) was collected in 1921 during the University of Alberta field program. | DO | University of Alberta Dino Lab history | Direct historical record | High | Provenance metadata should be retained with geometry/CT files. |
 | UALVP2-02 | UALVP 2 is described as the most complete *Stegoceras* specimen available at the time of the University of Alberta historical record. | DO/AI | University of Alberta Dino Lab history | Historical institutional statement | Moderate | Supports use as a principal specimen, but completeness should not be equated with absence of preparation loss or distortion. |
-| UALVP2-03 | UALVP 2 comprises a nearly complete skull, both lower jaws, and parts of the postcranial skeleton. | DO | Sullivan 2006 revision; institutional history | Direct specimen description | High | Defines the anatomical scope available for reconstruction. |
-| UALVP2-04 | UALVP 2 conforms readily to the *Stegoceras* type frontoparietal and was used as a key basis for understanding the genus. | DO/AI | Sullivan 2006 | Morphological comparison | High | Supports taxonomic assignment used in biomechanical interpretation. |
+| UALVP2-03 | UALVP 2 comprises a nearly complete skull, both lower jaws, and parts of the postcranial skeleton. | DO | Sullivan 2003 revision; institutional history | Direct specimen description | High | Defines the anatomical scope available for reconstruction. |
+| UALVP2-04 | UALVP 2 conforms readily to the *Stegoceras* type frontoparietal and was used as a key basis for understanding the genus. | DO/AI | Sullivan 2003 | Morphological comparison | High | Supports taxonomic assignment used in biomechanical interpretation. |
 | UALVP2-05 | UALVP 2 was CT-scanned for biomechanical study. | DO | Snively & Theodor 2011 | Direct methods statement | High | Establishes published CT provenance for comparative modeling. |
 | UALVP2-06 | The cranial roof contains a dense superficial/cortical component that increases in thickness/density toward the dome apex. | DO | Snively & Theodor 2011 | CT-derived observation | High | Material zoning should not be treated as spatially uniform without justification. |
 | UALVP2-07 | A lower-density trabecular region occurs beneath the dense cortical layer, with trabeculae broadly radiating perpendicular to the dome surface. | DO | Snively & Theodor 2011 | CT-derived observation | High | Internal architecture can affect stiffness, stress path, and energy transfer. |
 | UALVP2-08 | A dense deep compact layer is present beneath the more porous region. | DO | Snively & Theodor 2011 | CT-derived observation | High | A simple homogeneous-shell model is a substantive simplification. |
-| UALVP2-09 | Numerous canals/vascular traces exit toward the external cranial surface. | DO | Snively & Theodor 2011 | CT-derived observation | High | Surface ornamentation/keratin assumptions and local porosity should be distinguished. |
+| UALVP2-09 | Numerous canals/vascular traces exit toward the external cranial surface. | DO | Snively & Theodor 2011; Nirody et al. 2022 | CT-derived observation | High | Surface ornamentation/keratin assumptions and local porosity should be distinguished. |
 | UALVP2-10 | Beam hardening may inflate apparent superficial density in CT data, although the authors considered the dense deep compact layer secure. | DO/AI | Snively & Theodor 2011 | Imaging limitation explicitly discussed by authors | High | CT-to-material mapping needs calibration and sensitivity analysis. |
-| UALVP2-11 | A published FEA model included UALVP 2 and used a 1360 N impact load. | DO | Snively & Theodor 2011 | Direct model input | High | Provides a literature benchmark load case; not evidence that 1360 N is the unique biological force. |
+| UALVP2-11 | A published FEA model included UALVP 2 and used a 1360 N benchmark impact load. | DO | Snively & Theodor 2011 | Direct model input | High | Provides a literature benchmark load scenario; not evidence that 1360 N is the actual biological force. |
 | UALVP2-12 | The 2011 model included bone and keratin tissue types. | DO | Snively & Theodor 2011 | Direct model input | High | Future load/material scenarios should document whether keratin is modeled explicitly or omitted. |
-| UALVP2-13 | The 2011 study compared UALVP 2 with extant artiodactyl skulls and *Prenocephale prenes*. | DO | Snively & Theodor 2011 | Direct study design | High | Comparative conclusions should be framed as relative to the chosen analog set. |
+| UALVP2-13 | The 2011 study compared UALVP 2 with extant artiodactyl skulls and *Prenocephale prenes*. | DO | Snively & Theodor 2011 | Direct study design | High | Comparative conclusions provide functional corroboration; not specimen-specific physical validation. |
 | UALVP2-14 | UALVP 2 showed structural correlates that the authors associated with head-striking taxa, including dome morphology, surface canals, neck muscle attachments, and layered cranial bone. | DO + AI | Snively & Theodor 2011 | Morphology measured; behavioral meaning inferred | High for anatomy; lower for behavior | Can motivate load scenarios but cannot determine actual behavior. |
-| UALVP2-15 | The study reported lower modeled stress and higher safety factors for *Stegoceras* than for several non-combative/other ungulate comparators under its chosen loading conditions. | DO/AI | Snively & Theodor 2011 | Model output | High | Comparative outputs are useful benchmarks; transferability to a different load case must be tested. |
+| UALVP2-15 | The study reported lower modeled stress and higher safety factors relative to chosen tissue-failure criteria for *Stegoceras* than for several comparison taxa under its chosen loading conditions. | DO/AI | Snively & Theodor 2011 | Model output | High | Comparative outputs are useful benchmarks; transferability to a different load case must be tested. |
 | UALVP2-16 | *Stegoceras* dome development varies strongly across ontogeny. | DO/AI | Schott et al. 2011 | Growth-series measurement/modeling | High | Geometry from UALVP 2 should not be generalized to juvenile/subadult morphologies without evidence. |
 | UALVP2-17 | Schott et al. found continuous, quantitatively modeled dome growth/variation rather than a simple taxonomic split between flat-headed and domed forms. | DO/AI | Schott et al. 2011 | Statistical/growth modeling | High | Load-bearing geometry is ontogenetically structured. |
-| UALVP2-18 | The 2013 pathology study reported lesions on the domes of 22% of sampled pachycephalosaurid specimens and found clustering near the apex. | DO | Peterson & Vittore 2013 | Specimen survey + spatial analysis | High | Pathology provides an independent evidence stream for load/impact hypotheses, not a direct force estimate. |
-| UALVP2-19 | The authors of the pathology study interpreted lesion distribution as consistent with intraspecific butting behavior. | AI | Peterson & Vittore 2013 | Author interpretation | High as an attribution; not established fact | Should not be encoded as a FEM boundary condition or behavioral certainty. |
-| UALVP2-20 | The 2024 headbutting review emphasizes ambiguity in the term “headbutting” and cautions against equating cranial integrity with absence of brain injury. | AI | Woodruff & Ackermans 2024 | Review interpretation | High | Interpret mechanical outputs in relation to explicitly defined behaviors and failure criteria. |
+| UALVP2-18 | The 2013 pathology study reported lesions on the domes of 22% of sampled pachycephalosaurid specimens and found clustering near the apex. | DO | Peterson, Dischler & Longrich 2013 | Specimen survey + spatial analysis | High | Pathology provides an independent evidence stream for load/impact hypotheses, not a direct force estimate. |
+| UALVP2-19 | The authors of the pathology study interpreted lesion distribution as consistent with intraspecific butting behavior. | AI | Peterson, Dischler & Longrich 2013 | Author interpretation | High as an attribution; not established fact | Should not be encoded as a FEM boundary condition or behavioral certainty. |
+| UALVP2-20 | A recent review emphasizes ambiguity in the term “headbutting” and cautions against equating cranial integrity with absence of brain injury. | AI | Woodruff & Ackermans 2026 | Review interpretation | High | Interpret mechanical outputs in relation to explicitly defined behaviors and failure criteria. |
 | UALVP2-21 | A 2026 study proposed that dome development may impose constraints/trade-offs on jaw adductor geometry and feeding performance. | AI/IN | Bateman & Larsson 2026 | Comparative/functional model | Moderate | Avoid assuming the dome must have had one exclusive function; consider competing biomechanical hypotheses. |
+| UALVP2-22 | High-resolution CT demonstrates that frontoparietal dome vascularity in *Stegoceras validum* is concentrated in internal canal networks that diminish ontogenetically. | DO | Nirody et al. 2022 | High-resolution micro-CT quantification | High | Directly constrains internal architecture and warns against treating CT HU as direct bone stiffness. |
+| UALVP2-23 | Reconstructed appendicular myology of UALVP 2 indicates adaptations for rotational stabilization and axial ground-reaction force transmission. | IN | Moore et al. 2022 | Comparative myological reconstruction | High as anatomy / Moderate as behavior | Provides postcranial biomechanical context for whole-body stance and impact resistance. |
 
 ---
 
@@ -95,17 +97,17 @@ No conclusion below is intended to decide whether headbutting occurred.
 
 ---
 
-## P03 — Sullivan (2006)
+## P03 — Sullivan (2003)
 
-**Citation:** Sullivan, R. M. (2006). Revision of the dinosaur *Stegoceras* Lambe (Ornithischia, Pachycephalosauridae). *Journal of Vertebrate Paleontology*, 26(2), 370–383.
+**Citation:** Sullivan, R. M. (2003). Revision of the dinosaur *Stegoceras* Lambe (Ornithischia, Pachycephalosauridae). *Journal of Vertebrate Paleontology*, 23(1), 181–207.
 
-**DOI:** **UNVERIFIED** in this review pass; commonly indexed under the JVP article but exact DOI string should be checked before publication.
+**DOI:** https://doi.org/10.1671/0272-4634(2003)23[181:ROTDSL]2.0.CO;2
 
 **Type:** Peer-reviewed systematic revision.
 
-**Key evidence:** UALVP 2 is described as a nearly complete skull with both lower jaws and parts of the postcranial skeleton. The paper uses UALVP 2 as a major comparative basis and discusses its relationship to the *Stegoceras* type frontoparietal.
+**Key evidence:** UALVP 2 is described as a nearly complete skull with both lower jaws and parts of the postcranial skeleton. The paper uses UALVP 2 as a principal comparative basis for the genus and demonstrates that the lectotype frontoparietal conforms readily to it. *(Note: Sullivan 2006, New Mexico Museum of Natural History and Science Bulletin 35:347–365, is a distinct family-level taxonomic review).*
 
-**Interpretive value:** Strong for specimen identity and taxonomic context; not a biomechanical validation study.
+**Interpretive value:** Authoritative primary source for specimen identity, completeness, and taxonomic context; not a biomechanical validation study.
 
 ---
 
@@ -143,7 +145,7 @@ No conclusion below is intended to decide whether headbutting occurred.
 
 ## P06 — Snively & Theodor (2011)
 
-**Citation:** Snively, E., & Theodor, J. M. (2011). Common functional correlates of head-strike behavior in the pachycephaleur *Stegoceras validum* (Ornithischia, Dinosauria) and combative artiodactyls. *PLOS ONE*, 6(6), e21422.
+**Citation:** Snively, E., & Theodor, J. M. (2011). Common functional correlates of head-strike behavior in the pachycephalosaur *Stegoceras validum* (Ornithischia, Dinosauria) and combative artiodactyls. *PLOS ONE*, 6(6), e21422.
 
 **DOI:** https://doi.org/10.1371/journal.pone.0021422
 
@@ -151,17 +153,17 @@ No conclusion below is intended to decide whether headbutting occurred.
 
 **Models:** CT and physical-section information from ten artiodactyls plus *Stegoceras validum* (UALVP 2) and *Prenocephale prenes*; FEA incorporated bone and keratin tissue types.
 
-**Load benchmark:** The published table includes a 1360 N load for UALVP 2.
+**Load benchmark:** The published table includes a 1360 N benchmark load for UALVP 2, derived from a similarly sized *Homalocephale* at 3 m/s closing speed (a comparative scenario, not an observed biological load).
 
-**Key result:** The paper identified anatomical and mechanical correlates shared by *Stegoceras* and extant head-striking taxa and reported lower modeled stress/higher safety factors for *Stegoceras* than several comparison taxa under the chosen conditions.
+**Key result:** The paper identified anatomical and mechanical correlates shared by *Stegoceras* and extant head-striking taxa and reported lower modeled stress/higher safety factors relative to chosen tissue-failure criteria for *Stegoceras* than several comparison taxa under the chosen conditions.
 
-**Limitation:** The conclusion is explicitly comparative and model-based. It does not constitute a direct behavioral observation.
+**Limitation:** The conclusion is explicitly comparative and model-based (comparative functional corroboration). It does not constitute a direct behavioral observation or physical strain-gauge validation.
 
 ---
 
-## P07 — Peterson & Vittore (2013)
+## P07 — Peterson, Dischler & Longrich (2013)
 
-**Citation:** Peterson, J. E., & Vittore, C. P. (2013). Distributions of cranial pathologies provide evidence for head-butting in dome-headed dinosaurs (Pachycephalosauridae). *PLOS ONE*, 8(7), e68620.
+**Citation:** Peterson, J. E., Dischler, C., & Longrich, N. R. (2013). Distributions of cranial pathologies provide evidence for head-butting in dome-headed dinosaurs (Pachycephalosauridae). *PLOS ONE*, 8(7), e68620.
 
 **DOI:** https://doi.org/10.1371/journal.pone.0068620
 
@@ -175,31 +177,59 @@ No conclusion below is intended to decide whether headbutting occurred.
 
 ---
 
-## P08 — Woodruff & Ackermans (2024; issue 2026)
+## P08 — Woodruff & Ackermans (2026)
 
-**Citation:** Woodruff, D. C., & Ackermans, N. L. (2024). Headbutting through time: A review of this hypothesized behavior in “dome-headed” fossil taxa. *The Anatomical Record*. Version of record 2024; issue online 2026.
+**Citation:** Woodruff, D. C., & Ackermans, N. L. (2026). Headbutting through time: A review of this hypothesized behavior in “dome-headed” fossil taxa. *The Anatomical Record*, 309(5), 1235–1256. (First published online 4 July 2024).
 
 **DOI:** https://doi.org/10.1002/ar.25526
 
 **Type:** Peer-reviewed review.
 
-**Key contribution:** Reviews the headbutting hypothesis across extinct dome-headed taxa and emphasizes that “headbutting” is not a sufficiently specific behavioral descriptor. It also cautions against using osteological deformation alone as a proxy for brain trauma.
+**Key contribution:** Reviews the headbutting hypothesis across extinct dome-headed taxa and emphasizes that “headbutting” encompasses diverse contact geometries, angles, and striking mechanics across extant analogs. It also cautions against using osteological deformation alone as a proxy for brain trauma.
 
-**Project relevance:** Encourages explicit behavioral/load-case definitions and more cautious interpretation of cranial mechanical outputs.
+**Project relevance:** Mandates defining a family of scenario load cases (contact area, angle, location) rather than a single monolithic "canonical headbutt."
 
 ---
 
 ## P09 — Bateman & Larsson (2026)
 
-**Citation:** Bateman, L.-P., & Larsson, H. C. E. (2026). On Pachycephalosaurs, Trade-Offs, and the Historical Genesis of Sociosexual Display Structures. *The American Naturalist*, 208(1).
+**Citation:** Bateman, L.-P., & Larsson, H. C. E. (2026). On Pachycephalosaurs, Trade-Offs, and the Historical Genesis of Sociosexual Display Structures. *The American Naturalist*, 208(1), 9–29.
 
 **DOI:** https://doi.org/10.1086/740811
 
-**Type:** Recent peer-reviewed functional/evolutionary study.
+**Type:** Peer-reviewed functional/evolutionary study.
 
 **Key idea:** Proposes that the dome can impose spatial constraints on jaw adductor musculature and reduce feeding performance, framing dome evolution in terms of trade-offs as well as display.
 
 **Project relevance:** Adds a functional hypothesis that is not equivalent to impact loading and therefore broadens the set of biological questions a cranial FEM could address.
+
+---
+
+## P10 — Nirody et al. (2022)
+
+**Citation:** Nirody, J. A., Goodwin, M. B., Horner, J. R., Huynh, T. L., Colbert, M. W., Smith, D. K., & Evans, D. C. (2022). Quantifying vascularity in the frontoparietal dome of *Stegoceras validum* (Dinosauria: Pachycephalosauridae) from high resolution CT scans. *Journal of Vertebrate Paleontology*, 41(5), e2036991.
+
+**DOI:** https://doi.org/10.1080/02724634.2021.2036991
+
+**Type:** Peer-reviewed high-resolution micro-CT quantification.
+
+**Key finding:** High-resolution CT directly resolves internal vascular networks in the *Stegoceras validum* dome, showing that vascular canal volume decreases markedly with ontogenetic maturity.
+
+**Project relevance:** Connects 2D histological zonation to 3D CT scan features for *Stegoceras*, directly informing Phase 8 CT thresholding and zonation while warning against treating raw CT HU values as direct bone stiffness.
+
+---
+
+## P11 — Moore et al. (2022)
+
+**Citation:** Moore, B. R. S., Roloson, M. J., Currie, P. J., Ryan, M. J., Patterson, C. M., & Mallon, J. C. (2022). The appendicular myology of *Stegoceras validum* (Ornithischia: Pachycephalosauridae) and implications for the head-butting hypothesis. *PLOS ONE*, 17(9), e0268144.
+
+**DOI:** https://doi.org/10.1371/journal.pone.0268144
+
+**Type:** Peer-reviewed comparative anatomical and myological reconstruction.
+
+**Key finding:** Reconstructed pelvic and hindlimb musculature of UALVP 2 shows adaptations for wide-stance stability and rotational resistance during ground-reaction force transmission.
+
+**Project relevance:** Provides postcranial biomechanical context for whole-body stance and impact resistance without treating head-to-head combat as an observed certainty.
 
 ---
 
@@ -208,9 +238,9 @@ No conclusion below is intended to decide whether headbutting occurred.
 | Study | Taxon/specimen | Geometry | Internal/material model | Loading | Main output | Validation/comparison | Main inference | Important limitation |
 |---|---|---|---|---|---|---|---|---|
 | Snively & Cox 2008 | *Homalocephale*, *Pachycephalosaurus*; subadult pachycephalosaur dome model | 2-D and 3-D cranial/dome geometries | Histologically informed zones in the subadult model; keratin modeled in some scenarios | Simulated head impacts over selected closing-speed/impact scenarios | Stress, strain, force/energy transmission | Comparative geometry/model cases | Dome geometry could mechanically tolerate/distribute substantial impact loads under modeled conditions | Behavior, exact impact mode, and material properties remain assumption-dependent |
-| Snively & Theodor 2011 | *Stegoceras validum* UALVP 2; *Prenocephale*; 10 artiodactyls | CT-derived / CT-informed cranial models | Bone and keratin tissue types; internal density stratification | Simulated head impacts; UALVP 2 load benchmark 1360 N | Cranial stress, strain, safety-factor-type comparisons | Extant artiodactyl analogs + cross-taxon recursive partitioning | *Stegoceras* falls within a mechanical/morphological cluster associated with extant head-strikers | Analog selection and loading remain assumptions; comparative capability ≠ observed behavior |
-| Peterson & Vittore 2013 | Pachycephalosaurid comparative sample | Digital skull mapping for lesion locations | Biological/pathological evidence rather than FEA material model | Not a force simulation | Lesion frequency/distribution | Cross-specimen comparison | Apex-clustered injuries are consistent with intraspecific butting | Exact mechanism/impact orientation not observed |
-| Schott et al. 2011 | Growth series of *Stegoceras validum* | 3-D cranial morphology across ontogeny | Growth/shape model rather than impact FEA | Not an impact FEM | Dome growth/variation | Ontogenetic comparative modeling | Dome morphology changes substantially through growth | Ontogeny does not by itself identify behavior |
+| Snively & Theodor 2011 | *Stegoceras validum* UALVP 2; *Prenocephale*; 10 artiodactyls | CT-derived / CT-informed cranial models | Bone and keratin tissue types; internal density stratification (cancellous E=1 GPa assumed) | Simulated head impacts; UALVP 2 benchmark 1360 N | Cranial stress, strain, safety-factor-type comparisons | Extant artiodactyl analogs + cross-taxon recursive partitioning (comparative functional corroboration; no specimen physical validation) | *Stegoceras* falls within a mechanical/morphological cluster associated with extant head-strikers | Analog selection and loading remain assumptions; comparative capability ≠ observed behavior |
+| Peterson, Dischler & Longrich 2013 | Pachycephalosaurid comparative sample | Digital skull mapping for lesion locations | Biological/pathological evidence rather than FEA material model | Not a force simulation | Lesion frequency/distribution | Cross-specimen comparison | Apex-clustered injuries are consistent with intraspecific butting | Exact mechanism/impact orientation not observed |
+| Schott et al. 2011 | Growth series of *Stegoceras validum* | 3-D cranial morphology across ontogeny | Growth/shape model rather than impact FEA | Not an impact FEM | Dome growth/variation | Ontogenetic comparative modeling | Dome morphology changes substantially through growth | Ontogeny does not by itself identify behavior |h growth | Ontogeny does not by itself identify behavior |
 
 ---
 
@@ -359,11 +389,15 @@ These are **candidate** claims only and must be verified against a broader liter
 # 13. Source URLs / identifiers
 
 - University of Alberta Dino Lab history: https://grad.biology.ualberta.ca/dino-lab/history/
+- Sullivan 2003: https://doi.org/10.1671/0272-4634(2003)23[181:ROTDSL]2.0.CO;2
+- Sullivan 2006: https://econtent.unm.edu/digital/collection/bulletins/id/1119/
 - Schott et al. 2011: https://doi.org/10.1371/journal.pone.0021092
 - Snively & Cox 2008: https://palaeo-electronica.org/2008_1/140/index.html
 - Snively & Theodor 2011: https://doi.org/10.1371/journal.pone.0021422
-- Peterson & Vittore 2013: https://doi.org/10.1371/journal.pone.0068620
-- Woodruff & Ackermans 2024/2026: https://doi.org/10.1002/ar.25526
+- Peterson, Dischler & Longrich 2013: https://doi.org/10.1371/journal.pone.0068620
+- Nirody et al. 2022: https://doi.org/10.1080/02724634.2021.2036991
+- Moore et al. 2022: https://doi.org/10.1371/journal.pone.0268144
+- Woodruff & Ackermans 2026: https://doi.org/10.1002/ar.25526
 - Bateman & Larsson 2026: https://doi.org/10.1086/740811
 
 ---

@@ -91,7 +91,7 @@ This document distinguishes source evidence from coordinator synthesis. Reposito
 
 ## 3. Master bibliography and source records
 
-**Core scientific records currently tracked: 23.** One additional management record (P24) exists only to document duplicate detection.
+**Core scientific records currently tracked: 24.** One additional management record (P25) exists only to document duplicate detection.
 
 Each source has a stable project ID (`P01` etc.). The CSV companion preserves these records in flat form.
 
@@ -122,6 +122,7 @@ Each source has a stable project ID (`P01` etc.). The CSV companion preserves th
 | P21 | 2025 | Research Article | Journal article; peer-review status UNVERIFIED in retrieved page | Dinosaur fossil (taxon not captured in excerpt) | Zhang L, Cao Z, Zhao Q. 2025. Deep learning-aided segmentation combined with finite element analysis reveals a more natural biomechanic of dinosaur fossil. Scientific Reports 15:13964. | UNVERIFIED |
 | P22 | 2026 | Research Article | Publication type is Journal Article; peer-reviewed status UNVERIFIED in retrieved record | Human patient-specific mandible | Uncertainty quantification and global sensitivity analysis of a patient-specific mandibular finite element model using Latin hypercube sampling and sparse polynomial chaos expansion. 2026. PubMed PMID 42594916. | UNVERIFIED |
 | P23 | 2014 | Review | Peer-reviewed (repository record) | Paleontological FE models; extant validation literature | Bright JA. 2014. A review of paleontological finite element models and their validity. Journal of Paleontology 88(4):760-769. | 10.1666/13-090 |
+| P24 | 2022 | Research Article | Known peer-reviewed journal article | Stegoceras validum; UALVP 2 and other domes | Nirody JA, Goodwin MB, Horner JR, Huynh TL, Colbert MW, Smith DK, Evans DC. 2022. Quantifying vascularity in the frontoparietal dome of Stegoceras validum (Dinosauria: Pachycephalosauridae) from high resolution CT scans. Journal of Vertebrate Paleontology 41(5):e2036991. | 10.1080/02724634.2021.2036991 |
 
 ### 3.2 Detailed source records
 
@@ -676,6 +677,30 @@ Each source has a stable project ID (`P01` etc.). The CSV companion preserves th
 - **Limitations:** No single universal accuracy criterion; usefulness depends on the scientific question.
 - **Relevance to project:** Core review guiding evidence hierarchy and claim calibration.
 - **Epistemic notes:** UNVERIFIED
+
+#### P24 — Nirody JA, Goodwin MB, Horner JR, Huynh TL, Colbert MW, Smith DK, Evans DC. 2022. Quantifying vascularity in the frontoparietal dome of Stegoceras validum (Dinosauria: Pachycephalosauridae) from high resolution CT scans. Journal of Vertebrate Paleontology 41(5):e2036991.
+
+- **Citation:** Nirody JA, Goodwin MB, Horner JR, Huynh TL, Colbert MW, Smith DK, Evans DC. 2022. Quantifying vascularity in the frontoparietal dome of Stegoceras validum (Dinosauria: Pachycephalosauridae) from high resolution CT scans. Journal of Vertebrate Paleontology 41(5):e2036991.
+- **DOI or stable identifier:** 10.1080/02724634.2021.2036991
+- **URL:** [https://doi.org/10.1080/02724634.2021.2036991](https://doi.org/10.1080/02724634.2021.2036991)
+- **Publication year:** 2022
+- **Publication type:** Research Article
+- **Peer-reviewed status:** Known peer-reviewed journal article
+- **Taxon / specimen:** Stegoceras validum; UALVP 2 and comparative growth series
+- **Anatomical structure:** frontoparietal dome vascular canal architecture
+- **Computational method:** High-resolution micro-CT segmentation and 3-D vascular network quantification
+- **Geometry source:** High-resolution CT scans of Stegoceras domes
+- **Material model:** Focuses on microstructural canal geometry and void volume rather than assigning elastic constants
+- **Loading conditions:** None (anatomical/microstructural quantification)
+- **Boundary conditions:** N/A
+- **Mesh strategy:** N/A
+- **Validation strategy:** Cross-validation between micro-CT slices and published histological thin sections
+- **Sensitivity / UQ methodology:** Evaluates spatial variation in vascularity across ontogenetic stages
+- **Principal scientific question:** What internal vascular structures are resolved in high-resolution CT of Stegoceras domes, and how does vascularity change through ontogeny?
+- **Principal finding:** Internal vascular canal networks are directly resolvable by micro-CT, showing higher vascular volume in subadults that diminishes in mature individuals, confirming histological zonation models.
+- **Limitations:** Does not measure living elastic modulus or tissue strength directly; fossilized bone is permineralized.
+- **Relevance to project:** Core evidence constraining UALVP 2 internal architecture and Phase 8 CT thresholding; cautions against treating raw CT HU as direct bone stiffness.
+- **Epistemic notes:** DO: high-res CT canal volume and orientation. AI: ontogenetic interpretation.
 
 ## 4. Evidence matrix — compact index
 
