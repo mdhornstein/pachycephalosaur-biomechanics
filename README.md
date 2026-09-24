@@ -57,9 +57,13 @@ pachycephalosaurus-biomechanics/
 │       ├── geometry_inventory.csv      # 33-mesh quantitative topological & coordinate catalog
 │       └── biomechanics_input_matrix.csv # Formally audited model input & evidence matrix
 │
-├── literature/                         # Parameter audits and methodology logs
+├── literature/                         # Parameter audits, scoping reviews, and evidence matrices
+│   ├── stegoceras_biomechanics_literature_synthesis.md # Master scoping review & gap analysis
+│   ├── stegoceras_biomechanics_evidence_matrix.csv     # Master consolidated evidence matrix
 │   ├── snively_theodor_2011_model_audit.md # Line-by-line model input audit
-│   └── missing_input_sources.md        # Alternative source & gap resolution strategy
+│   ├── missing_input_sources.md        # Alternative source & gap resolution strategy
+│   ├── protocols/                      # Search methodology, queries, & review design
+│   └── dossiers/                       # Specialist evidence dossiers (FEA, Pachycephalosauria, UQ, CT)
 │
 ├── notebooks/
 │   ├── 01_data_inventory.ipynb         # Interactive dataset audit & provenance inspector

@@ -1,0 +1,22 @@
+evidence_id,claim,evidence_type,source,measurement_or_inference,confidence,fem_uq_consequence
+UALVP2-01,UALVP 2 was collected in 1921 during the University of Alberta field program.,DO,University of Alberta Dino Lab history,Direct historical record,High,Specimen provenance metadata
+UALVP2-02,UALVP 2 is described institutionally as the most complete Stegoceras specimen to date in the historical record.,DO/AI,University of Alberta Dino Lab history,Institutional historical statement,Moderate,Supports specimen primacy; does not eliminate preparation distortion
+UALVP2-03,"UALVP 2 includes a nearly complete skull, both lower jaws, and parts of the postcranial skeleton.",DO,Sullivan 2006,Direct specimen description,High,Defines anatomical scope
+UALVP2-04,UALVP 2 is a principal comparative basis for Stegoceras and conforms to the type frontoparietal.,DO/AI,Sullivan 2006,Morphological comparison,High,Supports taxonomic anchoring
+UALVP2-05,UALVP 2 was CT-scanned and used in comparative cranial biomechanics.,DO,Snively & Theodor 2011,Methods statement,High,Published CT provenance
+UALVP2-06,Cortical density/thickness increases toward the dome apex.,DO,Snively & Theodor 2011,CT observation,High,Supports heterogeneous material model
+UALVP2-07,A lower-density trabecular region lies beneath dense cortical bone; trabeculae broadly radiate perpendicular to the outer dome.,DO,Snively & Theodor 2011,CT observation,High,Internal architecture may alter stiffness/stress paths
+UALVP2-08,A dense deep compact layer is present.,DO,Snively & Theodor 2011,CT observation,High,Homogeneous material model is a substantive simplification
+UALVP2-09,Numerous canals/tubular structures connect toward the cranial surface.,DO,Snively & Theodor 2011,CT observation,High,Relevant to surface/keratin assumptions
+UALVP2-10,Beam hardening may inflate apparent superficial density; a dense deep compact layer remained evident.,DO/AI,Snively & Theodor 2011,Imaging limitation + author interpretation,High,CT-to-material mapping uncertainty
+UALVP2-11,The 2011 UALVP 2 model used a 1360 N impact load.,DO,Snively & Theodor 2011,Direct model input,High,Benchmark load case; not unique biological force
+UALVP2-12,The 2011 model included bone and keratin tissue types.,DO,Snively & Theodor 2011,Direct model input,High,Material scenario needs documentation
+UALVP2-13,The 2011 study compared UALVP 2 with Prenocephale and extant artiodactyl crania.,DO,Snively & Theodor 2011,Study design,High,Comparative scope matters
+UALVP2-14,"Stegoceras shares dome morphology, surface canals, neck muscle attachments and layered cranial bone with extant head-strike correlates.",DO + AI,Snively & Theodor 2011,Anatomy measured; behavioral meaning inferred,High anatomy / Moderate behavior,Motivates but does not prove impact scenario
+UALVP2-15,The model reported lower stress/higher safety-factor behavior for Stegoceras than several comparison taxa under its chosen loading.,DO/AI,Snively & Theodor 2011,Model output,High,Useful benchmark; load-case dependent
+UALVP2-16,Stegoceras dome morphology changes strongly through ontogeny.,DO/AI,Schott et al. 2011,Growth-series analysis,High,Avoid ontogenetically unqualified generalization
+UALVP2-17,The ontogenetic pattern is continuous and quantitatively modeled rather than a simple flat-vs-domed dichotomy.,DO/AI,Schott et al. 2011,Quantitative growth model,High,Geometry is age-structured
+UALVP2-18,22% of sampled pachycephalosaurid specimens had dome lesions; lesions clustered near the apex.,DO,Peterson & Vittore 2013,Comparative pathology survey,High,Independent evidence stream for impact hypotheses
+UALVP2-19,Authors interpreted lesion distribution as consistent with intraspecific butting.,AI,Peterson & Vittore 2013,Author interpretation,High as attribution,Do not encode as behavioral certainty
+UALVP2-20,A recent review argues that “headbutting” is underspecified and that brain injury cannot be inferred solely from cranial deformation.,AI,Woodruff & Ackermans 2024,Review synthesis,High,Define mechanical event and outcome criteria
+UALVP2-21,A 2026 functional study proposes feeding-performance trade-offs associated with dome development.,AI/IN,Bateman & Larsson 2026,Comparative/functional model,Moderate,Consider non-impact functional scenarios

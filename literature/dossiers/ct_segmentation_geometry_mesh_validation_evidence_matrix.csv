@@ -1,0 +1,19 @@
+evidence_id,source_id,evidence_type,claim,evidence_domain,confidence,UALVP2_relevance
+EV-001,S01,DO,"Paleontological FEA is an end-to-end model of geometry, materials, loads and constraints, not merely a solver choice.",Methodological framing,High,geometry;segmentation;loads;materials;boundary_conditions
+EV-002,S02,DO,"Geometry, density/material properties and segmentation-related uncertainty can be treated as distinct CT-to-FEA input uncertainties.",Sensitivity study,High,segmentation;geometry;materials
+EV-003,S03,DO,"Different mesh-generation methods can trade accuracy, human effort and computational cost differently.",Mesh-method comparison,High,mesh_generation
+EV-004,S04,DO,"Surface smoothing can reduce numerical surface stress oscillation in CT-derived FE models, while modifying the geometry.",Mesh-generation study,High,smoothing;geometry
+EV-005,S05,SYN,Mesh refinement addresses discretization uncertainty; it does not by itself establish physical validity.,Review synthesis,High,mesh_convergence;verification;validation
+EV-006,S06,DO,"Cranial strain and displacement responses can vary with mesh density, and different regions can converge at different rates.",Mesh convergence study,High,mesh_convergence;stress;displacement
+EV-007,S07,DO,Cranial FE models can match loading conditions while still missing some local measured strain magnitudes.,Validation study,High,validation;local_outputs
+EV-008,S08,DO,Geometry/segmentation simplifications can leave global deformation modes comparatively stable while altering localized strain magnitudes.,Sensitivity study,High,segmentation;geometry;local_stress
+EV-009,S09,DO,"Human cranial FE validation found absolute deformations were not accurately predicted, while global strain-pattern distributions were more reasonably approximated.",Validation study,High,validation;absolute_values;spatial_patterns
+EV-010,S10,DO,Surface-mesh resolution is a distinct sensitivity layer from solid-mesh resolution.,Sensitivity study,High,surface_resolution;geometry;mesh
+EV-011,S11,SYN,Digital fossil repair/restoration operations introduce interpretive uncertainty that can propagate into functional analyses.,Review synthesis,High,repair;restoration;taphonomy
+EV-012,S13,DO,"A watertight, closed, non-manifold-free and non-self-intersecting surface is a prerequisite for reliable tetrahedralization in the cited fossil workflow.",Method protocol,High,watertight;topology;TetGen/Gmsh
+EV-013,S14,DO,"Deep-learning segmentation can greatly reduce manual effort, but CT artifacts, low fossil-matrix contrast and rapid anatomical changes remain failure modes.",Fossil segmentation study,High,segmentation;reproducibility;AI
+EV-014,S15,DO,"In a Jeholosaurus femur, removing matrix from intertrabecular spaces changed stress magnitudes and spatial correspondence with trabecular structure.",Fossil FEA study,High,matrix;trabeculae;segmentation;stress
+EV-015,S16,DO,Adjacent biomechanics literature can quantify FE output sensitivity to segmentation differences rather than treating segmentation as purely qualitative preprocessing.,Clinical FE study,Moderate,segmentation;sensitivity
+EV-016,S17,DO,"Reporting guidance recommends stating the outputs used for mesh convergence, and whether they represent overall or regional responses.",Reporting guidance,High,reporting;mesh_convergence
+EV-017,S18,DO,Tetrahedral mesh quality depends strongly on boundary-surface quality and on the meshing algorithm; slivers and poor elements are recognized numerical risks.,Image-based mesh review,High,mesh_quality;surface_quality
+EV-018,S19,DO,Recent microFE evidence shows mesh type/resolution can have a stronger effect on local stress/strain than on global apparent stiffness.,2026 comparative study,Moderate,mesh_type;resolution;local_outputs
