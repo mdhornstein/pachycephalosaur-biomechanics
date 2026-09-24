@@ -115,7 +115,7 @@ Each source has a stable project ID (`P01` etc.). The CSV companion preserves th
 | P14 | 2013 | Research Article | Known peer-reviewed journal article | Lacerta bilineata | Moazen M. et al. 2013. A sensitivity analysis to the role of the fronto-parietal suture in Lacerta bilineata: a preliminary finite element study. Anatomical Record. | 10.1002/ar.22629 |
 | P15 | 2012 | Research Article | Known peer-reviewed journal article | Macaca fascicularis | Probabilistic finite element analysis of a craniofacial finite element model. Journal of Theoretical Biology 300:242-253 (2012). | 10.1016/j.jtbi.2012.01.031 |
 | P16 | 2022 | Review | Known peer-reviewed journal article | Fossil and extant biomechanical models | Marcé-Nogué J. 2022. One step further in biomechanical models in palaeontology: a nonlinear finite element analysis review. PeerJ 10:e13890. | 10.7717/peerj.13890 |
-| P17 | 2022 | Research Article | Peer-reviewed (PLOS) | Stegoceras validum UALVP 2 | Moore BRS, Roloson MJ, Currie PJ, Ryan MJ, Patterson RT, Mallon JL. 2022. The appendicular myology of Stegoceras validum and implications for the head-butting hypothesis. PLoS ONE 17(9):e0268144. | 10.1371/journal.pone.0268144 |
+| P17 | 2022 | Research Article | Peer-reviewed (PLOS) | Stegoceras validum UALVP 2 | Moore BRS, Roloson MJ, Currie PJ, Ryan MJ, Patterson RT, Mallon JC. 2022. The appendicular myology of Stegoceras validum and implications for the head-butting hypothesis. PLoS ONE 17(9):e0268144. | 10.1371/journal.pone.0268144 |
 | P18 | 2009 | Research Article | Known peer-reviewed journal article; DOI UNVERIFIED | Ceratopsid dinosaurs | Hieronymus TL, Witmer LM, Tanke DH, Currie PJ. 2009. The facial integument of centrosaurine ceratopsids: morphological and histological correlates of novel skin structures. Anatomical Record 292:1370-1396. | UNVERIFIED |
 | P19 | 2008 | Research Article | Known peer-reviewed journal article; URL/DOI UNVERIFIED | Capra hircus (goat) | Farke AA. 2008. Frontal sinuses and head-butting in goats: a finite element analysis. Journal of Experimental Biology 211:3085-3094. | UNVERIFIED |
 | P20 | 2021 | Research Article | Known peer-reviewed article; exact bibliographic details UNVERIFIED | Primarily comparative skull/teeth models | McCurry MR? 2021. Modeling tooth enamel in FEA comparisons of skulls: comparing common simplifications with biologically realistic models. | UNVERIFIED |
@@ -510,9 +510,9 @@ Each source has a stable project ID (`P01` etc.). The CSV companion preserves th
 - **Relevance to project:** Frames the boundary between current linear baseline and future model-form/UQ extensions.
 - **Epistemic notes:** UNVERIFIED
 
-#### P17 — Moore BRS, Roloson MJ, Currie PJ, Ryan MJ, Patterson RT, Mallon JL. 2022. The appendicular myology of Stegoceras validum and implications for the head-butting hypothesis. PLoS ONE 17(9):e0268144.
+#### P17 — Moore BRS, Roloson MJ, Currie PJ, Ryan MJ, Patterson RT, Mallon JC. 2022. The appendicular myology of Stegoceras validum and implications for the head-butting hypothesis. PLoS ONE 17(9):e0268144.
 
-- **Citation:** Moore BRS, Roloson MJ, Currie PJ, Ryan MJ, Patterson RT, Mallon JL. 2022. The appendicular myology of Stegoceras validum and implications for the head-butting hypothesis. PLoS ONE 17(9):e0268144.
+- **Citation:** Moore BRS, Roloson MJ, Currie PJ, Ryan MJ, Patterson RT, Mallon JC. 2022. The appendicular myology of Stegoceras validum and implications for the head-butting hypothesis. PLoS ONE 17(9):e0268144.
 - **DOI or stable identifier:** 10.1371/journal.pone.0268144
 - **URL:** [https://doi.org/10.1371/journal.pone.0268144](https://doi.org/10.1371/journal.pone.0268144)
 - **Publication year:** 2022
@@ -697,7 +697,7 @@ Each source has a stable project ID (`P01` etc.). The CSV companion preserves th
 - **Validation strategy:** Cross-validation between micro-CT slices and published histological thin sections
 - **Sensitivity / UQ methodology:** Evaluates spatial variation in vascularity across ontogenetic stages
 - **Principal scientific question:** What internal vascular structures are resolved in high-resolution CT of Stegoceras domes, and how does vascularity change through ontogeny?
-- **Principal finding:** Internal vascular canal networks are directly resolvable by micro-CT, showing higher vascular volume in subadults that diminishes in mature individuals, confirming histological zonation models.
+- **Principal finding:** Internal vascular canal networks are directly resolvable by micro-CT, demonstrating that relative vascularity increases during dome development and then decreases substantially in late ontogeny, confirming histological zonation models.
 - **Limitations:** Does not measure living elastic modulus or tissue strength directly; fossilized bone is permineralized.
 - **Relevance to project:** Core evidence constraining UALVP 2 internal architecture and Phase 8 CT thresholding; cautions against treating raw CT HU as direct bone stiffness.
 - **Epistemic notes:** DO: high-res CT canal volume and orientation. AI: ontogenetic interpretation.

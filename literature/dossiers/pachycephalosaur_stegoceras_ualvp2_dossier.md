@@ -64,7 +64,7 @@ No conclusion below is intended to decide whether headbutting occurred.
 | UALVP2-19 | The authors of the pathology study interpreted lesion distribution as consistent with intraspecific butting behavior. | AI | Peterson, Dischler & Longrich 2013 | Author interpretation | High as an attribution; not established fact | Should not be encoded as a FEM boundary condition or behavioral certainty. |
 | UALVP2-20 | A recent review emphasizes ambiguity in the term “headbutting” and cautions against equating cranial integrity with absence of brain injury. | AI | Woodruff & Ackermans 2026 | Review interpretation | High | Interpret mechanical outputs in relation to explicitly defined behaviors and failure criteria. |
 | UALVP2-21 | A 2026 study proposed that dome development may impose constraints/trade-offs on jaw adductor geometry and feeding performance. | AI/IN | Bateman & Larsson 2026 | Comparative/functional model | Moderate | Avoid assuming the dome must have had one exclusive function; consider competing biomechanical hypotheses. |
-| UALVP2-22 | High-resolution CT demonstrates that frontoparietal dome vascularity in *Stegoceras validum* is concentrated in internal canal networks that diminish ontogenetically. | DO | Nirody et al. 2022 | High-resolution micro-CT quantification | High | Directly constrains internal architecture and warns against treating CT HU as direct bone stiffness. |
+| UALVP2-22 | High-resolution CT demonstrates that frontoparietal dome vascularity in *Stegoceras validum* is concentrated in internal canal networks whose relative volume increases during dome development and decreases in late ontogeny. | DO | Nirody et al. 2022 | High-resolution micro-CT quantification | High | Directly constrains internal architecture and warns against treating CT HU as direct bone stiffness. |
 | UALVP2-23 | Reconstructed appendicular myology of UALVP 2 indicates adaptations for rotational stabilization and axial ground-reaction force transmission. | IN | Moore et al. 2022 | Comparative myological reconstruction | High as anatomy / Moderate as behavior | Provides postcranial biomechanical context for whole-body stance and impact resistance. |
 
 ---
@@ -213,7 +213,7 @@ No conclusion below is intended to decide whether headbutting occurred.
 
 **Type:** Peer-reviewed high-resolution micro-CT quantification.
 
-**Key finding:** High-resolution CT directly resolves internal vascular networks in the *Stegoceras validum* dome, showing that vascular canal volume decreases markedly with ontogenetic maturity.
+**Key finding:** High-resolution CT directly resolves internal vascular networks in the *Stegoceras validum* dome, demonstrating that relative vascularity increases during dome development and then decreases substantially in late ontogeny, providing quantitative CT evidence for dynamic internal architecture and remodeling.
 
 **Project relevance:** Connects 2D histological zonation to 3D CT scan features for *Stegoceras*, directly informing Phase 8 CT thresholding and zonation while warning against treating raw CT HU values as direct bone stiffness.
 
@@ -221,7 +221,7 @@ No conclusion below is intended to decide whether headbutting occurred.
 
 ## P11 — Moore et al. (2022)
 
-**Citation:** Moore, B. R. S., Roloson, M. J., Currie, P. J., Ryan, M. J., Patterson, C. M., & Mallon, J. C. (2022). The appendicular myology of *Stegoceras validum* (Ornithischia: Pachycephalosauridae) and implications for the head-butting hypothesis. *PLOS ONE*, 17(9), e0268144.
+**Citation:** Moore, B. R. S., Roloson, M. J., Currie, P. J., Ryan, M. J., Patterson, R. T., & Mallon, J. C. (2022). The appendicular myology of *Stegoceras validum* (Ornithischia: Pachycephalosauridae) and implications for the head-butting hypothesis. *PLOS ONE*, 17(9), e0268144.
 
 **DOI:** https://doi.org/10.1371/journal.pone.0268144
 

@@ -96,7 +96,7 @@ It is also the key specimen for the present computational question because Snive
 ### 4.2 Anatomy, CT and histology
 The dome is formed by major hyperostotic thickening of the frontoparietal cranial roof. UALVP 2's CT data show dense superficial and deep compact layers separated by lower-density/trabecular tissue, with trabeculae approximately perpendicular to the external dome surface; dense structures around neurovascular canals extend toward the outer surface. The 2011 authors explicitly noted that beam hardening could inflate superficial CT density and therefore did not treat every Hounsfield value as literal fossil-bone density. [BIO-07]
 
-Quantitative micro-CT analysis of vascular canal networks by Nirody et al. (2022) revealed high-density canal systems in *Stegoceras* (including UALVP 2) and other pachycephalosaur domes [BIO-13]. Canals are oriented predominantly radially and vertically toward the dorsal surface, connecting the internal vascular network with the overlying cornified sheath. This canal architecture provides structural evidence for rapid growth and maintenance of an overlying keratinous integument, while potentially dissipating thermal energy or modifying local stress trajectories. Nirody et al. demonstrated that vascular porosity varies regionally and ontogenetically, underscoring that the dome was a dynamic, vascularized living structure rather than a static solid calcified block. [BIO-13]
+Quantitative micro-CT analysis of vascular canal networks by Nirody et al. (2022) revealed high-density canal systems in *Stegoceras* (including UALVP 2) and other pachycephalosaur domes [BIO-13]. Canals are oriented predominantly radially and vertically toward the dorsal surface, connecting the internal vascular network with the overlying cornified sheath. This canal architecture provides structural evidence for rapid growth and maintenance of an overlying keratinous integument, while potentially dissipating thermal energy or modifying local stress trajectories. Nirody et al. demonstrated that relative vascularity increases during dome development and then decreases substantially in late ontogeny, providing quantitative micro-CT evidence for dynamic internal architecture and remodeling, and underscoring that the dome was a dynamic, vascularized living structure rather than a static solid calcified block. [BIO-13]
 
 Histological work by Goodwin & Horner identified three dome zones and found that vascularity and radiating tissue structures changed substantially through ontogeny, with those structures diminishing in mature/adult domes. They interpreted this tissue history as inconsistent with treating the radiating trabecular architecture as a simple adult head-butting adaptation and instead favored display/species-recognition interpretations. That is an **author interpretation**, not a direct behavioral observation. [BIO-05]
 
@@ -105,9 +105,9 @@ Schott et al. used morphology, allometry, histology and high-resolution CT acros
 #### 3-Step Material Logic for Fossil Crania
 Synthesizing the histological, CT, and biomechanical literature requires a rigorous 3-step conceptual separation:
 1. **Spatial Architecture:** CT and histological evidence establish undeniable 3D structural heterogeneity in UALVP 2 (compact dorsal cortex, porous cancellous/trabecular core, neurovascular canals, dense basicranial floor). [BIO-05, BIO-07, BIO-13]
-2. **Constitutive Parameter Assignment:** Living mechanical properties ($E, \nu$) cannot be measured from fossils; literature analogues (e.g. bovine/human bone, $E \in [1, 20]\text{ GPa}$) provide bounded parameter ranges, but remain explicit modeling assumptions. [FE-11, BIO-07]
+2. **Constitutive Parameter Assignment:** Living mechanical properties ($E, \nu$) cannot be directly measured from the permineralized fossil; literature informs plausible vertebrate constitutive ranges (e.g. cancellous $E \in [0.5, 5.0]\text{ GPa}$, cortical $E \in [10.0, 25.0]\text{ GPa}$), from which project model parameters are chosen. Any selected value remains an assumption for the fossil. [FE-11, BIO-07]
 3. **CT-to-Property Calibration Limits:** Fossil CT attenuation values reflect diagenetic permineralization and beam hardening, not pristine living bone mineral density. Clinical Hounsfield-to-stiffness equations cannot be automatically applied; mapping CT numbers to modulus is an inference requiring explicit verification and uncertainty analysis. [BIO-07, FE-08, CT-06, FE-20]
-Consequently, a homogeneous linear elastic model ($E = 17.0\text{ GPa}$) is strictly a simplified baseline control to isolate geometric effects, while heterogeneous models represent discrete scenario branches.
+Consequently, the homogeneous linear elastic model ($E = 17.0\text{ GPa}, \nu = 0.30$) is strictly a project modeling parameter and simplified baseline control to isolate geometric and numerical effects, while heterogeneous models represent discrete scenario branches.
 
 ### 4.3 Proposed functions and competing hypotheses
 
@@ -357,10 +357,10 @@ Every major claim in this synthesis points to one or more source IDs. The source
 | **BIO-07** | Snively & Theodor 2011. *Common Functional Correlates of Head-Strike Behavior in the Pachycephalosaur Stegoceras validum and Combative Artiodactyls*. PLOS ONE 6:e21422. | [10.1371/journal.pone.0021422](https://doi.org/10.1371/journal.pone.0021422) |
 | **BIO-08** | Peterson, Dischler & Longrich 2013. *Distributions of Cranial Pathologies Provide Evidence for Head-Butting in Dome-Headed Dinosaurs*. PLOS ONE 8(7):e68620. | [10.1371/journal.pone.0068620](https://doi.org/10.1371/journal.pone.0068620) |
 | **BIO-09** | Woodruff & Ackermans 2024 (issue 2026). *Headbutting through time: A review of this hypothesized behavior in “dome-headed” fossil taxa*. The Anatomical Record 309:1235–1256. | [10.1002/ar.25526](https://doi.org/10.1002/ar.25526) |
-| **BIO-10** | Moore et al. 2022. *The appendicular myology of Stegoceras validum and implications for the head-butting hypothesis*. PLOS ONE. | [10.1371/journal.pone.0268144](https://doi.org/10.1371/journal.pone.0268144) |
+| **BIO-10** | Moore et al. 2022. *The appendicular myology of Stegoceras validum (Ornithischia: Pachycephalosauridae) and implications for the head-butting hypothesis*. PLOS ONE 17(9):e0268144. | [10.1371/journal.pone.0268144](https://doi.org/10.1371/journal.pone.0268144) |
 | **BIO-11** | Bateman & Larsson 2026. *On Pachycephalosaurs, Trade-Offs, and the Historical Genesis of Sociosexual Display Structures*. The American Naturalist 208:9–29. | [10.1086/740811](https://doi.org/10.1086/740811) |
 | **BIO-12** | University of Alberta Dino Lab. *History of Paleontology at the U of A — UALVP 2*. Institutional provenance record. | [UNVERIFIED bibliographic identifier](https://grad.biology.ualberta.ca/dino-lab/history/) |
-| **BIO-13** | Nirody et al. 2022. *Quantitative analysis of vascular canals in pachycephalosaur domes and its implications for biomechanics and behavioral hypotheses*. Journal of Anatomy 240(4):645–659. | [10.1111/joa.13592](https://doi.org/10.1111/joa.13592) |
+| **BIO-13** | Nirody, J. A., et al. 2022. *Quantifying vascularity in the frontoparietal dome of Stegoceras validum (Dinosauria: Pachycephalosauridae) from high resolution CT scans*. Journal of Vertebrate Paleontology 41(5):e2036991. | [10.1080/02724634.2021.2036991](https://doi.org/10.1080/02724634.2021.2036991) |
 | **UQ-01** | McKay, Beckman & Conover 1979. *Comparison of three methods for selecting values of input variables in the analysis of output from a computer code*. Technometrics. | [10.1080/00401706.1979.10489755](https://doi.org/10.1080/00401706.1979.10489755) |
 | **UQ-02** | Morris 1991. *Factorial sampling plans for preliminary computational experiments*. Technometrics. | [10.1080/00401706.1991.10484804](https://doi.org/10.1080/00401706.1991.10484804) |
 | **UQ-03** | Sobol 2001. *Global sensitivity indices for nonlinear mathematical models and their Monte Carlo estimates*. Mathematics and Computers in Simulation. | [10.1016/S0378-4754(00)00270-6](https://doi.org/10.1016/S0378-4754(00)00270-6) |
@@ -424,7 +424,7 @@ This canonical synthesis consolidates the evidence base to answer the ten founda
 - **Macroscopic hyperostosis (`DO`):** Marked thickening of the fused frontal and parietal elements forms a solid dorsal dome bordered by peripheral squamosal and postorbital ornamentation [BIO-01–BIO-04].
 - **Histological zonation (`DO`, `AI`):** Histological sections reveal three distinct structural zones (compact outer cortex, vascular/trabecular intermediate zone, dense inner zone) [BIO-05, BIO-07].
 - **Dynamic ontogenetic remodeling (`DO`, `AI`):** Goodwin & Horner (2004) demonstrated that vascular canals and fibrous radial structural tissue are abundant in juvenile/subadult domes but decrease markedly as individuals reach adult maturity [BIO-05].
-- **Vascular network architecture (`DO`, `AI`):** Micro-CT analysis by Nirody et al. (2022) established that the frontoparietal dome is densely penetrated by vertical and radial vascular canal networks supplying the overlying cornified integument, supporting rapid growth and metabolic exchange, and altering local strain fields [BIO-13].
+- **Vascular network architecture & ontogeny (`DO`, `AI`):** Micro-CT analysis by Nirody et al. (2022) demonstrated that relative vascularity increases during dome development and then decreases substantially in late ontogeny, providing quantitative CT evidence for dynamic internal architecture and dense vertical/radial vascular canal networks [BIO-13].
 - **Apex-clustered cranial pathology (`DO`, `IN`):** Peterson, Dischler & Longrich (2013) documented a 22% lesion frequency across pachycephalosaurid frontoparietals, with traumas concentrated on the dome apex, consistent with repeated blunt-force trauma from agonistic behavior [BIO-08].
 
 ### 3. What did previous *Stegoceras* FEA actually do?
@@ -444,7 +444,7 @@ This canonical synthesis consolidates the evidence base to answer the ten founda
 
 ### 5. What can our current homogeneous model legitimately establish?
 - **Morphology-driven baseline response:** Evaluates how the external 3D cranial geometry of UALVP 2 distributes stress and deformation under specified loading purely as a geometric structure.
-- **Controlled null model:** Establishes the necessary baseline control ($E = 17.0\text{ GPa}$, $\nu = 0.3$) against which the structural influence of future heterogeneous material zonation can be isolated and quantified.
+- **Controlled null model:** Establishes the necessary baseline control—using a chosen project model parameter ($E = 17.0\text{ GPa}$, $\nu = 0.30$) selected from plausible vertebrate cortical ranges—against which the structural influence of future heterogeneous material zonation can be isolated and quantified.
 - **Rigorous numerical verification:** Evaluates code correctness, reaction-force equilibrium, and output-specific discretization error across a controlled mesh hierarchy on a frozen surface geometry [CT-09, FE-10].
 - **Macro-scale load transfer pathways:** Identifies primary structural trajectories (e.g. dorsal load transmission through the basicranium toward occipital condyles) governed by overall skull morphology.
 - **Interpretive boundaries:** It CANNOT establish biological validation, historical living stress magnitudes, failure thresholds, or prove that the animal engaged in head-butting.
@@ -457,18 +457,20 @@ This canonical synthesis consolidates the evidence base to answer the ten founda
 
 ### 7. What questions require loading/model-form sensitivity?
 - **Impact angle & contact location:** Evaluating off-normal and oblique strikes (e.g., $10^\circ\text{--}30^\circ$ angles) to model flank-butting versus head-on combat scenarios (Woodruff & Ackermans 2026) [BIO-09].
-- **Contact patch compliance & spread:** Investigating how varying contact footprint area ($500\text{--}3000\text{ mm}^2$) simulates the presence of an unpreserved cushioning keratinous pad [BIO-06, BIO-07].
+- **Contact patch compliance & spread:** Investigating how varying contact footprint area (e.g., candidate project sensitivity ranges such as $500\text{--}3000\text{ mm}^2$ or $2500\text{--}4000\text{ mm}^2$) simulates the presence of an unpreserved cushioning keratinous pad [BIO-06, BIO-07, BIO-09].
 - **Cervical boundary compliance:** Replacing rigid occipital condyle pins with distributed elastic spring foundations representing cervical muscle and ligament restraint (Moore et al. 2022) [BIO-10, FE-06].
 - **Dynamic/transient formulation:** Assessing whether inertial forces, wave propagation, and rate-dependent effects alter stress patterns relative to static approximations [BIO-07, FE-19].
 
 ### 8. Which uncertainties can legitimately receive probability distributions?
-- **Continuous parameters with empirical literature support:**
-  - Compact bone Young's modulus: $E_{\text{compact}} \sim \text{Uniform}(10, 25)\text{ GPa}$ or truncated normal based on comparative vertebrate cortical bone.
-  - Cancellous bone Young's modulus: $E_{\text{cancellous}} \sim \text{Uniform}(0.5, 5.0)\text{ GPa}$ reflecting trabecular compliance bounds.
-  - Poisson's ratio: $\nu \sim \text{Uniform}(0.25, 0.35)$ spanning vertebrate skeletal tissues.
-  - Scaled impact force magnitude: $F \sim \text{Uniform}(500, 3000)\text{ N}$ representing a continuous spectrum of plausible mass-velocity closure scenarios.
-  - Impact force inclination angle: $\theta \sim \text{Uniform}(0^\circ, 20^\circ)$ representing directional variability within a localized contact cone.
-- Every assigned distribution must be formally justified by literature bounds rather than assumed arbitrarily.
+- **Continuous material parameters bounded by comparative vertebrate literature:**
+  - Compact bone Young's modulus bounds: $E_{\text{compact}} \in [10, 25]\text{ GPa}$ (e.g., truncated uniform or normal based on comparative vertebrate cortical bone).
+  - Cancellous bone Young's modulus bounds: $E_{\text{cancellous}} \in [0.5, 5.0]\text{ GPa}$ reflecting vertebrate trabecular compliance bounds.
+  - Poisson's ratio bounds: $\nu \in [0.25, 0.35]$ spanning vertebrate skeletal tissues.
+- **Candidate project design ranges / sensitivity envelopes (NOT literature-established biological distributions):**
+  - Scaled impact force magnitude: candidate range $F \in [500, 3000]\text{ N}$ representing an exploratory spectrum of kinetic energy scaling scenarios (Snively & Cox 2008).
+  - Impact inclination angle: candidate envelope $\theta \in [0^\circ, 20^\circ]$ representing directional sensitivity, motivated conceptually by Woodruff & Ackermans (2026) but not directly observed for *Stegoceras*.
+  - Contact patch area: candidate envelope $A \in [2500, 4000]\text{ mm}^2$ (or localized $500\text{--}3000\text{ mm}^2$) exploring keratinous spread and contact geometry.
+- Crucially, the literature informs plausible constitutive ranges and motivates multi-scenario loading, but does not provide empirically established probability distributions for UALVP 2. Any distribution assigned in UQ must be explicitly recognized as a project sensitivity assumption rather than an observed biological truth.
 
 ### 9. Which should instead be treated as scenarios/model branches?
 - **Qualitative, structural, and model-form alternatives that lack a continuous probability measure:**
