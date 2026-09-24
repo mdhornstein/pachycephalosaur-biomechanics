@@ -35,14 +35,15 @@ The objective of this project is to construct a fully reproducible, open-source 
 
 ```mermaid
 flowchart TD
-    P0["Phase 0: Environment & Scaffolding (Completed)"] --> P1["Phase 1: Data Acquisition & Provenance Audit (GATE - Completed)"]
+    P0["Phase 0: Environment & Scaffolding (Completed)"] --> P1["Phase 1: Data Acquisition & Provenance Audit (Completed)"]
     P1 --> P2["Phase 2: 3D Surface Mesh Topology & Inspection (Completed)"]
     P2 --> P3["Phase 3: Model Input Audit & Feasibility Gate (Completed)"]
-    P3 --> P4["Phase 4: Surface FEA Benchmark & Discretization Sensitivity (GATE - Completed)"]
-    P4 --> P5["Phase 5: Uncertainty Quantification (Biological & Material Distributions)"]
-    P5 --> P6["Phase 6: Global Sensitivity Analysis (Sobol Indices & Morris Screening)"]
-    P6 --> P7["Phase 7: Gaussian Process Surrogates & Active Learning"]
-    P7 --> P8["Phase 8: High-Resolution Internal CT Segmentation & Zonal Heterogeneity"]
+    P3 --> P4["Phase 4: Surface FEA Benchmark & Discretization Sensitivity (Completed)"]
+    P4 --> L1["Literature Basis v1: Audited Evidence Base & Decisions Spec (Completed)"]
+    L1 --> P5["Phase 5: UALVP 2 CT Characterization & Material A/B Experiment (Active Next Phase)"]
+    P5 --> P6["Phase 6: Focused Sensitivity & Discrete Scenario Analysis"]
+    P6 --> P7["Phase 7: Probabilistic UQ & Active Learning Surrogates"]
+    P7 --> P8["Phase 8: High-Resolution Voxelwise Heterogeneity & Microstructure"]
     P8 --> P9["Phase 9: Comparative Pachycephalosaur Biomechanics"]
 ```
 
@@ -90,37 +91,35 @@ flowchart TD
 - 17/17 passing automated tests in [`tests/test_phase4_fea.py`](tests/test_phase4_fea.py).
 - Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](reports/phase4_fea_benchmark_report.md).
 
-### Phase 5: Biological, Material, & Boundary Uncertainty Quantification *(Active Next Phase)*
-- Propagate characterized numerical discretization uncertainty ($\epsilon_{\text{num}}$) alongside epistemic and aleatory inputs:
-  - Bone Young's modulus $E \sim p(E)$ (mammalian/avian compact bone envelope: 10–22 GPa).
-  - Poisson's ratio $\nu \sim p(\nu)$ (0.28–0.38).
-  - Scale factor $s \sim \mathcal{U}(0.95, 1.05)$.
-  - Contact patch area $A \sim \mathcal{U}(2500, 4000)\text{ mm}^2$.
-  - Load inclination angle $\alpha \sim \mathcal{N}(0^\circ, 10^{\circ 2})$.
-- Monte Carlo / Latin Hypercube Sampling (LHS) across parameter distributions.
-- Quantify output distributions: dome apex stress, endocranial braincase safety margin, total strain energy.
+### Literature Basis v1 & Model Decisions Specification *(Completed — Commits `2662be0` & `HEAD`)*
+- Master literature synthesis ([`literature/stegoceras_biomechanics_literature_synthesis.md`](literature/stegoceras_biomechanics_literature_synthesis.md)), dossiers, and audit-to-correction ledger ([`literature/LITERATURE_CORRECTIONS.md`](literature/LITERATURE_CORRECTIONS.md)).
+- Bridge specification ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md)) codifying epistemic rules, mathematical scaling laws, and prohibited/allowed interpretations.
 
-### Phase 6: Global Sensitivity Analysis
-- First-order ($S_i$) and total-order ($S_{Ti}$) Sobol sensitivity indices via SALib.
-- Quantify variance decomposition: determine whether biological uncertainty (modulus, scale) or modeling choices (patch area, load angle) dominate cranial stress variance.
+### Phase 5: UALVP 2 CT Characterization & Material A/B Experiment *(Active Next Phase)*
+- **CT Characterization Gate**:
+  1. Ingest and cryptographically verify the primary 514-slice UALVP 2 micro-CT DICOM volume ($0.210 \times 0.210 \times 0.250\text{ mm}$).
+  2. Verify physical scale and spatial coordinate registration against the canonical surface mesh ($G_0$).
+  3. Characterize image data semantics: pixel dynamic range, rock matrix vs. bone attenuation contrast, beam-hardening artifacts, and internal canal network visibility.
+  4. Reconstruct published material inference logic from Snively & Theodor (2011).
+- **Decisive Material A/B Experiment**:
+  - Implement **Model B** (histology/anatomy-informed 3-zone model: dense cortex, compliant trabecular core, dense basicranium).
+  - Solve Model A vs. Model B under identical mesh ($G_0$), loads ($3000\text{ mm}^2$, $1000\text{ N}$), and boundary conditions.
+  - Determine whether evidence-based internal material architecture materially alters compliance, strain energy partitioning, and endocranial braincase stress attenuation.
 
-### Phase 7: Gaussian Process Surrogate Modeling & Active Learning
-- Train Gaussian Process (GP) regression models on FE simulation ensembles.
-- Evaluate surrogate predictive accuracy on held-out validation simulations ($R^2$, RMSE, interval calibration).
-- Deploy active learning acquisition functions (Expected Improvement / Predictive Variance) for sample-efficient exploration.
+### Phase 6: Focused Sensitivity & Discrete Scenario Analysis
+- Structured scenario families: impact inclination angle ($\alpha \in [0^\circ, 20^\circ]$), contact patch variation ($A \in [2500, 4000]\text{ mm}^2$ / $500\text{--}3000\text{ mm}^2$), and lateral strike placement.
+- Cervical boundary compliance: distributed elastic spring foundations vs. rigid condylar fixity.
+- Closed-form analytical scaling for force magnitude $F$ and base modulus $E$ (avoiding redundant 3D FE solves).
 
-### Phase 8: High-Resolution Internal CT Segmentation & Zonal Heterogeneity
-- Semi-automated segmentation from primary micro-CT slices.
-- Distinguish internal anatomical zones:
-  - **Zone 1**: Deep compact bone surrounding braincase.
-  - **Zone 2**: Vascular cancellous zone with radiating trabeculae.
-  - **Zone 3**: Superficial dense compact bone of the dorsal dome.
-- Segment endocranial cavity and neurovascular canals.
-- Heterogeneous material property mapping from CT Hounsfield Units.
+### Phase 7: Probabilistic Uncertainty Quantification & Surrogate Modeling
+- Parameter distributions strictly for continuous variables with empirical literature support.
+- Problem-scaled sampling design (LHS / Sobol variance decomposition).
+- Machine learning surrogate models (Gaussian Processes / Polynomial Chaos) conditional on full 3D solve costs.
+
+### Phase 8: High-Resolution Voxelwise Heterogeneity & Microstructure
+- Continuous density-stiffness mapping $E(\text{HU})$ with beam-hardening corrections.
+- Representation of vertical/radial vascular canal networks (Nirody et al. 2022) and localized stress concentrations.
 
 ### Phase 9: Comparative Pachycephalosaur Biomechanics
-- Expand validated UQ pipeline to comparative taxa:
-  - *Acrotholus audeti*
-  - *Prenocephale prenes*
-  - *Homalocephale calathoceros* (flat-headed morphotype)
-  - Extant artiodactyl analogues (*Ovibos moschatus*, *Ovis canadensis*).
+- Expand validated pipeline across comparative taxa (*Acrotholus audeti*, *Prenocephale prenes*, *Homalocephale calathoceros*, *Ovibos moschatus*, *Ovis canadensis*).
+

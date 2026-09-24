@@ -53,18 +53,22 @@ This repository enforces a **two-dimensional information architecture** that str
    - **Audience**: All project contributors.
    - **Role**: Forward-looking master research roadmap, computational gates, and phase definitions.
    - **Rule**: Defines where we are going; does not redefine current implementation details.
+4. **[`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md)**:
+   - **Audience**: Computational modelers, simulation script authors, and UQ engineers.
+   - **Role**: Scientific requirements and bridge specification directly translating Literature Basis v1 (`2662be0`) into non-negotiable mathematical constraints, model implications, and experiment gates.
+   - **Rule**: Authoritative standard for all downstream simulation phases; updated only when canonical literature evidence or empirical CT data formally change.
 
 ### B. Historical & Scientific Records (Permanent, Append-Only, or Milestone Records)
-4. **[`docs/DECISIONS.md`](../docs/DECISIONS.md)**:
+5. **[`docs/DECISIONS.md`](../docs/DECISIONS.md)**:
    - **Role**: Append-only scientific and architectural decision log.
    - **Rule**: Never rewritten. When a prior decision is revised, a new decision is appended that explicitly supersedes the old one (e.g. `D004` supersedes `D002`).
-5. **[`docs/snapshots/*.md`](../docs/snapshots/)**:
+6. **[`docs/snapshots/*.md`](../docs/snapshots/)**:
    - **Role**: Truly immutable historical snapshots capturing the exact research and model state at a specific milestone commit (e.g., `2026-09-19-phase4-freeze.md`).
    - **Rule**: Tied to a specific git commit SHA; never modified after creation.
-6. **[`reports/*.md`](../reports/)**:
+7. **[`reports/*.md`](../reports/)**:
    - **Role**: Formal project and milestone scientific reports (e.g., [`phase4_fea_benchmark_report.md`](../reports/phase4_fea_benchmark_report.md)).
    - **Rule**: Records what each completed milestone investigation formally established. Normally stable upon phase completion, but correctable (for errata or precision fixes) with revision history preserved by Git. Does not serve as the living operational handoff.
-7. **[`reports/archive/*.md`](../reports/archive/)**:
+8. **[`reports/archive/*.md`](../reports/archive/)**:
    - **Role**: Preserved legacy documentation (e.g., [`phase4_walkthrough_legacy.md`](../reports/archive/phase4_walkthrough_legacy.md)).
    - **Rule**: Clearly marked with an archival banner indicating that it has been superseded.
 

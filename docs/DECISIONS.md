@@ -52,7 +52,21 @@ This document records key scientific, modeling, and architectural decisions made
 
 ## D006 — Propagate Internal Stress Discretization Sensitivity into Phase 5 UQ
 - **Date**: 2026-09-19
-- **Status**: ACCEPTED
-- **Decision**: Freeze the Phase 4 deterministic FEA baseline at the 825k-element medium mesh. Formally document that while global compliance ($U$), whole-skull displacement, and dorsal dome stress are stabilized ($<2\%$ net shift), global 95th% stress ($-18.10\%$) and endocranial braincase 95th% stress ($-28.64\%$) remain discretization-sensitive. Carry this characterized sensitivity forward into Phase 5 as numerical model-form uncertainty ($\epsilon_{\text{num}} \approx \pm 28.6\%$) rather than asserting false global convergence or attempting intractable laptop direct solves.
+- **Status**: ACCEPTED (Terminology clarified by Literature Basis v1 AF-19)
+- **Decision**: Freeze the Phase 4 deterministic FEA baseline at the 825k-element medium mesh. Formally document that while global compliance ($U$), whole-skull displacement, and dorsal dome stress are stabilized ($<2\%$ net shift), global 95th% stress ($-18.10\%$) and endocranial braincase 95th% stress ($-28.64\%$) remain discretization-sensitive. Carry this characterized sensitivity forward into Phase 5 as numerical discretization discrepancy ($\epsilon_{\text{num}} \approx \pm 28.6\%$) rather than asserting false global convergence or attempting intractable laptop direct solves.
 - **Rationale**: Pursuing a 1.4M $\to$ 3M $\to$ 5M element direct solve exceeds workstation RAM and direct solver scalability, while iterative PCG requires complex preconditioning on irregular non-convex geometries. Treating the observed stress sensitivity honestly as a known uncertainty component allows Phase 5 global sensitivity analysis to evaluate whether biological uncertainties (e.g. bone modulus, animal size, strike angle) dominate over residual numerical discretization effects.
 - **Evidence**: Documented in Section 7 of [`reports/phase4_fea_benchmark_report.md`](../reports/phase4_fea_benchmark_report.md) and [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md).
+
+---
+
+## D007 — Adopt Literature-to-Model Decisions Specification and Realign Computational Gates
+- **Date**: 2026-09-24
+- **Status**: ACCEPTED
+- **Decision**: Formally freeze the literature review layer as **Literature Basis v1** (commit `2662be0`), adopt [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) as the authoritative bridge specification, and realign the computational roadmap to prioritize empirical CT characterization and a decisive material A/B test over an unmotivated 48-point LHS campaign.
+- **Rationale**: The audited literature review establishes that:
+  1. UALVP 2 has demonstrated internal histological/CT zonation, making our homogeneous Model A strictly a baseline control rather than a final biological endpoint.
+  2. In linear elasticity, force magnitude $F$ and base Young's modulus $E$ exhibit closed-form analytical scaling ($\mathbf{u} \propto F/E$, $\boldsymbol{\sigma} \propto F$, $U \propto F^2/E$). Repeated numerical solves over $F$ and $E$ in a homogeneous linear model are mathematically redundant.
+  3. Specimen scale is an imaging audit check, not a continuous aleatory biological distribution.
+  4. Model-form alternatives (homogeneous vs. zoned) are discrete scenario branches that must not be smeared into arbitrary continuous distributions.
+  5. The decisive next scientific question is empirical: *What does the actual UALVP 2 DICOM volume allow us to say about internal architecture, and does introducing evidence-based material zonation (Model B) materially change the mechanical response and braincase stress attenuation relative to Model A?*
+- **Evidence**: [`literature/stegoceras_biomechanics_literature_synthesis.md`](../literature/stegoceras_biomechanics_literature_synthesis.md), [`literature/LITERATURE_CORRECTIONS.md`](../literature/LITERATURE_CORRECTIONS.md), and [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md).

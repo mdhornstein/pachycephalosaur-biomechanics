@@ -1,14 +1,14 @@
 # PROJECT HANDOFF
 
-**Date**: 2026-09-19  
-**Phase Transition Baseline**: `15a342f` (Phase 4 Freeze & Scientific Baseline)  
+**Date**: 2026-09-24  
+**Phase Transition Baseline**: `15a342f` (Phase 4 FE Freeze) & `2662be0` (Literature Basis v1 Freeze)  
 **Current Git State**: Dynamic — interrogate directly via `git rev-parse HEAD`  
-**Current Phase**: Phase 4 **FROZEN**; Phase 5 (Uncertainty Quantification & Sensitivity Design) **DESIGN PENDING — NEXT GATE**  
+**Current Phase**: Phase 4 & Literature Basis v1 **FROZEN**; Phase 5 (UALVP 2 CT Characterization & Material A/B Experiment) **ACTIVE NEXT GATE**  
 **Lead Specimen**: *Stegoceras validum* UALVP 2 (Cast from micro-CT reconstructed cranium)
 
 > [!IMPORTANT]
 > **Authority & Orientation Notice**:
-> This document is the fast, living operational entry point for incoming humans and AI agents. It reflects current reality at HEAD. For historical milestones, see [`docs/snapshots/`](docs/snapshots/). For repository documentation conventions and rules, see [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md). Do not infer the current computational implementation from historical phase reports. For scientific review, independently inspect current code, configurations, and numerical artifacts rather than treating this handoff text as proof.
+> This document is the fast, living operational entry point for incoming humans and AI agents. It reflects current reality at HEAD. For historical milestones, see [`docs/snapshots/`](docs/snapshots/). For repository documentation conventions and rules, see [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md). For the formal scientific requirements translating literature into computational models, see [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md). Do not infer the current computational implementation from historical phase reports. For scientific review, independently inspect current code, configurations, and numerical artifacts rather than treating this handoff text as proof.
 
 ---
 
@@ -18,11 +18,14 @@ Quantify cranial stress distribution, compliance, and energy absorption in *Steg
 ---
 
 ## 📍 Current State
-1. **Phase 4 Baseline Complete & Frozen**:
+1. **Phase 4 Baseline Complete & Frozen (`15a342f`)**:
    - **Model A** (surface-derived, homogeneous isotropic compact bone: $E = 17.0\text{ GPa}, \nu = 0.30$) verified and solved across a 3-tier pure volumetric $h$-refinement hierarchy (423k, 540k, 825k tetrahedral elements).
    - **All Solves Complete**: Free DOFs up to 497,907 solved via direct sparse LU factorization (`scipy.sparse.linalg.spsolve`) without out-of-memory errors or swap thrashing.
    - **Dorsal Load Patch Verified**: Surface-connected dual-graph Dijkstra wavefront algorithm strictly confined to the dorsal dome ($Z \ge 80.0\text{ mm}$, single connected component, zero ventral/internal penetration).
    - **Static Equilibrium Confirmed**: Normalized force and moment residuals $\le 1.53 \times 10^{-12}$ (machine precision).
+2. **Literature Basis v1 Complete & Frozen (`2662be0`)**:
+   - Canonical synthesis ([`literature/stegoceras_biomechanics_literature_synthesis.md`](literature/stegoceras_biomechanics_literature_synthesis.md)), dossiers, and audit-to-correction ledger ([`literature/LITERATURE_CORRECTIONS.md`](literature/LITERATURE_CORRECTIONS.md)) fully resolved.
+   - Model decisions bridge specification codified in [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md).
 
 ---
 
@@ -45,17 +48,20 @@ Quantify cranial stress distribution, compliance, and energy absorption in *Steg
   - Unlike the dorsal dome and global compliance, internal stress fields remain discretization-sensitive:
     - Global 95th% von Mises stress shifted $-18.10\%$ across tiers ($2.493 \to 2.290 \to 2.042\text{ MPa}$).
     - Endocranial braincase roof 95th% stress shifted $-28.64\%$ across tiers ($2.823 \to 2.383 \to 2.015\text{ MPa}$; step deltas $-15.59\%$ and $-15.46\%$).
-  - **Scientific Decision**: Do not pursue intractable multi-million element solves on workstation hardware. Rather, carry this characterized numerical sensitivity forward into Phase 5 as a formal numerical model-form uncertainty component ($\epsilon_{\text{num}} \approx \pm 28.6\%$) to assess whether biological variation dominates over numerical discretization error.
+  - **Scientific Decision**: Do not pursue intractable multi-million element solves on workstation hardware. Rather, carry this characterized numerical sensitivity forward as a formal numerical discretization discrepancy ($\epsilon_{\text{num}} \approx \pm 28.6\%$).
+- **Homogeneous Material Simplification**:
+  - Model A treats the cranium as a uniform compact bone block ($E = 17.0\text{ GPa}$). The audited literature proves that UALVP 2 has structured internal architecture (cortex, vascular cancellous core, dense basicranium). Model A serves strictly as a geometric control baseline.
 
 ---
 
 ## 🔮 Next Recommended Action
-**Do NOT jump into brute-force Monte Carlo simulations.**  
-Author the formal **Phase 5 UQ & Sensitivity Specification** (`docs/phase5_uq_specification.md`):
-1. Define biologically defensible distributions for uncertain parameters ($E, \nu, s, A, \alpha$).
-2. Factorize linear dimensions (scale $F$ and $E$ analytically without solver re-runs).
-3. Design a sample-efficient Design of Experiments (DoE) (e.g. 20–32 LHS / Sobol points) across the non-linear geometric/boundary dimensions ($A, \alpha, \nu, s$).
-4. Plan the Gaussian Process surrogate modeling and Sobol variance decomposition.
+**Do NOT deploy an unmotivated 48-point LHS campaign.**  
+Per [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md), execute **Phase 5: UALVP 2 CT Characterization & The Decisive Material A/B Experiment**:
+1. **Acquire & Ingest DICOM Volume**: Ingest the 514-slice, $0.210 \times 0.210 \times 0.250\text{ mm}$ primary micro-CT scan of UALVP 2.
+2. **Verify Physical Scale & Coordinates**: Register the voxel grid against the canonical surface mesh ($G_0$).
+3. **Characterize Image Data Semantics**: Quantify pixel values, beam hardening, rock matrix vs. bone contrast, and internal architecture visibility.
+4. **Reconstruct Published Material Inference Logic**: Document what Snively & Theodor (2011) inferred from CT vs. what was assumed.
+5. **Execute Decisive Model A vs. Model B Test**: Compare Model A against Model B (histology-informed 3-zone model) under identical mesh, loads, and BCs to determine if internal zonation materially alters braincase stress attenuation.
 
 ---
 
