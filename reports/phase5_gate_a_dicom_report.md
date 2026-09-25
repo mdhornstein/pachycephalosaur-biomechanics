@@ -22,7 +22,7 @@ This audit confirms that:
    - Matrix dimensions are **$1024\text{ rows} \times 754\text{ columns}$** (clarifying that columns are 754, not 1024).
    - Slice-plane spacing derived along the slice normal is **$0.250000\text{ mm}$** ($\text{std} = 0.0000000000\text{ mm}$, 100% uniform across all 513 adjacent steps).
    - Spatial coordinate range along the normal spans $[0.0000, 128.2500]\text{ mm}$, aligning with the canonical master boundary surface $G_0$ ($Z \in [0.31, 128.15]\text{ mm}$).
-6. **Intensity Representation**: Stored pixel values are raw **unsigned 16-bit integers** ($[0, 65535]$) with identity rescale tags (`RescaleSlope = 1.0`, `RescaleIntercept = 0.0`). In accordance with epistemic safeguards, these values are **not Hounsfield Units** and represent relative linear attenuation.
+6. **Intensity Representation**: Stored pixel values are raw **unsigned 16-bit integers** with identity rescale tags (`RescaleSlope = 1.0`, `RescaleIntercept = 0.0`). In accordance with epistemic safeguards, these values are reconstructed 16-bit CT gray values with no DICOM rescale to HU; their quantitative physical relationship to linear attenuation remains to be established in Gate C.
 
 Gate A is formally declared **PASSED & FROZEN**.
 
@@ -76,10 +76,11 @@ $$\begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix} = \begin{bmatrix} 0.207572 & 0 
   - $X \in [26.481, 182.783]\text{ mm}$ (Span: $156.302\text{ mm}$)
   - $Y \in [0.000, 212.346]\text{ mm}$ (Span: $212.346\text{ mm}$)
   - $Z \in [0.000, 128.250]\text{ mm}$ (Span: $128.250\text{ mm}$)
+- **Anatomical Orientation Tags**: Both `AnatomicalOrientationType` (0010,2210) and `PatientOrientation` (0020,0020) are absent (`NOT_PRESENT`). The coordinate system is therefore defined strictly by numerical direction cosines ($+X$ along row direction $[1, 0, 0]$, $+Y$ along column direction $[0, 1, 0]$, $+Z$ along slice normal $[0, 0, 1]$), avoiding premature or incorrect anatomical axis assumptions.
 
 ### 3.2 Comparison with Canonical Boundary Surface ($G_0$)
 - $G_0$ Extents: $X \in [37.91, 169.20]\text{ mm}$, $Y \in [4.20, 204.88]\text{ mm}$, $Z \in [0.31, 128.15]\text{ mm}$.
-- **Finding**: The surface mesh $G_0$ resides strictly inside the DICOM physical bounding box on all three axes with margins of $\sim 11.4\text{ mm}$ ($X$), $\sim 4.2\text{ mm}$ ($Y$), and $\sim 0.3\text{ mm}$ ($Z$). There is zero unit mismatch (both datasets are in true millimeters, sharing approximately the same coordinate origin).
+- **Finding**: The CT volume and $G_0$ have overlapping, millimeter-scale coordinate extents consistent with a common spatial frame. Quantitative rigid registration and residual analysis (Gate B) are strictly required to establish physical spatial correspondence, translation, rotation, and provenance.
 
 ---
 
@@ -88,17 +89,17 @@ $$\begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix} = \begin{bmatrix} 0.207572 & 0 
 | DICOM Tag | Value | Epistemic Interpretation |
 | :--- | :--- | :--- |
 | `BitsAllocated` | 16 | 16 bits per pixel container |
-| `BitsStored` | 16 | Full 16-bit precision utilized |
+| `BitsStored` | 16 | 16-bit storage declared |
 | `HighBit` | 15 | Most significant bit is bit 15 |
-| `PixelRepresentation` | 0 | Unsigned integer (range: $[0, 65535]$) |
-| `RescaleIntercept` | 0.0 | Default identity mapping |
-| `RescaleSlope` | 1.0 | Default identity mapping |
+| `PixelRepresentation` | 0 | Unsigned integer |
+| `RescaleIntercept` | 0.0 | Identity mapping (no HU calibration) |
+| `RescaleSlope` | 1.0 | Identity mapping (no HU calibration) |
 | `RescaleType` | `None` | No standard rescale units defined |
-| `Stored Range` | $[0, 65535]$ | Full dynamic range utilized |
+| `Stored Range` | $[0, 65535]$ | Extrema observed across slice stack; regional distribution, histogram, and clipping/saturation to be audited in Gate C |
 
 ### 4.1 Epistemic Safeguard: Not Hounsfield Units
 - **Fossil Attenuation vs. Medical CT**: The scan was acquired on an industrial micro-CT system (450 kV, brass filtered) without a water/air calibration phantom.
-- **Physical Interpretation**: The stored pixel values represent relative X-ray linear attenuation coefficients ($\mu$). They must **never** be treated as biological Hounsfield Units, and must **never** be automatically converted to Young's modulus via clinical density-stiffness empirical laws ($E(\text{HU})$).
+- **Physical Interpretation**: The volume contains reconstructed 16-bit image intensities with no DICOM rescale to HU; their quantitative physical relationship to linear attenuation remains to be established in Gate C. They must **never** be treated as biological Hounsfield Units, and must **never** be automatically converted to Young's modulus via clinical density-stiffness empirical laws ($E(\text{HU})$).
 - In Phase 5, these values serve strictly as geometric/architectural evidence to identify internal morphological boundaries.
 
 ---

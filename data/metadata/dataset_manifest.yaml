@@ -65,7 +65,7 @@ datasets:
       y: 0.207572
       z: 0.250000
     physical_units: "mm"
-    coordinate_frame: "DICOM Patient Coordinate System (+X right, +Y posterior, +Z dorsal/superior)"
+    coordinate_frame: "DICOM Image Coordinate System (+X along row direction [1,0,0], +Y along column direction [0,1,0], +Z along slice normal [0,0,1]; anatomical orientation tags 0010,2210 / 0020,0020 not present)"
     license: "CC BY-NC 4.0 (MorphoSource 3D Use Limited Agreement)"
     download_status: "downloaded_and_verified"
     requires_authentication: true

@@ -1,5 +1,6 @@
 """Automated verification test suite for Phase 5 Gate A: DICOM Ingestion & Cryptographic Header Audit."""
 
+import hashlib
 import json
 from pathlib import Path
 import numpy as np
@@ -19,7 +20,20 @@ def slice_manifest():
         return json.load(f)
 
 
-def test_dicom_archive_and_slice_count(slice_manifest):
+def test_nested_archive_integrity(slice_manifest):
+    """Verifies SHA-256 hash of the nested DICOM zip archive if present."""
+    if NESTED_ZIP_PATH.exists():
+        h = hashlib.sha256()
+        with open(NESTED_ZIP_PATH, "rb") as f:
+            while chunk := f.read(1024 * 1024 * 8):
+                h.update(chunk)
+        computed_sha = h.hexdigest()
+        assert computed_sha == slice_manifest["nested_zip_sha256"], (
+            f"Nested ZIP hash mismatch: {computed_sha} != {slice_manifest['nested_zip_sha256']}"
+        )
+
+
+def test_dicom_slice_count_and_provenance(slice_manifest):
     """Verifies that exactly 514 DICOM slices are present, readable, and cataloged."""
     assert slice_manifest["num_slices"] == 514
     assert len(slice_manifest["slices"]) == 514
@@ -32,6 +46,22 @@ def test_dicom_archive_and_slice_count(slice_manifest):
     assert len(set(filenames)) == 514
     uids = [s["sop_instance_uid"] for s in slice_manifest["slices"]]
     assert len(set(uids)) == 514
+
+
+def test_dicom_per_slice_sha256_full_integrity(slice_manifest):
+    """Recomputes SHA-256 hash of every single DICOM slice on disk and compares against manifest."""
+    manifest_lookup = {s["filename"]: s["sha256"] for s in slice_manifest["slices"]}
+    dcm_files = sorted(list(DICOM_DIR.glob("*.dcm")))
+    assert len(dcm_files) == 514
+    
+    for fpath in dcm_files:
+        expected_hash = manifest_lookup.get(fpath.name)
+        assert expected_hash is not None, f"File {fpath.name} not found in manifest"
+        
+        computed_hash = hashlib.sha256(fpath.read_bytes()).hexdigest()
+        assert computed_hash == expected_hash, (
+            f"Cryptographic hash mismatch for {fpath.name}: {computed_hash} != {expected_hash}"
+        )
 
 
 def test_dicom_spatial_geometry(slice_manifest):
@@ -61,6 +91,18 @@ def test_dicom_spatial_geometry(slice_manifest):
     assert np.isclose(z_range[1], 128.25, atol=1e-3)
 
 
+def test_dicom_orientation_tags_absence():
+    """Verifies that anatomical orientation tags (0010,2210 and 0020,0020) are absent,
+    confirming that the coordinate system is strictly defined by numerical direction cosines.
+    """
+    first_path = DICOM_DIR / "WitmerLab_Stegoceras_UALVP2_DICOM001.dcm"
+    ds = pydicom.dcmread(first_path)
+    
+    assert (0x0010, 0x2210) not in ds, "AnatomicalOrientationType unexpectedly present"
+    assert (0x0020, 0x0020) not in ds, "PatientOrientation unexpectedly present"
+    assert (0x0018, 0x5100) not in ds, "PatientPosition unexpectedly present"
+
+
 def test_dicom_intensity_semantics(slice_manifest):
     """Verifies that stored pixel values are unsigned 16-bit integers and not calibrated Hounsfield Units."""
     assert slice_manifest["bits_allocated"] == 16
@@ -72,7 +114,7 @@ def test_dicom_intensity_semantics(slice_manifest):
     assert slice_manifest["rescale_intercept"] == 0.0
     assert slice_manifest["rescale_slope"] == 1.0
     
-    # Intensity dynamic range spans raw 16-bit detector scale
+    # Extrema observed across volume
     assert slice_manifest["stored_pixel_min"] == 0
     assert slice_manifest["stored_pixel_max"] == 65535
 
