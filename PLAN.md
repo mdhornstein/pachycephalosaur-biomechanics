@@ -16,10 +16,13 @@ The objective of this project is to construct a fully reproducible, open-source 
 
 1. **Strict Provenance & Immutability**:
    Every raw scan, surface mesh, and reference model has documented provenance, repository ID, and licensing. Raw data are never altered in place.
-2. **Explicit Uncertainty & Zero Fabrication**:
-   Unknown parameters (e.g., in vivo keratin thickness, permineralization modulus inflation, non-preserved cartilage) are explicitly labeled `UNKNOWN` and modeled as probability distributions $\theta \sim p(\theta)$ rather than asserted as fixed constants. Uninspected meshes are marked `NOT_YET_INSPECTED`.
-3. **Reproducibility Over Complexity**:
-   A deterministic, transparent, and reproducible FEA benchmark is established and validated prior to deploying non-linear contacts, complex anisotropic tensors, or machine learning surrogates.
+2. **Explicit Uncertainty & Scenario Discipline**:
+   Unknown parameters and model-form choices are explicitly classified and handled according to their mathematical nature (Model Decision Basis v1 D07, D16):
+   - Continuous parameters with comparative literature support (e.g., tissue modulus ranges) are initially treated as bounded sensitivity envelopes. A probabilistic representation $\theta \sim p(\theta)$ requires scientific justification of the quantity and its distribution, and is never assumed a priori.
+   - Discrete structural and boundary alternatives (homogeneous vs. zoned, rigid vs. compliant restraints) remain distinct scenario branches and are never smeared into continuous probability distributions.
+   - Unknown biological features (e.g., unpreserved keratin thickness or cartilage) are explicitly labeled `UNKNOWN`. Uninspected meshes are marked `NOT_YET_INSPECTED`.
+3. **Reproducibility Over Premature Complexity**:
+   A deterministic, transparent, and reproducible FEA benchmark is established and numerically verified prior to deploying multi-zone material architectures, non-linear contacts, or surrogate modeling. Numerical verification is strictly separated from biological validation (D14).
 4. **Distinction of Uncertainty Sources**:
    Numerical discretization error (mesh convergence) is strictly separated from biological uncertainty (material properties, in vivo muscle force) and model-form uncertainty (boundary conditions).
 5. **Phase Gating & State Architecture**:
@@ -112,9 +115,9 @@ flowchart TD
 - Closed-form analytical scaling for force magnitude $F$ and base modulus $E$ (avoiding redundant 3D FE solves).
 
 ### Phase 7: Probabilistic Uncertainty Quantification & Surrogate Modeling
-- Parameter distributions strictly for continuous variables with empirical literature support.
-- Problem-scaled sampling design (LHS / Sobol variance decomposition).
-- Machine learning surrogate models (Gaussian Processes / Polynomial Chaos) conditional on full 3D solve costs.
+- Parameter distributions strictly for continuous variables that have empirical literature support and cannot be factored out analytically.
+- Problem-scaled sampling design (LHS / Sobol variance decomposition) sized to problem dimensionality and solve costs after Phase 5/6, without precommitting to arbitrary sample sizes (D16).
+- Surrogate modeling (Gaussian Processes / Polynomial Chaos) deployed only if full 3D solves prove computationally prohibitive for the required sample size.
 
 ### Phase 8: High-Resolution Voxelwise Heterogeneity & Microstructure
 - Continuous density-stiffness mapping $E(\text{HU})$ with beam-hardening corrections.

@@ -87,3 +87,15 @@ This document records key scientific, modeling, and architectural decisions made
   7. *Staged UQ & Deferred Complexities (D16, D17)*: Deferring broad LHS sampling and dynamic/contact FEA until continuous uncertainty inventory and model forms are experimentally justified.
 - **Evidence**: [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) and [`literature/stegoceras_biomechanics_literature_synthesis.md`](../literature/stegoceras_biomechanics_literature_synthesis.md).
 
+---
+
+## D009 — Epistemic Clarification of Discretization Discrepancy (Supersedes D006 Terminology)
+- **Date**: 2026-09-24
+- **Status**: ACCEPTED (Supersedes D006 terminology per Model Decision Basis v1 D12, D14)
+- **Decision**: Formally clarify the epistemic representation of the observed mesh-to-mesh difference in endocranial braincase roof 95th-percentile stress ($-28.64\%$ net across $h_1 \to h_3$). This quantity must strictly be treated as an **observed output-specific numerical discretization discrepancy** ($\Delta_{\text{num}}$), explicitly superseding the prior symmetric interval notation ($\pm 28.6\%$) and any interpretation of discretization error as an aleatory or biological uncertainty distribution.
+- **Rationale**: In rigorous computational mechanics and verification/validation (V&V):
+  1. *Observed Numerical Discrepancy ($\Delta_{\text{num}}$)*: The deterministic, signed difference between discrete solutions across mesh tiers ($2.823 \to 2.383 \to 2.015\text{ MPa}$; net $-28.64\%$). It measures the incomplete spatial resolution of complex internal cranial cavities under the current discrete linear tetrahedral approximation.
+  2. *Formal Numerical Error Bound*: An analytical or asymptotic bound (e.g., via Richardson extrapolation or GCI) that requires the solution to be within the asymptotic convergence regime for that specific QoI. Where asymptotic convergence is not yet demonstrated, quoting a symmetric interval ($\pm 28.6\%$) creates the false impression of a verified error bound.
+  3. *Biological Uncertainty Distribution*: A probability measure $\theta \sim p(\theta)$ representing physical variation across individuals, tissues, or loading events. Under Rule 4 and Decision D12 of the canonical bridge specification, numerical discretization differences must **never** be smeared into or treated as biological probability distributions.
+- **Evidence**: [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) (Epistemic Rules, D12, D14) and [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_convergence_comparison.json).
+

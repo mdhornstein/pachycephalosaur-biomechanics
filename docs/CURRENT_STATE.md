@@ -1,26 +1,31 @@
 # Current Scientific & Computational State
 
 **Document Status**: Canonical Living State Document  
-**Last Updated**: 2026-09-19  
-**Phase Transition Baseline**: `15a342f` (Phase 4 Freeze & Scientific Baseline)  
+**Last Updated**: 2026-09-24  
+**Phase Transition Baselines**: `15a342f` (Phase 4 Freeze & FE Baseline) & `2662be0` (Literature Basis v1 Freeze)  
+**Authoritative Bridge**: [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) (Model Decision Basis v1; Decisions D007, D008, D009)  
 **Current Git State**: Dynamic — interrogate directly via `git rev-parse HEAD`  
-**Current Phase**: Phase 4 **FROZEN**; Phase 5 (UQ & Sensitivity Design) **PENDING DESIGN**
+**Current Phase**: Phase 4 **FROZEN**; Literature Basis v1 **FROZEN**; Model Decision Basis v1 **FROZEN**; Phase 5 (UALVP 2 CT Characterization & Material A/B Experiment) **ACTIVE NEXT GATE**
 
 ---
 
 ## 1. Scientific Objective
-This investigation quantifies the mechanical behavior of the pachycephalosaur cranium under impact loading. The central evolutionary and biomechanical question is:
+This investigation quantifies cranial stress distribution, compliance, and strain energy absorption in the pachycephalosaur *Stegoceras validum* under dome impact loading using 3D finite element analysis (FEA).
 
-> **Did the hypertrophied frontoparietal dome of *Stegoceras validum* function as an effective shock-absorbing structure protecting the endocranial braincase during intra-specific head-strikes, or do stress concentrations and compliance characteristics support alternative behavioral hypotheses (flank-butting or visual display)?**
+The immediate computational question is:
+> **Does introducing evidence-based internal material architecture (Model B) materially alter cranial compliance, strain energy distribution, and stress transmission/redistribution to the endocranial braincase relative to our frozen homogeneous baseline (Model A)?**
 
-To answer this defensively, we must quantify not only deterministic stress fields, but also whether biological and kinematic uncertainties dominate over numerical discretization error.
+### Epistemic Invariants & Scope Boundaries (Model Decision Basis v1)
+1. **Conditional Mechanical Evaluation**: Finite element results quantify comparative structural response under explicitly modeled geometric, material, and kinematic scenarios. Mechanical competence under modeled conditions does not by itself establish the occurrence of fighting behavior or the evolutionary function of the dome (Decisions D10, D15).
+2. **Zero Biological Ground-Truth Validation**: In vivo bone strain and impact force measurements are physically impossible for extinct non-avian dinosaurs. Solver verification, numerical equilibrium, and benchmark reproduction must never be conflated with specimen-specific biological validation (Decision D14).
+3. **Strict Separation of Uncertainty Scales**: Output-specific numerical discretization discrepancies ($\Delta_{\text{num}}$) arising from finite-element mesh resolution are rigorously separated from parametric sensitivity envelopes and discrete model-form scenario branches (Decisions D07, D12, D14, D009).
 
 ---
 
 ## 2. Current Computational Model (Model A)
 The project currently executes **Model A**:
-- **Representation**: Surface-derived, fused monolithic continuum approximation inspired by Snively & Theodor (2011).
-- **Material Assumption**: Homogeneous isotropic compact bone. (Serves as the uncompromised computational baseline to verify geometry, solver execution, load application, and discretization sensitivity before introducing multi-zone internal histological layering in later phases).
+- **Representation**: Surface-derived continuum model on the canonical boundary surface ($G_0$).
+- **Material Assumption**: Homogeneous isotropic compact bone ($E = 17.0\text{ GPa}, \nu = 0.30$). Per Decision D06, Model A serves strictly as a geometric and numerical baseline control to isolate geometric effects before introducing internal material zonation. It is not an assertion of biological bone homogeneity in the living animal.
 
 ---
 
@@ -43,7 +48,7 @@ The project currently executes **Model A**:
 ## 4. Boundary Conditions & Support
 - **Occipital Condyle**: Rigid translational fixity in all three DOFs ($u_x = u_y = u_z = 0$) across 139 nodes within a $12.0\text{ mm}$ radius sphere at the posterior-ventral condylar articular margin (centroid: $[104.64, 178.06, 40.13]\text{ mm}$).
 - **Nuchal Crest Rim**: Translational restraint in longitudinal and vertical DOFs ($u_y = u_z = 0$) across 702 posterior nuchal nodes (centroid: $[116.98, 190.23, 82.40]\text{ mm}$) to represent cervical muscular and ligamentous bracing (m. complexus, lig. nuchae).
-- **Equilibrium Verification**: Reaction forces and moments are computed via direct sparse matrix-vector multiplication $\mathbf{R} = \mathbf{K}\mathbf{u} - \mathbf{F}_{\text{ext}}$ across all restrained DOFs.
+- **Equilibrium Verification**: Reaction forces and moments are computed via direct sparse matrix-vector multiplication $\mathbf{R} = \mathbf{K}\mathbf{u} - \mathbf{F}_{\text{ext}}$ across all restrained DOFs. Normalized residuals $\le 1.53 \times 10^{-12}$ (machine precision).
 
 ---
 
@@ -55,7 +60,7 @@ The project currently executes **Model A**:
   - Connectivity assertion: Selected facets form exactly one connected topological component on the dorsal surface.
   - Ventral penetration: `0.00%` (verified eliminated).
 - **Patch Properties**:
-  - Target Area: $3,000.0\text{ mm}^2$ (Literature broad contact zone).
+  - Target Area: $3,000.0\text{ mm}^2$ (literature broad contact scenario).
   - Selected Area: $3,000.02\text{ mm}^2$ ($+0.0007\%$ error).
   - Selected Faces: 1,406 triangles (808 loaded nodes on canonical surface).
   - Centroid: $[X=108.40, Y=104.33, Z=101.97]\text{ mm}$.
@@ -66,9 +71,12 @@ The project currently executes **Model A**:
 ---
 
 ## 6. Material Properties
-- **Young's Modulus ($E$)**: $17.0\text{ GPa}$ ($17,000.0\text{ MPa}$). Standard vertebrate compact bone baseline (Rayfield 2007, Snively & Theodor 2011).
-- **Poisson's Ratio ($\nu$)**: $0.30$. Standard isotropic bone value.
-- **Epistemic Status**: Parameter-limited literature borrowing. Compact bone modulus across mammals/archosaurs spans $10\text{--}22\text{ GPa}$; this variation is explicitly scheduled for propagation in Phase 5 UQ.
+- **Young's Modulus ($E$)**: $17.0\text{ GPa}$ ($17,000.0\text{ MPa}$). Chosen project control parameter (Rayfield 2007, Snively & Theodor 2011; Decision D06).
+- **Poisson's Ratio ($\nu$)**: $0.30$. Standard isotropic bone control value.
+- **Epistemic Status (Decisions D07, D09, D16)**:
+  - Vertebrate skeletal tissue spans broad plausible property ranges (compact bone $E \in [10, 25]\text{ GPa}$, cancellous bone $E \in [0.5, 5.0]\text{ GPa}$). These intervals define candidate sensitivity envelopes, not established probability distributions for fossil UALVP 2.
+  - In linear homogeneous models, scalar modulus variations scale analytically ($u \propto 1/E, \sigma \propto E^0, U \propto 1/E$) and do not require repeated finite element solves (Decision D09).
+  - Modulus sensitivity will be evaluated as candidate stiffness-contrast ratios ($E_{\text{cortex}}/E_{\text{core}}$) in Model B rather than premature probabilistic Monte Carlo sampling.
 
 ---
 
@@ -107,29 +115,33 @@ From [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_
 
 ---
 
-## 9. Known Limitations & Discretization Sensitivities
-1. **Stress Field Discretization Sensitivity**:
-   - Total compliance ($U$), whole-skull displacement, and dorsal dome stress are stabilized ($<2\%$ net variation).
-   - In contrast, global 95th% stress ($-18.1\%$) and endocranial braincase 95th% stress ($-28.6\%$) exhibit non-decaying step differences across the tested mesh range.
-   - This reflects ongoing geometric resolution of complex internal cranial cavities and boundary gradients away from the dorsal impact zone.
-2. **Stopping Rule**:
-   - The 825k-element medium mesh represents the practical upper limit for direct sparse LU solves on 16 GB hardware without out-of-core thrashing.
-   - We do not chase a 1.4M $\to$ 3M mesh solve. Instead, the characterized numerical sensitivity ($\approx 28.6\%$ on braincase stress) is formally carried forward as numerical model-form uncertainty into Phase 5.
+## 9. Characterized Discretization Sensitivity & Mesh Disciplines
+1. **Output-Specific Discrepancy ($\Delta_{\text{num}}$)**:
+   - Total compliance ($U$), whole-skull displacement, and dorsal dome stress are stabilized across the refinement tiers ($<2\%$ net variation).
+   - In contrast, internal stress fields exhibit non-decaying mesh-tier differences: global 95th% stress shifted $-18.10\%$ and endocranial braincase 95th% stress shifted $-28.64\%$ ($2.823 \to 2.383 \to 2.015\text{ MPa}$).
+   - This reflects ongoing discrete geometric resolution of complex non-convex internal cavities away from the dorsal load zone.
+   - **Epistemic Classification (Decisions D12, D009)**: This is reported deterministically as an output-specific numerical discretization discrepancy ($\Delta_{\text{num}} = -28.64\%$). Per Decision D009, it must **never** be treated as a biological uncertainty distribution or a symmetric error bound ($\pm 28.6\%$).
+2. **Stopping Rule & Model A/B Invariant**:
+   - The 825k-element medium mesh ($h_3$) represents the practical computational limit for direct sparse LU solves on 16 GB workstation hardware without out-of-core memory thrashing.
+   - Rather than pursuing intractable multi-million element solves, Phase 5 enforces the **Mesh Invariant Principle** (Decisions D03, D15): Model B will be solved on this exact $h_3$ mesh topology ($G_0$) via elementwise material assignment. This guarantees that the discretization discrepancy remains identical ($\Delta_{\text{discretization}} = 0$) during the decisive A/B comparison.
 
 ---
 
 ## 10. Scientific Interpretation
 - **What is Established**:
-  - The deterministic FEM pipeline is numerically verified, stable, and statically balanced.
-  - The dome acts as a stiff structural buffer, keeping dome peak stresses remarkably low ($\sim 3.3\text{ MPa}$ under $1.0\text{ kN}$; $\sim 4.5\text{ MPa}$ under biological $1.36\text{ kN}$).
-  - Hookean linearity and quadratic energy scaling are exact (`0.000000%` error).
+  - The deterministic FEM pipeline is numerically verified, statically balanced, and executes closed-form analytical scaling.
+  - Under baseline normal loading on the dorsal apex, peak von Mises stress in the compact dome remains low ($\sim 3.3\text{ MPa}$ under $1.0\text{ kN}$ compressive force; scaling to $\sim 4.5\text{ MPa}$ under the $1.36\text{ kN}$ literature benchmark).
 - **What is NOT Established**:
-  - We have **not** established asymptotic convergence of localized internal braincase stress.
-  - We have **not** established whether the skull remains safe under off-axis oblique impacts or under low-stiffness bone conditions.
+  - Asymptotic convergence of localized internal braincase stress is not demonstrated.
+  - Structural performance under internal material zonation, oblique loading, or compliant cervical restraints remains to be quantified.
+  - No specimen-specific biological validation exists for UALVP 2 (Decision D14).
+  - Finite element outputs under modeled load cases do not determine the living behavior or evolutionary function of the pachycephalosaur dome (Decisions D10, D15).
 
 ---
 
-## 11. Phase Status & Next Decisions
-- **Phase 4 Status**: **VERIFIED & FROZEN**.
-- **Phase 5 Status**: **PENDING DESIGN**.
-- **Next Decision (D007)**: Formal specification of the Phase 5 Uncertainty Quantification & Sensitivity Design of Experiments (DoE) before running any new simulations.
+## 11. Phase Status & Next Scientific Actions
+- **Phase 4 Status**: **VERIFIED & FROZEN** (commit `15a342f`).
+- **Literature Basis v1**: **FROZEN** (commit `2662be0`).
+- **Model Decision Basis v1**: **FROZEN** ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md); Decisions D007, D008, D009).
+- **Phase 5 Status**: **ACTIVE NEXT GATE** — UALVP 2 CT Characterization & Material A/B Experiment.
+- **Immediate Next Action (Gate A)**: Ingest, cryptographically verify, and extract metadata from the 514-slice UALVP 2 micro-CT DICOM volume ($0.210 \times 0.210 \times 0.250\text{ mm}$) from MorphoSource / UTCT / WitmerLab.

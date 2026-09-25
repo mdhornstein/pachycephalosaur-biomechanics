@@ -13,7 +13,7 @@
 ---
 
 ## 🎯 Scientific Objective
-Quantify cranial stress distribution, compliance, and energy absorption in *Stegoceras validum* under dome impact loading using 3D finite element analysis (FEA), and rigorously determine via Uncertainty Quantification (UQ) and Global Sensitivity Analysis (Sobol indices) whether the frontoparietal dome acts as a protective shock-absorbing helmet shielding the endocranial braincase, or if stress concentrations favor alternative biological hypotheses (flank-butting, visual sexual display).
+Quantify cranial stress distribution, compliance, and strain energy absorption in *Stegoceras validum* under dome impact loading using 3D finite element analysis (FEA), and evaluate whether introducing evidence-based internal material architecture materially alters compliance, strain energy distribution, and stress transmission/redistribution to the endocranial braincase relative to a homogeneous control. In accordance with Model Decision Basis v1, conditional mechanical response is evaluated across structured loading and boundary scenarios, strictly distinguishing computational mechanics from behavioral or evolutionary inferences.
 
 ---
 
@@ -48,7 +48,7 @@ Quantify cranial stress distribution, compliance, and energy absorption in *Steg
   - Unlike the dorsal dome and global compliance, internal stress fields remain discretization-sensitive:
     - Global 95th% von Mises stress shifted $-18.10\%$ across tiers ($2.493 \to 2.290 \to 2.042\text{ MPa}$).
     - Endocranial braincase roof 95th% stress shifted $-28.64\%$ across tiers ($2.823 \to 2.383 \to 2.015\text{ MPa}$; step deltas $-15.59\%$ and $-15.46\%$).
-  - **Scientific Decision**: Do not pursue intractable multi-million element solves on workstation hardware. Rather, carry this characterized numerical sensitivity forward as a formal numerical discretization discrepancy ($\epsilon_{\text{num}} \approx \pm 28.6\%$).
+  - **Scientific Decision**: Do not pursue intractable multi-million element solves on workstation hardware. Rather, carry this characterized numerical sensitivity forward as an output-specific numerical discretization discrepancy ($\Delta_{\text{num}} = -28.64\%$ across $h_1 \to h_3$), avoiding symmetric error-bound notation or treating discretization error as biological uncertainty (Decisions D006, D009).
 - **Homogeneous Material Simplification**:
   - Model A treats the cranium as a uniform compact bone block ($E = 17.0\text{ GPa}$). The audited literature demonstrates internal anatomical heterogeneity (cortex, vascular cancellous core, dense basicranium). Model A serves strictly as a geometric control baseline.
 
