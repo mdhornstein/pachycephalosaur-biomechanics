@@ -119,3 +119,37 @@ An automated test suite has been established in [`tests/test_gate_a_dicom.py`](.
 - **Next Scientific Gate**: **Gate B — CT-to-Surface Registration & Empirical Scale Verification**.
   - Compute anatomical landmarks and rigid ICP transformation between the DICOM coordinate system and canonical surface $G_0$.
   - Quantify registration residuals to definitively verify that $G_0$ derives directly from this scan without hidden arbitrary scale scaling.
+
+---
+
+## Computational Traceability
+
+Design:
+[`docs/phase_design/PHASE5_GATE_A_DESIGN.md`](../docs/phase_design/PHASE5_GATE_A_DESIGN.md)
+
+Implementation:
+[`data/metadata/dataset_manifest.yaml`](../data/metadata/dataset_manifest.yaml)
+[`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json)
+
+Supporting implementation:
+`pydicom`, Python standard library `zipfile`, `hashlib`
+
+Tests:
+[`tests/test_gate_a_dicom.py`](../tests/test_gate_a_dicom.py)
+
+Inputs:
+MorphoSource Media `000018283`: `data/raw/dicom/morphosource_media-id-000018283_download-bde34772.zip` (SHA-256: `068e64c...`)
+Extracted DICOM files: `data/raw/dicom/cranium/` (514 slices)
+
+Results:
+[`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json)
+[`data/metadata/dataset_manifest.yaml`](../data/metadata/dataset_manifest.yaml)
+
+Execution commit:
+`5f575d8` (Initial ingestion and audit); refined in `1c7a125`
+
+Report:
+[`reports/phase5_gate_a_dicom_report.md`](phase5_gate_a_dicom_report.md) *(this report)*
+
+Decision / state update:
+Model Decision Basis v1 §4.1; [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md); [`HANDOFF.md`](../HANDOFF.md)

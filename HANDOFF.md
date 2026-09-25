@@ -59,7 +59,7 @@ Quantify cranial stress distribution, compliance, and strain energy absorption i
 Per [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md), execute **Phase 5: UALVP 2 CT Characterization & The Decisive Material A/B Experiment**:
 1. **Gate A — Acquire & Ingest DICOM Volume**: **VERIFIED & FROZEN** ([`reports/phase5_gate_a_dicom_report.md`](reports/phase5_gate_a_dicom_report.md); 514 slices verified, true voxel spacing $0.207572 \times 0.207572 \times 0.250000\text{ mm}$, unsigned 16-bit intensity $[0, 65535]$, manifest in [`data/metadata/dicom_slice_manifest.json`](data/metadata/dicom_slice_manifest.json)).
 2. **Gate B — Verify Physical Scale & Coordinates**: **VERIFIED & FROZEN** ([`reports/phase5_gate_b_registration_report.md`](reports/phase5_gate_b_registration_report.md); rigid registration at unit scale $s = 1.000000$ supported by free-scale diagnostic $\hat{s} = 1.00494$, primary forward median surface residual $0.1633\text{ mm}$, whole-volume reverse diagnostic median $1.0928\text{ mm}$, translation magnitude $0.2472\text{ mm}$ [below $0.25\text{-mm}$ through-plane spacing], zero-based DICOM voxel-center convention directly from `ImagePositionPatient`, objective Otsu threshold $T = 20,864$, metrics in [`results/phase5/gate_b_registration_metrics.json`](results/phase5/gate_b_registration_metrics.json)).
-3. **Gate C — Characterize Image Data Semantics (ACTIVE NEXT GATE)**: Quantify stored pixel values, dynamic range, beam hardening, rock matrix vs. bone contrast, and internal architecture visibility (without assuming values are Hounsfield Units).
+3. **Gate C — Characterize Image Data Semantics (ACTIVE NEXT GATE)**: Quantify stored pixel values, dynamic range, beam hardening, rock matrix vs. bone contrast, and internal architecture visibility (without assuming values are Hounsfield Units) per design in [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](docs/phase_design/PHASE5_GATE_C_DESIGN.md).
 4. **Gate D — Reconstruct Published Material Inference Logic**: Document what Snively & Theodor (2011) directly observed from CT vs. what was assumed or thresholded.
 5. **Gate E — Formulate Minimal Model B**: Define candidate 3-zone architecture supported by evidence; assign elementwise properties to $h_3$ volume mesh.
 6. **Gate F — Execute Decisive Model A vs. Model B Test**: Compare Model A against Model B under identical $h_3$ mesh, loads, and BCs to evaluate stress redistribution to the endocranial braincase roof and strain energy partitioning.
@@ -78,6 +78,8 @@ Never make the same technical fact authoritative in two places:
    - Solution arrays: `simulations/phase4/solution_*.npz`
 2. **Level 2: Current Scientific Interpretation**:
    - Comprehensive living state: [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
+   - Master research traceability: [`docs/RESEARCH_TRACEABILITY.md`](docs/RESEARCH_TRACEABILITY.md)
+   - Phase/gate scientific designs: [`docs/phase_design/`](docs/phase_design/)
 3. **Level 3: Operational Handoff & Roadmap**:
    - Living entry point: [`HANDOFF.md`](HANDOFF.md)
    - Forward research roadmap: [`PLAN.md`](PLAN.md)

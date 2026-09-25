@@ -1,9 +1,10 @@
 # Current Scientific & Computational State
 
 **Document Status**: Canonical Living State Document  
-**Last Updated**: 2026-09-24  
+**Last Updated**: 2026-09-25  
 **Phase Transition Baselines**: `15a342f` (Phase 4 Freeze & FE Baseline) & `2662be0` (Literature Basis v1 Freeze)  
 **Authoritative Bridge**: [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) (Model Decision Basis v1; Decisions D007, D008, D009)  
+**Traceability Map**: [`docs/RESEARCH_TRACEABILITY.md`](RESEARCH_TRACEABILITY.md)  
 **Current Git State**: Dynamic — interrogate directly via `git rev-parse HEAD`  
 **Current Phase**: Phase 4, Literature Basis v1, Model Decision Basis v1, Phase 5 Gate A & Gate B **FROZEN**; Phase 5 Gate C (Image Semantics & Attenuation Characterization) **ACTIVE NEXT GATE**
 
@@ -146,4 +147,4 @@ From [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_
 - **Phase 5 Status**: **ACTIVE** — UALVP 2 CT Characterization & Material A/B Experiment.
 - **Phase 5 Gate A (DICOM Ingestion & Header Audit)**: **VERIFIED & FROZEN** ([`reports/phase5_gate_a_dicom_report.md`](../reports/phase5_gate_a_dicom_report.md); 514 slices verified, true voxel spacing $0.207572 \times 0.207572 \times 0.250000\text{ mm}$, unsigned 16-bit intensity $[0, 65535]$, manifest in [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json)).
 - **Phase 5 Gate B (CT-to-Surface Registration & Empirical Scale Verification)**: **VERIFIED & FROZEN** ([`reports/phase5_gate_b_registration_report.md`](../reports/phase5_gate_b_registration_report.md); rigid registration at unit scale $s = 1.000000$ supported by free-scale diagnostic $\hat{s} = 1.00494$, primary forward median surface residual $0.1633\text{ mm}$, whole-volume reverse diagnostic median $1.0928\text{ mm}$, translation magnitude $0.2472\text{ mm}$ [below $0.25\text{-mm}$ through-plane spacing], zero-based DICOM voxel-center convention directly from `ImagePositionPatient`, objective Otsu threshold $T = 20,864$, metrics in [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json)).
-- **Immediate Next Action (Gate C)**: Characterize image data semantics, audit attenuation histogram across cranial tissues (air, matrix, compact dome bone, cancellous bone), and evaluate radial/depth attenuation gradients in the dome to inform Model B zonation boundaries.
+- **Immediate Next Action (Gate C)**: Characterize image data semantics per design in [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](phase_design/PHASE5_GATE_C_DESIGN.md), audit attenuation histogram across cranial tissues (air, matrix, compact dome bone, cancellous bone), and evaluate radial/depth attenuation gradients in the dome to inform Model B zonation boundaries.

@@ -207,3 +207,36 @@ $$\text{Geometric Correspondence} \neq \text{Archival Provenance Proof}$$
 - **Next Scientific Gate**: **Phase 5 Gate C — Image Semantics & Attenuation Characterization**.
   - Audit attenuation histogram across cranial tissues (air, matrix, compact dome bone, cancellous bone).
   - Investigate whether radial/depth attenuation gradients exist in the dome to inform Model B zonation boundaries.
+
+---
+
+## Computational Traceability
+
+Design:
+[`docs/phase_design/PHASE5_GATE_B_DESIGN.md`](../docs/phase_design/PHASE5_GATE_B_DESIGN.md)
+
+Implementation:
+[`scripts/register_ct_to_surface.py`](../scripts/register_ct_to_surface.py)
+
+Supporting implementation:
+`scipy.spatial.KDTree`, `pyvista`, `trimesh`, `pydicom`, `numpy`
+
+Tests:
+[`tests/test_gate_b_registration.py`](../tests/test_gate_b_registration.py)
+
+Inputs:
+Canonical master surface $G_0$: [`data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl`](../data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl) (SHA-256: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`)
+Micro-CT volume: `data/raw/dicom/cranium/` (514 slices)
+Landmark catalog: [`data/metadata/gate_b_landmark_provenance.json`](../data/metadata/gate_b_landmark_provenance.json)
+
+Results:
+[`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json)
+
+Execution commit:
+`ca32eba` (Initial registration execution); refined in `b1117a5` and `fa0cf58`
+
+Report:
+[`reports/phase5_gate_b_registration_report.md`](phase5_gate_b_registration_report.md) *(this report)*
+
+Decision / state update:
+Decision `D010` in [`docs/DECISIONS.md`](../docs/DECISIONS.md); Phase 5 Gate B Freeze in [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md)

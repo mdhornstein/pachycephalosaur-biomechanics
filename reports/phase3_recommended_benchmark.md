@@ -173,3 +173,36 @@ The following modeling decisions are explicitly documented as **provisional assu
 ## 🏁 8. Phase 3 Gate Summary
 
 This document establishes a **provisional, explicitly parameterized benchmark specification** for the first computational experiment. It formalizes a three-tier validation hierarchy and separates linear structural compliance ($1.0\text{ kN}$) from biological load assumptions ($1360\text{ N}$).
+
+---
+
+## Computational Traceability
+
+Design:
+[`docs/phase_design/PHASE3_DESIGN_RECONSTRUCTED.md`](../docs/phase_design/PHASE3_DESIGN_RECONSTRUCTED.md) *(Retrospective Reconstruction)*
+
+Implementation:
+[`reports/snively_theodor_model_reconstruction.md`](snively_theodor_model_reconstruction.md)
+[`data/metadata/biomechanics_input_matrix.csv`](../data/metadata/biomechanics_input_matrix.csv)
+
+Supporting implementation:
+[`src/stegoceras_biomechanics/`](../src/stegoceras_biomechanics/)
+
+Tests:
+[`tests/test_phase3_model_audit.py`](../tests/test_phase3_model_audit.py)
+
+Inputs:
+Snively & Theodor (2011) *PLoS ONE* 6(6): e21412
+MorphoSource Media `000018284` & `000043121`–`000043162`
+
+Results:
+[`data/metadata/biomechanics_input_matrix.csv`](../data/metadata/biomechanics_input_matrix.csv)
+
+Execution commit:
+`255ee46` (Final Phase 3 specification refinement commit; initial delivery in `79c8cb6`)
+
+Report:
+[`reports/phase3_recommended_benchmark.md`](phase3_recommended_benchmark.md) *(this report)*
+
+Decision / state update:
+Decisions `D001`, `D002` in [`docs/DECISIONS.md`](../docs/DECISIONS.md)

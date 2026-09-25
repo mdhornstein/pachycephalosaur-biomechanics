@@ -225,3 +225,44 @@ Outputs under the literature-derived biological load ($F_{\text{bio}} = 1360\tex
 ### 7.3 Gate Decision: Phase 4 Baseline Verified & Frozen for Phase 5 UQ Transition
 - **Gate Conclusion**: Phase 4 numerical verification, solver integrity, static equilibrium, and pure discretization sensitivity characterization are **successfully completed and approved with scientific qualifications**.
 - **Phase Transition**: The simulator is numerically verified, statically balanced, and its residual discretization sensitivities are quantitatively bounded and documented. The project is cleared to transition to **Phase 5 (Biological & Material Uncertainty Quantification)**.
+
+---
+
+## Computational Traceability
+
+Design:
+[`docs/phase_design/PHASE4_DESIGN_RECONSTRUCTED.md`](../docs/phase_design/PHASE4_DESIGN_RECONSTRUCTED.md) *(Retrospective Reconstruction)*
+
+Implementation:
+[`models/phase4/baseline.yaml`](../models/phase4/baseline.yaml)
+[`src/stegoceras_biomechanics/fea/solve_production.py`](../src/stegoceras_biomechanics/fea/solve_production.py)
+[`src/stegoceras_biomechanics/fea/plot_results.py`](../src/stegoceras_biomechanics/fea/plot_results.py)
+
+Supporting implementation:
+[`src/stegoceras_biomechanics/fea/solver.py`](../src/stegoceras_biomechanics/fea/solver.py)
+[`src/stegoceras_biomechanics/fea/meshing.py`](../src/stegoceras_biomechanics/fea/meshing.py)
+[`src/stegoceras_biomechanics/fea/loads.py`](../src/stegoceras_biomechanics/fea/loads.py)
+[`src/stegoceras_biomechanics/fea/boundary_conditions.py`](../src/stegoceras_biomechanics/fea/boundary_conditions.py)
+
+Tests:
+[`tests/test_phase4_fea.py`](../tests/test_phase4_fea.py)
+
+Inputs:
+Canonical master surface $G_0$: [`data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl`](../data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl) (SHA-256: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`)
+
+Results:
+[`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_convergence_comparison.json)
+[`data/metadata/phase4_mesh_metrics_coarse.json`](../data/metadata/phase4_mesh_metrics_coarse.json)
+[`data/metadata/phase4_mesh_metrics_medium_coarse.json`](../data/metadata/phase4_mesh_metrics_medium_coarse.json)
+[`data/metadata/phase4_mesh_metrics_medium.json`](../data/metadata/phase4_mesh_metrics_medium.json)
+[`data/metadata/phase4_mesh_metrics_fine.json`](../data/metadata/phase4_mesh_metrics_fine.json)
+`simulations/phase4/solution_*.npz`
+
+Execution commit:
+`b7aa8d0` (Solver decoupling & production execution); Phase 4 frozen at `15a342f`
+
+Report:
+[`reports/phase4_fea_benchmark_report.md`](phase4_fea_benchmark_report.md) *(this report)*
+
+Decision / state update:
+Decisions `D003`, `D004`, `D005`, `D006` in [`docs/DECISIONS.md`](../docs/DECISIONS.md); Phase 4 Freeze in [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md)

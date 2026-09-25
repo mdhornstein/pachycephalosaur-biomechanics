@@ -62,15 +62,21 @@ This repository enforces a **two-dimensional information architecture** that str
 5. **[`docs/DECISIONS.md`](../docs/DECISIONS.md)**:
    - **Role**: Append-only scientific and architectural decision log.
    - **Rule**: Never rewritten. When a prior decision is revised, a new decision is appended that explicitly supersedes the old one (e.g. `D004` supersedes `D002`).
-6. **[`docs/archive/*.md`](../docs/archive/)**:
+6. **[`docs/RESEARCH_TRACEABILITY.md`](RESEARCH_TRACEABILITY.md)**:
+   - **Role**: Master scientific and computational traceability matrix linking each phase/gate from question to design, code, tests, inputs, results, report, and decision.
+   - **Rule**: Kept up to date as each phase/gate transitions from planned to active to frozen.
+7. **[`docs/phase_design/*.md`](phase_design/)**:
+   - **Role**: Pre-execution prospective phase and gate scientific design documents capturing variables, controls, hypotheses, and acceptance criteria before running computations.
+   - **Rule**: Historical completed phases without contemporaneous designs are preserved via explicitly labeled retrospective reconstructions (e.g., `PHASE3_DESIGN_RECONSTRUCTED.md`).
+8. **[`docs/archive/*.md`](../docs/archive/)**:
    - **Role**: Historical drafts and superseded specifications preserved for auditability and provenance.
-7. **[`docs/snapshots/*.md`](../docs/snapshots/)**:
+9. **[`docs/snapshots/*.md`](../docs/snapshots/)**:
    - **Role**: Truly immutable historical snapshots capturing the exact research and model state at a specific milestone commit (e.g., `2026-09-19-phase4-freeze.md`).
    - **Rule**: Tied to a specific git commit SHA; never modified after creation.
-7. **[`reports/*.md`](../reports/)**:
+10. **[`reports/*.md`](../reports/)**:
    - **Role**: Formal project and milestone scientific reports (e.g., [`phase4_fea_benchmark_report.md`](../reports/phase4_fea_benchmark_report.md)).
    - **Rule**: Records what each completed milestone investigation formally established. Normally stable upon phase completion, but correctable (for errata or precision fixes) with revision history preserved by Git. Does not serve as the living operational handoff.
-8. **[`reports/archive/*.md`](../reports/archive/)**:
+11. **[`reports/archive/*.md`](../reports/archive/)**:
    - **Role**: Preserved legacy documentation (e.g., [`phase4_walkthrough_legacy.md`](../reports/archive/phase4_walkthrough_legacy.md)).
    - **Rule**: Clearly marked with an archival banner indicating that it has been superseded.
 
@@ -129,3 +135,5 @@ Level 4: HISTORICAL RECORD & SCIENTIFIC ARCHIVE
    Every milestone transition commit must be self-contained, updating `HANDOFF.md`, `docs/CURRENT_STATE.md`, logging any new decisions in `docs/DECISIONS.md`, and generating a snapshot in `docs/snapshots/`.
 9. **Rule 9: Architecture-Bearing Docstrings Must Align with Master Roadmap**  
    Architecture-bearing package and module docstrings that declare phases, roadmap roles, or deferred statuses are part of the repository's navigational state. They must not contradict `PLAN.md`. When a roadmap change makes such a docstring stale, the docstring must be updated or pruned as part of the same change.
+10. **Rule 10: Preserve Separation of Experimental Intent, Implementation, Observation, and Interpretation**  
+    Always preserve the distinct layers of scientific inquiry: what was intended to be tested before execution (`docs/phase_design/`), what ran and was measured (`results/`, `tests/`), what was observed and interpreted (`reports/`), and what architectural or scientific decision followed (`docs/DECISIONS.md`). Never collapse these layers into a single document or put biological conclusions into code docstrings.
