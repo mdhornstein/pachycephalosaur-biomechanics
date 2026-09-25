@@ -23,9 +23,9 @@ Quantify cranial stress distribution, compliance, and energy absorption in *Steg
    - **All Solves Complete**: Free DOFs up to 497,907 solved via direct sparse LU factorization (`scipy.sparse.linalg.spsolve`) without out-of-memory errors or swap thrashing.
    - **Dorsal Load Patch Verified**: Surface-connected dual-graph Dijkstra wavefront algorithm strictly confined to the dorsal dome ($Z \ge 80.0\text{ mm}$, single connected component, zero ventral/internal penetration).
    - **Static Equilibrium Confirmed**: Normalized force and moment residuals $\le 1.53 \times 10^{-12}$ (machine precision).
-2. **Literature Basis v1 Complete & Frozen (`2662be0`)**:
+2. **Literature Basis v1 & Model Decision Basis v1 Frozen**:
    - Canonical synthesis ([`literature/stegoceras_biomechanics_literature_synthesis.md`](literature/stegoceras_biomechanics_literature_synthesis.md)), dossiers, and audit-to-correction ledger ([`literature/LITERATURE_CORRECTIONS.md`](literature/LITERATURE_CORRECTIONS.md)) fully resolved.
-   - Model decisions bridge specification codified in [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md).
+   - Model decisions bridge specification codified in [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md) as **Model Decision Basis v1**.
 
 ---
 
@@ -50,7 +50,7 @@ Quantify cranial stress distribution, compliance, and energy absorption in *Steg
     - Endocranial braincase roof 95th% stress shifted $-28.64\%$ across tiers ($2.823 \to 2.383 \to 2.015\text{ MPa}$; step deltas $-15.59\%$ and $-15.46\%$).
   - **Scientific Decision**: Do not pursue intractable multi-million element solves on workstation hardware. Rather, carry this characterized numerical sensitivity forward as a formal numerical discretization discrepancy ($\epsilon_{\text{num}} \approx \pm 28.6\%$).
 - **Homogeneous Material Simplification**:
-  - Model A treats the cranium as a uniform compact bone block ($E = 17.0\text{ GPa}$). The audited literature proves that UALVP 2 has structured internal architecture (cortex, vascular cancellous core, dense basicranium). Model A serves strictly as a geometric control baseline.
+  - Model A treats the cranium as a uniform compact bone block ($E = 17.0\text{ GPa}$). The audited literature demonstrates internal anatomical heterogeneity (cortex, vascular cancellous core, dense basicranium). Model A serves strictly as a geometric control baseline.
 
 ---
 
@@ -61,7 +61,7 @@ Per [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS
 2. **Verify Physical Scale & Coordinates**: Register the voxel grid against the canonical surface mesh ($G_0$).
 3. **Characterize Image Data Semantics**: Quantify pixel values, beam hardening, rock matrix vs. bone contrast, and internal architecture visibility.
 4. **Reconstruct Published Material Inference Logic**: Document what Snively & Theodor (2011) inferred from CT vs. what was assumed.
-5. **Execute Decisive Model A vs. Model B Test**: Compare Model A against Model B (histology-informed 3-zone model) under identical mesh, loads, and BCs to determine if internal zonation materially alters braincase stress attenuation.
+5. **Execute Decisive Model A vs. Model B Test**: Compare Model A against Model B (histology/anatomy-informed 3-zone candidate baseline with stiffness-contrast sweep) on identical volume mesh topology ($G_0$) to determine if internal zonation materially alters cranial compliance, strain-energy distribution, and stress transmission/redistribution to the endocranial braincase.
 
 ---
 

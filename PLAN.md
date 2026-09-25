@@ -91,9 +91,9 @@ flowchart TD
 - 17/17 passing automated tests in [`tests/test_phase4_fea.py`](tests/test_phase4_fea.py).
 - Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](reports/phase4_fea_benchmark_report.md).
 
-### Literature Basis v1 & Model Decisions Specification *(Completed — Commits `2662be0` & `HEAD`)*
+### Literature Basis v1 & Model Decisions Specification *(Completed — Model Decision Basis v1)*
 - Master literature synthesis ([`literature/stegoceras_biomechanics_literature_synthesis.md`](literature/stegoceras_biomechanics_literature_synthesis.md)), dossiers, and audit-to-correction ledger ([`literature/LITERATURE_CORRECTIONS.md`](literature/LITERATURE_CORRECTIONS.md)).
-- Bridge specification ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md)) codifying epistemic rules, mathematical scaling laws, and prohibited/allowed interpretations.
+- Bridge specification ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md)) codifying epistemic rules, mathematical scaling laws, volume-mesh representation discipline, and prohibited/allowed interpretations.
 
 ### Phase 5: UALVP 2 CT Characterization & Material A/B Experiment *(Active Next Phase)*
 - **CT Characterization Gate**:
@@ -102,12 +102,12 @@ flowchart TD
   3. Characterize image data semantics: pixel dynamic range, rock matrix vs. bone attenuation contrast, beam-hardening artifacts, and internal canal network visibility.
   4. Reconstruct published material inference logic from Snively & Theodor (2011).
 - **Decisive Material A/B Experiment**:
-  - Implement **Model B** (histology/anatomy-informed 3-zone model: dense cortex, compliant trabecular core, dense basicranium).
-  - Solve Model A vs. Model B under identical mesh ($G_0$), loads ($3000\text{ mm}^2$, $1000\text{ N}$), and boundary conditions.
-  - Determine whether evidence-based internal material architecture materially alters compliance, strain energy partitioning, and endocranial braincase stress attenuation.
+  - Implement **Model B** (histology/anatomy-informed 3-zone candidate baseline with stiffness-contrast sensitivity sweep).
+  - Solve Model A vs. Model B on identical volume mesh topology ($G_0$), loads ($3000\text{ mm}^2$, $1000\text{ N}$), and boundary conditions via elementwise material assignment.
+  - Determine whether evidence-based internal material architecture materially alters compliance, strain-energy partitioning, and stress transmission/redistribution to the endocranial braincase.
 
 ### Phase 6: Focused Sensitivity & Discrete Scenario Analysis
-- Structured scenario families: impact inclination angle ($\alpha \in [0^\circ, 20^\circ]$), contact patch variation ($A \in [2500, 4000]\text{ mm}^2$ / $500\text{--}3000\text{ mm}^2$), and lateral strike placement.
+- Structured scenario families over candidate design envelopes: impact inclination angle ($\alpha \in [0^\circ, 20^\circ]$), contact patch variation ($A \in [2500, 4000]\text{ mm}^2$ / $500\text{--}3000\text{ mm}^2$), and lateral strike placement — to be finalized after CT/geometry characterization.
 - Cervical boundary compliance: distributed elastic spring foundations vs. rigid condylar fixity.
 - Closed-form analytical scaling for force magnitude $F$ and base modulus $E$ (avoiding redundant 3D FE solves).
 
