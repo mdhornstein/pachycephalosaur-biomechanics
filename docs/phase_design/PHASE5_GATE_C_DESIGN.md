@@ -92,8 +92,14 @@ Specifically:
 ---
 
 ## 8. Planned Computational Implementation
-- **Executable Script**: `scripts/characterize_image_semantics.py`.
-- **Target Results Directory**: `results/phase5/gate_c_semantics/`.
+- **Planned Execution Command(s)**:
+  1. Primary characterization: `uv run python scripts/characterize_image_semantics.py`
+  2. Automated regression tests: `uv run pytest tests/test_gate_c_semantics.py -v`
+- **Primary Executable Entry Point**: `scripts/characterize_image_semantics.py`.
+- **Reusable Source Modules**: `stegoceras_biomechanics.ct.semantics` *(planned)*.
+- **Post-processing / Analysis Entry Point**: Dynamic range auditing, beam-hardening radial transect evaluation, tissue contrast distribution analysis.
+- **Figure-generation Entry Point**: `scripts/characterize_image_semantics.py` (generating Figures 13 and 14 in `reports/figures/`).
+- **Target Results Directory**: `results/phase5/`.
 - **Target Metrics File**: `results/phase5/gate_c_semantics_metrics.json`.
 
 ---

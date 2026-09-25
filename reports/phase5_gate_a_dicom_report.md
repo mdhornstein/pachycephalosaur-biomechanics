@@ -122,37 +122,44 @@ An automated test suite has been established in [`tests/test_gate_a_dicom.py`](.
 
 ---
 
-## Computational Traceability
+## Reproduction
 
-Design:
-[`docs/phase_design/PHASE5_GATE_A_DESIGN.md`](../docs/phase_design/PHASE5_GATE_A_DESIGN.md)
+### Environment
+- Python 3.12 (managed via `uv`)
+- Core dependencies defined in [`pyproject.toml`](../pyproject.toml): `pydicom`, `pyyaml`, `pytest`
+- Lockfile: `uv.lock`
 
-Implementation:
-[`data/metadata/dataset_manifest.yaml`](../data/metadata/dataset_manifest.yaml)
-[`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json)
+### Execution
+1. Run local workspace dataset inventory audit:
+   ```bash
+   uv run python scripts/ingest_data.py audit
+   ```
+2. Primary computational entry points:
+   - CLI driver: [`scripts/ingest_data.py`](../scripts/ingest_data.py)
+   - Archive extraction & verification: [`src/stegoceras_biomechanics/io/ingest.py`](../src/stegoceras_biomechanics/io/ingest.py) (`ingest_file()`, `safe_extract_zip()`)
+   - Checksum audit: [`src/stegoceras_biomechanics/io/manifest.py`](../src/stegoceras_biomechanics/io/manifest.py) (`audit_local_inventory()`, `compute_sha256()`)
+   *(Note on historical command provenance: The original outer ZIP extraction and per-slice SHA-256 hash generation were executed in Python via `pydicom`/`hashlib` during commit `5f575d8`; regression verification is automated via `pytest tests/test_gate_a_dicom.py`)*
 
-Supporting implementation:
-`pydicom`, Python standard library `zipfile`, `hashlib`
+### Post-processing / Analysis
+1. Post-processing verification routines:
+   - Extraction of DICOM header metadata (ImagePositionPatient, PixelSpacing, SliceThickness, SOPInstanceUID).
+   - Intensity dynamic range audit across 514 slices (raw 16-bit unsigned integers: min 0, max 60,379, mean 9,727.6).
+   - Computation of individual SHA-256 cryptographic hashes for all 514 slices.
+   - Cataloging of results in [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json).
 
-Tests:
-[`tests/test_gate_a_dicom.py`](../tests/test_gate_a_dicom.py)
+### Figure generation
+- *None* (No figures generated for Gate A).
 
-Inputs:
-MorphoSource Media `000018283`: `data/raw/dicom/morphosource_media-id-000018283_download-bde34772.zip` (SHA-256: `068e64c...`)
-Extracted DICOM files: `data/raw/dicom/cranium/` (514 slices)
+### Expected artifacts
+- Dataset inventory manifest:
+  - [`data/metadata/dataset_manifest.yaml`](../data/metadata/dataset_manifest.yaml)
+- Per-slice cryptographic hash catalog:
+  - [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json) (514 slices cataloged with SHA-256 hashes)
 
-Results:
-[`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json)
-[`data/metadata/dataset_manifest.yaml`](../data/metadata/dataset_manifest.yaml)
+### Report provenance
+- **Governing Design**: [`docs/phase_design/PHASE5_GATE_A_DESIGN.md`](../docs/phase_design/PHASE5_GATE_A_DESIGN.md) *(Retrospective Reconstruction)*
+- **Execution commit**: `5f575d8` (Initial DICOM archive extraction, per-slice SHA-256 computation, and slice manifest generation)
+- **Report / documentation commit**: `1c7a125` (Refinement of Gate A epistemic language, coordinate semantics, and regression tests)
+- **Verification tests**: `uv run pytest tests/test_gate_a_dicom.py -v` (7 tests verifying nested archive integrity, slice count, per-slice SHA-256 integrity, spatial geometry, orientation tags absence, intensity semantics, and boundary slice headers)
+- **Governing decisions**: Model Decision Basis v1 §4.1; Decision `D008` in [`docs/DECISIONS.md`](../docs/DECISIONS.md); updated [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md) and [`HANDOFF.md`](../HANDOFF.md)
 
-Execution commit:
-`5f575d8` (Initial DICOM archive extraction, per-slice SHA-256 computation, and slice manifest generation)
-
-Report/documentation commit:
-`1c7a125` (Refinement of Gate A epistemic language, coordinate semantics, and regression tests)
-
-Report:
-[`reports/phase5_gate_a_dicom_report.md`](phase5_gate_a_dicom_report.md) *(this report)*
-
-Decision / state update:
-Model Decision Basis v1 §4.1; [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md); [`HANDOFF.md`](../HANDOFF.md)

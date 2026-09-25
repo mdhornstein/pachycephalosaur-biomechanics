@@ -67,8 +67,11 @@
 
 ## 8. Planned Computational Implementation
 *Identify the code architecture and execution pathway.*
+- **Planned Execution Command(s)**: [e.g., `uv run python scripts/...` or `uv run python -m stegoceras_biomechanics...`]
 - **Primary Executable Entry Point**: [`scripts/...`](../../scripts/) or CLI runner.
 - **Reusable Source Modules**: [`src/stegoceras_biomechanics/...`](../../src/stegoceras_biomechanics/)
+- **Post-processing / Analysis Entry Point**: [Script or function performing derived numerical analysis and summary metric compilation]
+- **Figure-generation Entry Point**: [Script generating visual publication plots in `reports/figures/`]
 - **Configuration Files**: [`models/...`](../../models/)
 - **Dependencies & Environment**: [e.g., Python 3.12, uv, specific scientific packages]
 

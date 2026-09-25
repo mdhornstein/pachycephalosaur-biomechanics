@@ -2,7 +2,7 @@
 
 **Document Role**: Meta-Specification for Repository Documentation Conventions  
 **Status**: ACTIVE STANDARD  
-**Last Updated**: 2026-09-19  
+**Last Updated**: 2026-09-25  
 
 ---
 
@@ -12,7 +12,7 @@ Computational science projects often suffer from **temporal conflation**: differ
 
 This repository enforces a **two-dimensional information architecture** that strictly decouples **Current State** from **Historical Record**, and separates **Technical Truth** (code, configuration, data) from **Scientific Interpretation**.
 
-```
+```text
                            THE DOCUMENTATION ARCHITECTURE
 
          OPERATIONAL LAYER                 CURRENT STATE LAYER
@@ -30,11 +30,45 @@ This repository enforces a **two-dimensional information architecture** that str
 
                            HISTORICAL & SCIENTIFIC LAYER
        ┌────────────────────┐    ┌─────────────────────┐    ┌───────────────────┐
-       │    DECISIONS.md    │    │     snapshots/      │    │     reports/      │
-       │ "Why we decided it"│    │"What we believed at"│    │"What was formally"│
-       │   (Append-Only)    │    │ (Commit Time-Capsule│    │    established    │
+       │ docs/phase_design/ │    │RESEARCH_TRACEABILITY│    │     reports/      │
+       │"What we intended to│    │ "Complete execution │    │"What was formally"│
+       │   test beforehand" │    │  reproduction chain"│    │    established    │
        └────────────────────┘    └─────────────────────┘    └───────────────────┘
+                 │                                                    │
+                 ▼                                                    ▼
+       ┌────────────────────┐                               ┌───────────────────┐
+       │    DECISIONS.md    │                               │     archive/      │
+       │ "Why we decided it"│                               │"Superseded drafts │
+       │   (Append-Only)    │                               │  and specs"       │
+       └────────────────────┘                               └───────────────────┘
 ```
+
+### The Full Computational Reproducibility Chain
+
+A reported computational result is considered **scientifically reproducible** only when the repository provides, where applicable:
+
+```text
+Scientific Design (docs/phase_design/)
+        ↓
+Environment (Python version, dependencies in pyproject.toml / uv.lock)
+        ↓
+Execution Command(s) (Exact CLI invocations)
+        ↓
+Primary Computational Entry Point(s) (Simulation / solver driver scripts)
+        ↓
+Post-processing / Analysis Entry Point(s) (Derived metric extraction & aggregation)
+        ↓
+Figure-generation Entry Point(s) (Visual plotting scripts)
+        ↓
+Generated Artifacts (Raw simulation NPZ, regional CSV/JSON, derived comparison JSON)
+        ↓
+Report (reports/*.md with standardized Reproduction & Provenance sections)
+        ↓
+Decision (docs/DECISIONS.md, docs/CURRENT_STATE.md)
+```
+
+> [!IMPORTANT]
+> **Post-Processing & Analysis Invariant**: Post-processing and visualization may themselves contain substantive scientific computation. For example, a script named `plot_results.py` may derive cross-tier convergence metrics, evaluate geometric aspect ratios, and generate authoritative JSON artifacts (`mesh_convergence_comparison.json`) in addition to rendering plots. Never assume visualization scripts are "just plotting"—always inspect, document, and trace what they actually derive.
 
 ---
 
@@ -59,26 +93,26 @@ This repository enforces a **two-dimensional information architecture** that str
    - **Rule**: Authoritative standard for all downstream simulation phases; updated only when canonical literature evidence or empirical CT data formally change.
 
 ### B. Historical & Scientific Records (Permanent, Append-Only, or Milestone Records)
-5. **[`docs/DECISIONS.md`](../docs/DECISIONS.md)**:
+5. **[`docs/phase_design/*.md`](phase_design/)**:
+   - **Role**: Pre-execution prospective phase and gate scientific design documents capturing variables, controls, hypotheses, acceptance criteria, and planned reproduction recipes *before* running computations.
+   - **Rule**: Prospective designs govern upcoming gates (e.g., [`PHASE5_GATE_C_DESIGN.md`](phase_design/PHASE5_GATE_C_DESIGN.md)). Historical completed phases without contemporaneous designs are preserved via explicitly labeled retrospective reconstructions (e.g., [`PHASE3_DESIGN_RECONSTRUCTED.md`](phase_design/PHASE3_DESIGN_RECONSTRUCTED.md), [`PHASE5_GATE_B_DESIGN.md`](phase_design/PHASE5_GATE_B_DESIGN.md)).
+6. **[`docs/RESEARCH_TRACEABILITY.md`](RESEARCH_TRACEABILITY.md)**:
+   - **Role**: Master scientific and computational traceability matrix linking each phase/gate across the entire reproducibility chain (design, environment, execution commit, commands, primary solver, post-processing, figures, artifacts, tests, report, and decision).
+   - **Rule**: Kept up to date as each phase/gate transitions from planned to active to frozen.
+7. **[`reports/*.md`](../reports/)**:
+   - **Role**: Formal project and milestone scientific reports (e.g., [`phase4_fea_benchmark_report.md`](../reports/phase4_fea_benchmark_report.md)).
+   - **Rule**: Records what each completed milestone investigation formally established. Every computational report must contain a standardized `## Reproduction` section detailing environment, execution commands, post-processing, figure generation, expected artifacts, and separated execution vs. report commits.
+8. **[`docs/DECISIONS.md`](../docs/DECISIONS.md)**:
    - **Role**: Append-only scientific and architectural decision log.
    - **Rule**: Never rewritten. When a prior decision is revised, a new decision is appended that explicitly supersedes the old one (e.g. `D004` supersedes `D002`).
-6. **[`docs/RESEARCH_TRACEABILITY.md`](RESEARCH_TRACEABILITY.md)**:
-   - **Role**: Master scientific and computational traceability matrix linking each phase/gate from question to design, code, tests, inputs, results, report, and decision.
-   - **Rule**: Kept up to date as each phase/gate transitions from planned to active to frozen.
-7. **[`docs/phase_design/*.md`](phase_design/)**:
-   - **Role**: Pre-execution prospective phase and gate scientific design documents capturing variables, controls, hypotheses, and acceptance criteria before running computations.
-   - **Rule**: Historical completed phases without contemporaneous designs are preserved via explicitly labeled retrospective reconstructions (e.g., `PHASE3_DESIGN_RECONSTRUCTED.md`).
-8. **[`docs/archive/*.md`](../docs/archive/)**:
-   - **Role**: Historical drafts and superseded specifications preserved for auditability and provenance.
-9. **[`docs/snapshots/*.md`](../docs/snapshots/)**:
-   - **Role**: Truly immutable historical snapshots capturing the exact research and model state at a specific milestone commit (e.g., `2026-09-19-phase4-freeze.md`).
-   - **Rule**: Tied to a specific git commit SHA; never modified after creation.
-10. **[`reports/*.md`](../reports/)**:
-   - **Role**: Formal project and milestone scientific reports (e.g., [`phase4_fea_benchmark_report.md`](../reports/phase4_fea_benchmark_report.md)).
-   - **Rule**: Records what each completed milestone investigation formally established. Normally stable upon phase completion, but correctable (for errata or precision fixes) with revision history preserved by Git. Does not serve as the living operational handoff.
-11. **[`reports/archive/*.md`](../reports/archive/)**:
-   - **Role**: Preserved legacy documentation (e.g., [`phase4_walkthrough_legacy.md`](../reports/archive/phase4_walkthrough_legacy.md)).
-   - **Rule**: Clearly marked with an archival banner indicating that it has been superseded.
+9. **[`docs/archive/*.md`](../docs/archive/)**:
+   - **Role**: Historical drafts and superseded specifications preserved for auditability and provenance. Distinct from active documentation.
+10. **[`reports/archive/*.md`](../reports/archive/)**:
+    - **Role**: Preserved legacy documentation (e.g., [`phase4_walkthrough_legacy.md`](../reports/archive/phase4_walkthrough_legacy.md)).
+    - **Rule**: Clearly marked with an archival banner indicating that it has been superseded.
+11. **[`docs/snapshots/*.md`](../docs/snapshots/)** *(Optional / Deprecated for Future Milestones)*:
+    - **Role**: Historical point-in-time snapshots capturing repository state at earlier milestones (e.g., `2026-09-19-phase4-freeze.md`).
+    - **Rule**: Existing historical snapshot files are permanently preserved for archival integrity. However, generating new snapshot files is **deprecated and optional**: the primary milestone freeze is now constituted by the immutable Git commit + prospective design document + computational artifacts + formal report + decision record. Future milestones do not generate snapshots unless an explicit archival need is identified.
 
 ---
 
@@ -86,10 +120,10 @@ This repository enforces a **two-dimensional information architecture** that str
 
 When documents or data disagree, resolution is governed strictly by the following hierarchy:
 
-```
+```text
 Level 1: TECHNICAL TRUTH (Code, Executable Configs, Binary Data, & JSON Metrics)
          • models/*/baseline.yaml
-         • data/metadata/*.json
+         • data/metadata/*.json, *.yaml
          • results/*/*.json, *.csv
          • simulations/*/*.npz
          ▼
@@ -101,21 +135,24 @@ Level 3: OPERATIONAL HANDOFF & ROADMAP
          • PLAN.md
          ▼
 Level 4: HISTORICAL RECORD & SCIENTIFIC ARCHIVE
-         • docs/snapshots/*.md (Truly immutable historical snapshots)
-         • docs/archive/*.md (Superseded drafts and historical specifications)
+         • Git commits & tags (Authoritative repository state)
+         • docs/phase_design/*.md (Prospective designs and retrospective reconstructions)
+         • docs/RESEARCH_TRACEABILITY.md (Master computational reproduction map)
          • docs/DECISIONS.md (Append-only rationale log)
          • reports/*.md (Formal milestone records, correctable via Git)
+         • docs/archive/*.md & reports/archive/*.md (Superseded drafts)
+         • docs/snapshots/*.md (Historical snapshots, preserved but deprecated)
 ```
 
 - **Technical Fact Invariant**: Never re-declare or hardcode the same technical scalar (e.g. element count, canonical SHA-256 hash, energy value) in multiple competing places. Level 1 defines it; Level 2 interprets it; Level 3 documents may summarize Level 1 technical values for orientation, but must never become an independent authoritative source for those values.
 - **Commit Identity Principle (No Mutable HEAD Invariant)**: Living state documents (`HANDOFF.md`, `docs/CURRENT_STATE.md`) must **never** hardcode the active Git HEAD commit SHA. A committed file cannot truthfully record its own commit SHA without creating an immediate self-referential staleness paradox upon commit. Instead:
-  - **Phase Transition Baseline**: Stable, immutable milestone commits (such as `15a342f` for the Phase 4 freeze) are explicitly recorded as fixed scientific anchors.
+  - **Milestone Anchors**: Stable, immutable milestone commits (such as `15a342f` for the Phase 4 freeze or `fa0cf58` for Gate B) are explicitly recorded as fixed scientific anchors.
   - **Active Git HEAD**: Incoming agents and researchers must query Git directly (`git rev-parse HEAD`) to inspect the working tree SHA.
-  - **Snapshots**: Immutable milestone snapshots in `docs/snapshots/` record the exact commit SHA of the freeze milestone at that specific historical point.
+  - **Execution vs. Documentation Commits**: Computational reports and the traceability matrix explicitly distinguish the commit at which computation ran from the commit containing the finalized report prose.
 
 ---
 
-## 📜 4. The Nine Core Documentation Rules
+## 📜 4. The Eleven Core Documentation Rules
 
 1. **Rule 1: One Technical Authority**  
    Code, configuration, and data artifacts are authoritative for technical facts. Current-state documents interpret and summarize them for orientation; they do not independently invent or redefine them.
@@ -125,15 +162,41 @@ Level 4: HISTORICAL RECORD & SCIENTIFIC ARCHIVE
    Update it whenever the model geometry, materials, boundary conditions, or empirical conclusions change.
 4. **Rule 4: Decisions are Append-Only**  
    Never edit past decisions in `docs/DECISIONS.md` to make past choices look cleaner. A revised decision gets a new entry (`D00X`) that explicitly supersedes the earlier entry.
-5. **Rule 5: Snapshots are Immutable**  
-   Every major milestone freeze generates a new file in `docs/snapshots/` bearing the date, milestone name, and exact git commit SHA. Once committed, a snapshot is frozen.
+5. **Rule 5: Milestone Freezes in Git & Optional Snapshots**  
+   The primary milestone freeze is established through a dedicated Git commit containing the frozen design document, implementation, tests, machine-readable results, formal report, and decision record. Creating standalone snapshot files in `docs/snapshots/` is optional/deprecated; snapshots are no longer mandatory for every milestone. Historical snapshot files are preserved.
 6. **Rule 6: Reports are Milestone Records, Not Operational Handoffs**  
    A scientific report formally records what a milestone investigation established. While normally stable upon phase completion, it remains correctable (e.g. for errata or precision adjustments) with revision history preserved by Git, but does not serve as the living operational handoff.
 7. **Rule 7: Agents Must Independently Verify**  
    `HANDOFF.md` provides orientation, not proof. Review agents must independently inspect the code, execute tests, and verify JSON/NPZ data artifacts before approving work.
-8. **Rule 8: Milestone Commits Update the State System**  
-   Every milestone transition commit must be self-contained, updating `HANDOFF.md`, `docs/CURRENT_STATE.md`, logging any new decisions in `docs/DECISIONS.md`, and generating a snapshot in `docs/snapshots/`.
+8. **Rule 8: Milestone Commits Update the State and Traceability System**  
+   Every milestone transition commit must be self-contained, updating `HANDOFF.md`, `docs/CURRENT_STATE.md`, logging any new decisions in `docs/DECISIONS.md`, and recording the execution commit, report commit, and exact reproduction commands in `docs/RESEARCH_TRACEABILITY.md`.
 9. **Rule 9: Architecture-Bearing Docstrings Must Align with Master Roadmap**  
    Architecture-bearing package and module docstrings that declare phases, roadmap roles, or deferred statuses are part of the repository's navigational state. They must not contradict `PLAN.md`. When a roadmap change makes such a docstring stale, the docstring must be updated or pruned as part of the same change.
 10. **Rule 10: Preserve Separation of Experimental Intent, Implementation, Observation, and Interpretation**  
     Always preserve the distinct layers of scientific inquiry: what was intended to be tested before execution (`docs/phase_design/`), what ran and was measured (`results/`, `tests/`), what was observed and interpreted (`reports/`), and what architectural or scientific decision followed (`docs/DECISIONS.md`). Never collapse these layers into a single document or put biological conclusions into code docstrings.
+11. **Rule 11: The Full Computational Reproducibility Standard**  
+    A computational result is reproducible only when the repository documents its complete provenance chain: Scientific Design → Environment → Execution Command(s) → Primary Solver Entry Point(s) → Post-processing / Analysis Entry Point(s) → Figure-generation Entry Point(s) → Generated Artifacts → Report → Decision. Post-processing and visualization scripts must be inspected for derived numerical computations, which must be explicitly documented.
+
+---
+
+## 🔄 5. The Recommended 13-Step Milestone Workflow
+
+For all prospective experimental phases and gates (beginning with Phase 5 Gate C), contributors adhere to the following 13-step sequence:
+
+```text
+ 1. Create phase/gate design document (docs/phase_design/PHASE*_DESIGN.md)
+ 2. Freeze design (mark document role, hypotheses, parameters, and acceptance criteria)
+ 3. Implement computational code (in src/stegoceras_biomechanics/ or scripts/)
+ 4. Record/verify input artifacts (checksums, manifest entries in data/metadata/)
+ 5. Implement and run automated verification tests (in tests/)
+ 6. Execute the primary computational pipeline
+ 7. Run post-processing / derived numerical analysis
+ 8. Generate publication figures
+ 9. Preserve machine-readable artifacts (in results/ and simulations/)
+10. Record exact execution commit SHA and CLI commands
+11. Write formal scientific report (in reports/, including ## Reproduction section)
+12. Record architectural decision in docs/DECISIONS.md and update docs/CURRENT_STATE.md
+13. Freeze milestone in Git (commit and push to main)
+```
+
+Under this workflow, the formal report points directly back to the execution recipe, environment, code entry points, and generated artifacts, ensuring complete and permanent auditability.

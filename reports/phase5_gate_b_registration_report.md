@@ -210,36 +210,48 @@ $$\text{Geometric Correspondence} \neq \text{Archival Provenance Proof}$$
 
 ---
 
-## Computational Traceability
+## Reproduction
 
-Design:
-[`docs/phase_design/PHASE5_GATE_B_DESIGN.md`](../docs/phase_design/PHASE5_GATE_B_DESIGN.md)
+### Environment
+- Python 3.12 (managed via `uv`)
+- Core dependencies defined in [`pyproject.toml`](../pyproject.toml): `numpy`, `scipy`, `pydicom`, `pyvista`, `trimesh`, `pytest`
+- Lockfile: `uv.lock`
 
-Implementation:
-[`scripts/register_ct_to_surface.py`](../scripts/register_ct_to_surface.py)
+### Execution
+1. Run rigid registration, scale diagnostic, and boundary residual evaluation:
+   ```bash
+   uv run python scripts/register_ct_to_surface.py
+   ```
+2. Primary computational entry point:
+   - Module: [`scripts/register_ct_to_surface.py`](../scripts/register_ct_to_surface.py)
+   - Function: `execute_gate_b_registration()`
+   - Mathematical algorithms:
+     - 6-DOF Kabsch SVD rigid alignment (`rigid_kabsch_svd()`, scale fixed at $s = 1.0$)
+     - 7-DOF Umeyama SVD similarity scale diagnostic (`similarity_umeyama_svd()`, estimating $\hat{s}$)
+     - Point-to-plane ICP refinement with 4.0 mm outlier rejection cutoff
+     - Flying Edges isosurface extraction from 16-bit CT volume (`pyvista.ImageData.contour()`)
+     - KDTree nearest-neighbor Euclidean distance mapping (`scipy.spatial.KDTree`)
 
-Supporting implementation:
-`scipy.spatial.KDTree`, `pyvista`, `trimesh`, `pydicom`, `numpy`
+### Post-processing / Analysis
+1. Integrated post-processing within [`scripts/register_ct_to_surface.py`](../scripts/register_ct_to_surface.py):
+   - Computes forward surface distance distribution ($G_0 \to S_{\text{CT}}$) to evaluate canonical outer boundary alignment.
+   - Computes reverse whole-volume internal interface diagnostic ($S_{\text{CT}} \to G_0$), capturing bone-void interfaces (endocranial surfaces, sinuses, trabecular spaces) against the outer shell.
+   - Computes outward vertex normal signed distances to confirm unbiased spatial centering (50.5% exterior vs. 49.5% interior).
+   - Evaluates subregion-specific registration error across 6 anatomical regions.
+   - Writes the authoritative machine-readable result artifact:
+     [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json).
 
-Tests:
-[`tests/test_gate_b_registration.py`](../tests/test_gate_b_registration.py)
+### Figure generation
+- *None* (Gate B outputs are purely machine-readable JSON metrics; no visual figures are generated for the report).
 
-Inputs:
-Canonical master surface $G_0$: [`data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl`](../data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl) (SHA-256: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`)
-Micro-CT volume: `data/raw/dicom/cranium/` (514 slices)
-Landmark catalog: [`data/metadata/gate_b_landmark_provenance.json`](../data/metadata/gate_b_landmark_provenance.json)
+### Expected artifacts
+- Machine-readable result artifact:
+  - [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json) (contains rigid and similarity transform matrices, residual statistics, signed normal distributions, and subregion breakdowns)
 
-Results:
-[`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json)
+### Report provenance
+- **Governing Design**: [`docs/phase_design/PHASE5_GATE_B_DESIGN.md`](../docs/phase_design/PHASE5_GATE_B_DESIGN.md) *(Retrospective Reconstruction)*
+- **Execution commit**: `ca32eba` (Primary 6-DOF Kabsch registration, Free-Scale similarity diagnostic, ICP refinement, and metric generation)
+- **Report / documentation commit**: `fa0cf58` (Refinement of diagnostic terminology, whole-volume interface diagnostic, and dimensional translation description)
+- **Verification tests**: `uv run pytest tests/test_gate_b_registration.py -v` (10 tests verifying rigid scale constraint, Umeyama diagnostic, zero-based coordinate convention, objective threshold frozen rule, landmark residuals, ICP convergence, and subregion accuracy)
+- **Governing decisions**: Decision [`D010`](../docs/DECISIONS.md) in [`docs/DECISIONS.md`](../docs/DECISIONS.md); Phase 5 Gate B Freeze in [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md) and [`HANDOFF.md`](../HANDOFF.md)
 
-Execution commit:
-`ca32eba` (Primary 6-DOF Kabsch registration, Free-Scale similarity diagnostic, ICP refinement, and metric generation)
-
-Report/documentation commit:
-`fa0cf58` (Refinement of diagnostic terminology, whole-volume interface diagnostic, and dimensional translation description)
-
-Report:
-[`reports/phase5_gate_b_registration_report.md`](phase5_gate_b_registration_report.md) *(this report)*
-
-Decision / state update:
-Decision `D010` in [`docs/DECISIONS.md`](../docs/DECISIONS.md); Phase 5 Gate B Freeze in [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md)

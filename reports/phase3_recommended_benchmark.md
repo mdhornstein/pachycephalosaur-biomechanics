@@ -176,36 +176,45 @@ This document establishes a **provisional, explicitly parameterized benchmark sp
 
 ---
 
-## Computational Traceability
+---
 
-Design:
-[`docs/phase_design/PHASE3_DESIGN_RECONSTRUCTED.md`](../docs/phase_design/PHASE3_DESIGN_RECONSTRUCTED.md) *(Retrospective Reconstruction)*
+## Reproduction
 
-Implementation:
-[`reports/snively_theodor_model_reconstruction.md`](snively_theodor_model_reconstruction.md)
-[`data/metadata/biomechanics_input_matrix.csv`](../data/metadata/biomechanics_input_matrix.csv)
+### Environment
+- Python 3.12 (managed via `uv`)
+- Core dependencies defined in [`pyproject.toml`](../pyproject.toml): `pandas`, `pytest`, `jupyter`
+- Lockfile: `uv.lock`
 
-Supporting implementation:
-[`src/stegoceras_biomechanics/`](../src/stegoceras_biomechanics/)
+### Execution
+1. Run automated input audit and dimensional validation test suite:
+   ```bash
+   uv run pytest tests/test_phase3_model_audit.py -v
+   ```
+2. Primary computational entry points:
+   - Jupyter notebook: `notebooks/05_model_input_dimensional_audit.ipynb`
+   - Verification test suite: [`tests/test_phase3_model_audit.py`](../tests/test_phase3_model_audit.py)
+   *(Note on historical command provenance: Phase 3 established the parameter audit and validation hierarchy through structured data compilation into `data/metadata/biomechanics_input_matrix.csv` and exploratory evaluation in `notebooks/05_model_input_dimensional_audit.ipynb`. The exact exploratory shell commands used during initial data entry at commit `79c8cb6` were not preserved contemporaneously; automated validation was codified in `tests/test_phase3_model_audit.py`)*
 
-Tests:
-[`tests/test_phase3_model_audit.py`](../tests/test_phase3_model_audit.py)
+### Post-processing / Analysis
+1. Input parameter status classification:
+   - Evaluates availability status against controlled vocabulary (`AVAILABLE_DIRECT`, `AVAILABLE_DERIVED`, `LITERATURE_ONLY`, `UNAVAILABLE`, etc.).
+   - Assigns 5-tier evidence grading (Levels A through E) and parameter confidence metrics.
+   - Enforces that no unavailable micro-CT variable is treated as available for Model A.
+   - Verifies dimensional consistency between Snively & Theodor (2011) published metrics and canonical surface $G_0$.
 
-Inputs:
-Snively & Theodor (2011) *PLoS ONE* 6(6): e21412
-MorphoSource Media `000018284` & `000043121`–`000043162`
+### Figure generation
+- *None* (No figures generated for Phase 3).
 
-Results:
-[`data/metadata/biomechanics_input_matrix.csv`](../data/metadata/biomechanics_input_matrix.csv)
+### Expected artifacts
+- Authoritative input parameter matrix:
+  - [`data/metadata/biomechanics_input_matrix.csv`](../data/metadata/biomechanics_input_matrix.csv)
+- Reconstructed model specification:
+  - [`reports/snively_theodor_model_reconstruction.md`](snively_theodor_model_reconstruction.md)
 
-Execution commit:
-`79c8cb6` (Phase 3 input audit, dimensional check, and benchmark specification execution)
+### Report provenance
+- **Governing Design**: [`docs/phase_design/PHASE3_DESIGN_RECONSTRUCTED.md`](../docs/phase_design/PHASE3_DESIGN_RECONSTRUCTED.md) *(Retrospective Reconstruction)*
+- **Execution commit**: `79c8cb6` (Phase 3 input audit, dimensional check, and benchmark specification execution)
+- **Report / documentation commit**: `255ee46` (Final Phase 3 specification refinement and validation hierarchy freeze)
+- **Verification tests**: `uv run pytest tests/test_phase3_model_audit.py -v` (6 tests verifying deliverable presence, matrix schema uniqueness, status validity, CT availability invariants, and citations)
+- **Governing decisions**: Decisions [`D001`, `D002`](../docs/DECISIONS.md) in [`docs/DECISIONS.md`](../docs/DECISIONS.md)
 
-Report/documentation commit:
-`255ee46` (Final Phase 3 specification refinement and validation hierarchy freeze)
-
-Report:
-[`reports/phase3_recommended_benchmark.md`](phase3_recommended_benchmark.md) *(this report)*
-
-Decision / state update:
-Decisions `D001`, `D002` in [`docs/DECISIONS.md`](../docs/DECISIONS.md)
