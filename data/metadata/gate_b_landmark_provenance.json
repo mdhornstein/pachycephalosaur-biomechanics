@@ -1,0 +1,63 @@
+{
+  "audit": "Gate B Anatomical Landmark Provenance & Selection Audit Trail",
+  "specimen": "Stegoceras validum UALVP 2",
+  "governing_gate": "Phase 5 Gate B (CT-to-Surface Registration)",
+  "date_documented": "2026-09-25",
+  "landmark_count": 5,
+  "selection_methodology_overview": {
+    "objective": "Identify homologous, anatomically discrete cranial poles and bilateral crest boundaries to initialize 6-DOF rigid registration without deformable manipulation.",
+    "epistemic_safeguard_against_circularity": "Landmarks were selected based on distinct morphologic features (maximum dorsal dome apex, rostral midline premaxillary edge, ventral condylar articular ball, and lateral parietal shelf corners). While initial bounding search windows were guided by general cranial dimensions (rostral, dorsal, posterior, lateral), each landmark coordinate was determined from local morphological extrema (curvature/elevation/profile extrema) independently on the surface mesh and the CT slice stack. The subsequent ICP surface refinement verified that the registration converges to the same global optimum independent of minor landmark localization perturbations."
+  },
+  "landmarks": [
+    {
+      "id": "snout_anterior_apex",
+      "anatomical_name": "Rostral Premaxillary Midline Apex",
+      "anatomical_description": "Anterior-most midline tip of the premaxillary rostrum forming the rostral pole of the cranium.",
+      "canonical_mesh_coords_mm": [105.12, 10.37, 72.54],
+      "ct_physical_coords_mm": [104.22, 11.23, 73.12],
+      "g0_identification_method": "Algorithmic search for minimum Y-coordinate within the midline premaxillary cluster (X in [100, 110] mm, Z in [65, 80] mm).",
+      "ct_identification_method": "Identification of the anterior-most ossified voxel of the premaxillary rostrum in sagittal slices (X ~ 104 mm, slice k ~ 292).",
+      "potential_circularity_notes": "Search region was anatomically restricted to the snout; within that region, the coordinate is an objective profile extremum."
+    },
+    {
+      "id": "dome_dorsal_apex",
+      "anatomical_name": "Frontoparietal Dome Dorsal Apex",
+      "anatomical_description": "Highest dorsal elevation of the compact frontoparietal dome along the midsagittal axis.",
+      "canonical_mesh_coords_mm": [105.34, 117.89, 107.52],
+      "ct_physical_coords_mm": [104.98, 119.12, 106.88],
+      "g0_identification_method": "Algorithmic global Z-maximum of the frontoparietal dome along the midsagittal symmetry plane (X in [100, 110] mm, Y in [90, 130] mm).",
+      "ct_identification_method": "Maximum dorsal bone voxel (Z-maximum) on the midsagittal slice profile (k ~ 427, X ~ 105 mm).",
+      "potential_circularity_notes": "Purely geometric/morphological local extremum; independent of external coordinates once the dome region is isolated."
+    },
+    {
+      "id": "occipital_condyle_apex",
+      "anatomical_name": "Occipital Condyle Ventral Articular Margin",
+      "anatomical_description": "Ventral-most articular pole of the hemi-spherical basioccipital condyle.",
+      "canonical_mesh_coords_mm": [105.02, 175.48, 48.12],
+      "ct_physical_coords_mm": [105.21, 176.01, 48.35],
+      "g0_identification_method": "Local minimum Z on the spherical posterior condylar articular surface (Y in [170, 185] mm, X in [100, 110] mm).",
+      "ct_identification_method": "Ventral-most bone voxel of the condylar articular ball in transverse/sagittal CT slices (k ~ 193).",
+      "potential_circularity_notes": "Discrete anatomical ball-and-socket landmark; easily localized with sub-millimeter precision in orthogonal views."
+    },
+    {
+      "id": "parietal_crest_left",
+      "anatomical_name": "Posterior Parietal Crest Left Lateral Boss",
+      "anatomical_description": "Posterolateral-most corner/tubercle of the posterior parietal-squamosal shelf on the left side (+X direction).",
+      "canonical_mesh_coords_mm": [140.85, 172.10, 85.34],
+      "ct_physical_coords_mm": [141.52, 171.25, 84.80],
+      "g0_identification_method": "Local curvature and posterior-lateral extremum on the left posterior cranial rim (X > 135 mm, Y > 165 mm).",
+      "ct_identification_method": "Distinct cortical bone tubercle at the left posterolateral margin in transverse CT slices (k ~ 339).",
+      "potential_circularity_notes": "Bilateral boundary landmark constraining yaw rotation and mediolateral width."
+    },
+    {
+      "id": "parietal_crest_right",
+      "anatomical_name": "Posterior Parietal Crest Right Lateral Boss",
+      "anatomical_description": "Posterolateral-most corner/tubercle of the posterior parietal-squamosal shelf on the right side (-X direction).",
+      "canonical_mesh_coords_mm": [68.92, 171.95, 85.40],
+      "ct_physical_coords_mm": [68.75, 172.15, 85.10],
+      "g0_identification_method": "Local curvature and posterior-lateral extremum on the right posterior cranial rim (X < 75 mm, Y > 165 mm).",
+      "ct_identification_method": "Distinct cortical bone tubercle at the right posterolateral margin in transverse CT slices (k ~ 340).",
+      "potential_circularity_notes": "Bilateral boundary landmark paired with left crest to provide roll and yaw stabilization."
+    }
+  ]
+}

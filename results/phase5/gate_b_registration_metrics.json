@@ -2,8 +2,18 @@
   "gate": "Gate B",
   "description": "CT-to-Surface Registration and Empirical Scale Verification",
   "status": "VERIFIED_PASS",
-  "provenance_conclusion": "Consistent with G_0 being derived directly from this micro-CT volume. Sub-voxel translation norm (0.158 mm) and sub-millimeter median surface residual (0.1655 mm) confirm physical scale s = 1.0000. Residual elevations (>2.0 mm) concentrate specifically in complex endocranial foramina and thin temporal arches, consistent with post-segmentation digital mesh repair/closure rather than misregistration.",
-  "scale_factor_empirical": 1.0,
+  "epistemic_conclusion": "The rigid registration is performed at unit scale (s = 1.000000), and an independent free-scale diagnostic is consistent with approximately unit scale (s_hat = 1.00494, Delta s = +0.49%). Remaining geometric uncertainty is therefore no longer represented as an arbitrary global +/-5% scale parameter, but supported by unit scale subject to the quantified registration/modeling residuals. Sub-voxel translation norm (0.2472 mm) and sub-millimeter median surface residual (0.1633 mm) provide decisive geometric evidence consistent with G_0 being derived from this micro-CT volume. Residual elevations (>2.0 mm) concentrate specifically in complex endocranial foramina and thin arches, consistent with post-segmentation digital mesh repair/closure rather than misregistration.",
+  "mandated_registration_scale": 1.0,
+  "scale_diagnostic": {
+    "diagnostic_purpose": "Independent similarity fit allowing isotropic scale to vary to evaluate unit-scale concordance",
+    "mandated_registration_scale": 1.0,
+    "free_scale_estimate_s_hat": 1.0049439210126956,
+    "scale_offset_pct": 0.49439210126955846,
+    "rigid_landmark_rms_mm": 0.7959355503140781,
+    "free_scale_landmark_rms_mm": 0.7174825194266178,
+    "rms_residual_delta_mm": 0.07845303088746036,
+    "interpretation": "The free-scale landmark estimate s_hat = 1.00494 corresponds to a minor +0.49% difference. Allowing scale to vary reduces landmark RMS by only 0.0785 mm (~78 microns). This confirms that the data are consistent with approximately unit scale without justifying non-unit scaling."
+  },
   "voxel_coordinate_convention": "Zero-based DICOM voxel-center convention directly from ImagePositionPatient: P = ImagePositionPatient + [col*dx, row*dy, slice*dz]^T with no +0.5 offset.",
   "threshold_rule": {
     "primary_threshold": 20864,
@@ -14,6 +24,7 @@
   "landmark_registration": {
     "method": "Kabsch SVD rigid (s=1.0)",
     "num_landmarks": 5,
+    "provenance_document": "data/metadata/gate_b_landmark_provenance.json",
     "rms_residual_mm": 0.7959355503140781,
     "mean_residual_mm": 0.7692771454406861,
     "per_landmark_residuals_mm": {
@@ -80,19 +91,46 @@
       -0.04066076845258547
     ]
   },
-  "surface_distance_residuals": {
-    "source_mesh": "stegoceras_ualvp2_canonical_master.stl",
-    "vertex_count": 29722,
-    "median_mm": 0.16331251190716337,
-    "mean_mm": 0.4129639267468502,
-    "rms_mm": 0.8765581125341346,
-    "p75_mm": 0.2361276947876423,
-    "p90_mm": 1.1529876897569813,
-    "p95_mm": 2.2784131198053337,
-    "p99_mm": 3.8756643015417205,
-    "max_mm": 6.24373019601379,
-    "frac_lt_05_pct": 86.9894354350313,
-    "frac_lt_10_pct": 89.33786420833053
+  "bidirectional_surface_distance_residuals": {
+    "forward_g0_to_ct": {
+      "direction": "G_0 vertices -> closest CT isosurface point",
+      "description": "Quantifies fidelity of the canonical outer boundary mesh relative to reconstructed CT bone interfaces",
+      "vertex_count": 29722,
+      "median_mm": 0.16331251190716337,
+      "mean_mm": 0.4129639267468502,
+      "rms_mm": 0.8765581125341346,
+      "p75_mm": 0.2361276947876423,
+      "p90_mm": 1.1529876897569813,
+      "p95_mm": 2.2784131198053337,
+      "p99_mm": 3.8756643015417205,
+      "max_mm": 6.24373019601379,
+      "frac_lt_05_pct": 86.9894354350313,
+      "frac_lt_10_pct": 89.33786420833053
+    },
+    "reverse_ct_to_g0": {
+      "direction": "CT isosurface points -> closest G_0 vertex",
+      "description": "Evaluates all reconstructed CT bone interfaces against the outer G_0 boundary shell. Note that S_CT contains internal structures (endocranial cavity, trabecular channels, sinuses) that are naturally absent from the watertight outer boundary surface G_0.",
+      "point_count": 4950375,
+      "median_mm": 1.092781918715343,
+      "mean_mm": 2.727863644279526,
+      "rms_mm": 4.6529307514474905,
+      "p75_mm": 2.3873138674293606,
+      "p90_mm": 8.522977863224579,
+      "p95_mm": 11.137480953486127,
+      "p99_mm": 17.512260052850845,
+      "max_mm": 28.303357762555418,
+      "frac_lt_05_pct": 11.962770497184556,
+      "frac_lt_10_pct": 44.5609070019948,
+      "frac_lt_20_pct": 72.87769108400879
+    },
+    "symmetric_summary": {
+      "bidirectional_mean_mm": 1.570413785513188,
+      "bidirectional_rms_mm": 3.3479933320136044,
+      "directed_95th_percentile_g0_to_ct_mm": 2.2784131198053337,
+      "directed_95th_percentile_ct_to_g0_mm": 11.137480953486127,
+      "directed_hausdorff_max_g0_to_ct_mm": 6.24373019601379,
+      "directed_hausdorff_max_ct_to_g0_mm": 28.303357762555418
+    }
   },
   "signed_normal_distance": {
     "convention": "Displacement from G_0 along outward vertex normal to closest CT isosurface point",
@@ -135,5 +173,5 @@
       "frac_lt_05_pct": 36.92307692307693
     }
   },
-  "runtime_seconds": 10.3
+  "runtime_seconds": 12.96
 }
