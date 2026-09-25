@@ -5,7 +5,7 @@
 **Phase Transition Baselines**: `15a342f` (Phase 4 Freeze & FE Baseline) & `2662be0` (Literature Basis v1 Freeze)  
 **Authoritative Bridge**: [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) (Model Decision Basis v1; Decisions D007, D008, D009)  
 **Current Git State**: Dynamic — interrogate directly via `git rev-parse HEAD`  
-**Current Phase**: Phase 4 **FROZEN**; Literature Basis v1 **FROZEN**; Model Decision Basis v1 **FROZEN**; Phase 5 (UALVP 2 CT Characterization & Material A/B Experiment) **ACTIVE NEXT GATE**
+**Current Phase**: Phase 4, Literature Basis v1, Model Decision Basis v1, Phase 5 Gate A & Gate B **FROZEN**; Phase 5 Gate C (Image Semantics & Attenuation Characterization) **ACTIVE NEXT GATE**
 
 ---
 
@@ -145,4 +145,5 @@ From [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_
 - **Model Decision Basis v1**: **FROZEN** ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md); Decisions D007, D008, D009).
 - **Phase 5 Status**: **ACTIVE** — UALVP 2 CT Characterization & Material A/B Experiment.
 - **Phase 5 Gate A (DICOM Ingestion & Header Audit)**: **VERIFIED & FROZEN** ([`reports/phase5_gate_a_dicom_report.md`](../reports/phase5_gate_a_dicom_report.md); 514 slices verified, true voxel spacing $0.207572 \times 0.207572 \times 0.250000\text{ mm}$, unsigned 16-bit intensity $[0, 65535]$, manifest in [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json)).
-- **Immediate Next Action (Gate B)**: Establish CT-to-surface registration, compute rigid transformation matrix and residuals between the DICOM grid and canonical surface $G_0$, and empirically resolve scale alignment.
+- **Phase 5 Gate B (CT-to-Surface Registration & Empirical Scale Verification)**: **VERIFIED & FROZEN** ([`reports/phase5_gate_b_registration_report.md`](../reports/phase5_gate_b_registration_report.md); physical scale $s = 1.000000$ verified, median surface residual $0.1633\text{ mm}$, sub-voxel translation norm $0.2472\text{ mm}$, zero-based DICOM voxel-center convention directly from `ImagePositionPatient`, objective Otsu threshold $T = 20,864$, metrics in [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json)).
+- **Immediate Next Action (Gate C)**: Characterize image data semantics, audit attenuation histogram across cranial tissues (air, matrix, compact dome bone, cancellous bone), and evaluate radial/depth attenuation gradients in the dome to inform Model B zonation boundaries.

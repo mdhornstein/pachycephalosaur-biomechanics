@@ -30,6 +30,8 @@ results/*
 !results/.gitkeep
 !results/phase4/
 !results/phase4/*
+!results/phase5/
+!results/phase5/*
 
 # OS and IDE files
 .DS_Store

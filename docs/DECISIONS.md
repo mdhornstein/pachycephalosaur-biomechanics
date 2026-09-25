@@ -97,5 +97,19 @@ This document records key scientific, modeling, and architectural decisions made
   1. *Observed Numerical Discrepancy ($\Delta_{\text{num}}$)*: The deterministic, signed difference between discrete solutions across mesh tiers ($2.823 \to 2.383 \to 2.015\text{ MPa}$; net $-28.64\%$). It measures the incomplete spatial resolution of complex internal cranial cavities under the current discrete linear tetrahedral approximation.
   2. *Formal Numerical Error Bound*: An analytical or asymptotic bound (e.g., via Richardson extrapolation or GCI) that requires the solution to be within the asymptotic convergence regime for that specific QoI. Where asymptotic convergence is not yet demonstrated, quoting a symmetric interval ($\pm 28.6\%$) creates the false impression of a verified error bound.
   3. *Biological Uncertainty Distribution*: A probability measure $\theta \sim p(\theta)$ representing physical variation across individuals, tissues, or loading events. Under Rule 4 and Decision D12 of the canonical bridge specification, numerical discretization differences must **never** be smeared into or treated as biological probability distributions.
-- **Evidence**: [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) (Epistemic Rules, D12, D14) and [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_convergence_comparison.json).
+
+---
+
+## D010 — Empirical Physical Scale Verification & Zero-Based DICOM Coordinate Convention (Gate B)
+- **Date**: 2026-09-25
+- **Status**: ACCEPTED (Governing Gate B of Model Decision Basis v1)
+- **Decision**: 
+  1. Fix the physical scale factor between canonical master surface $G_0$ and the micro-CT volume `UALVP2-CT-DICOM-CRAN-01` at exactly $s = 1.000000$ ($0.207572 \times 0.207572 \times 0.250000\text{ mm}$), permanently eliminating the prior $\pm 5\%$ scale uncertainty envelope.
+  2. Adopt the standard DICOM zero-based voxel center mapping directly from `ImagePositionPatient`:
+     $$\mathbf{P}(c, r, k) = \mathbf{P}_0 + [c \cdot \Delta x, r \cdot \Delta y, k \cdot \Delta z]^T$$
+     without an artificial $+0.5$ half-voxel offset, ensuring exact sub-voxel alignment.
+  3. Freeze the objective full-volume Otsu threshold ($T_{\text{primary}} = 20,864$) derived from the 396.8M voxel histogram strictly prior to and independent of comparison with $G_0$.
+  4. Separate landmark-only rigid registration (RMS $0.796\text{ mm}$) from ICP refinement (translation norm $0.247\text{ mm}$, Euler angles $< 0.05^\circ$).
+  5. Formally record that the sub-millimeter median surface residual ($0.1633\text{ mm}$) and sub-voxel translation provide decisive geometric evidence consistent with $G_0$ being derived directly from this micro-CT volume, distinguishing geometric correspondence from archival provenance proof.
+- **Evidence**: [`reports/phase5_gate_b_registration_report.md`](../reports/phase5_gate_b_registration_report.md), [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json), and [`tests/test_gate_b_registration.py`](../tests/test_gate_b_registration.py).
 

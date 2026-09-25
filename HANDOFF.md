@@ -3,7 +3,7 @@
 **Date**: 2026-09-24  
 **Phase Transition Baseline**: `15a342f` (Phase 4 FE Freeze) & `2662be0` (Literature Basis v1 Freeze)  
 **Current Git State**: Dynamic — interrogate directly via `git rev-parse HEAD`  
-**Current Phase**: Phase 4 & Literature Basis v1 **FROZEN**; Phase 5 Gate A **FROZEN**; Phase 5 Gate B (CT-to-Surface Registration) **ACTIVE NEXT GATE**  
+**Current Phase**: Phase 4, Literature Basis v1, Phase 5 Gate A & Gate B **FROZEN**; Phase 5 Gate C (Image Semantics & Attenuation Characterization) **ACTIVE NEXT GATE**  
 **Lead Specimen**: *Stegoceras validum* UALVP 2 (Cast from micro-CT reconstructed cranium)
 
 > [!IMPORTANT]
@@ -58,8 +58,8 @@ Quantify cranial stress distribution, compliance, and strain energy absorption i
 **Do NOT deploy an unmotivated 48-point LHS campaign.**  
 Per [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md), execute **Phase 5: UALVP 2 CT Characterization & The Decisive Material A/B Experiment**:
 1. **Gate A — Acquire & Ingest DICOM Volume**: **VERIFIED & FROZEN** ([`reports/phase5_gate_a_dicom_report.md`](reports/phase5_gate_a_dicom_report.md); 514 slices verified, true voxel spacing $0.207572 \times 0.207572 \times 0.250000\text{ mm}$, unsigned 16-bit intensity $[0, 65535]$, manifest in [`data/metadata/dicom_slice_manifest.json`](data/metadata/dicom_slice_manifest.json)).
-2. **Gate B — Verify Physical Scale & Coordinates (ACTIVE NEXT GATE)**: Register the voxel grid against the canonical surface mesh ($G_0$), compute rigid transformation matrix and residuals, and empirically resolve scale alignment.
-3. **Gate C — Characterize Image Data Semantics**: Quantify stored pixel values, dynamic range, beam hardening, rock matrix vs. bone contrast, and internal architecture visibility (without assuming values are Hounsfield Units).
+2. **Gate B — Verify Physical Scale & Coordinates**: **VERIFIED & FROZEN** ([`reports/phase5_gate_b_registration_report.md`](reports/phase5_gate_b_registration_report.md); physical scale $s = 1.000000$ verified, median surface residual $0.1633\text{ mm}$, sub-voxel translation norm $0.2472\text{ mm}$, zero-based DICOM voxel-center convention directly from `ImagePositionPatient`, objective Otsu threshold $T = 20,864$, metrics in [`results/phase5/gate_b_registration_metrics.json`](results/phase5/gate_b_registration_metrics.json)).
+3. **Gate C — Characterize Image Data Semantics (ACTIVE NEXT GATE)**: Quantify stored pixel values, dynamic range, beam hardening, rock matrix vs. bone contrast, and internal architecture visibility (without assuming values are Hounsfield Units).
 4. **Gate D — Reconstruct Published Material Inference Logic**: Document what Snively & Theodor (2011) directly observed from CT vs. what was assumed or thresholded.
 5. **Gate E — Formulate Minimal Model B**: Define candidate 3-zone architecture supported by evidence; assign elementwise properties to $h_3$ volume mesh.
 6. **Gate F — Execute Decisive Model A vs. Model B Test**: Compare Model A against Model B under identical $h_3$ mesh, loads, and BCs to evaluate stress redistribution to the endocranial braincase roof and strain energy partitioning.

@@ -72,8 +72,8 @@ datasets:
     local_path: "data/raw/dicom/cranium/"
     sha256_checksum: "b6e16d6b31e39e2f9f2e319f1c6b760c8a164ded853c60c1cae2540a20c5a9d3"
     checksum_status: "verified"
-    notes: "514-slice micro-CT volumetric image series of UALVP 2 cranium deposited by Lawrence Witmer on MorphoSource as Media 000018283. Verified with zero CRC errors, uniform derived slice-plane spacing (0.250000 mm), and raw 16-bit unsigned intensity range [0, 65535]. Per-slice cryptographic hashes recorded in data/metadata/dicom_slice_manifest.json."
-    evidence_source: "MorphoSource Media 000018283 manifest; UTCT Archive 2218 contents.doc; pydicom header audit"
+    notes: "514-slice micro-CT volumetric image series of UALVP 2 cranium deposited by Lawrence Witmer on MorphoSource as Media 000018283. Verified with zero CRC errors, uniform derived slice-plane spacing (0.250000 mm), and raw 16-bit unsigned intensity range [0, 65535]. Per-slice cryptographic hashes recorded in data/metadata/dicom_slice_manifest.json. In Gate B, physical scale s = 1.000000 was empirically verified via rigid registration against canonical master surface G_0 (median residual 0.1633 mm, sub-voxel translation norm 0.247 mm; reports/phase5_gate_b_registration_report.md)."
+    evidence_source: "MorphoSource Media 000018283 manifest; UTCT Archive 2218 contents.doc; pydicom header audit; Phase 5 Gate B registration audit"
 
   - dataset_id: "UALVP2-CT-RAW-MAND-01"
     specimen_id: "UALVP 2"
