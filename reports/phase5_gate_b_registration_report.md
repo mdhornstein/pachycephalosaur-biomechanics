@@ -12,7 +12,7 @@
 
 ## 1. Executive Summary
 
-Phase 5 Gate B establishes the empirical physical scale and spatial registration between the ingested micro-CT volume (`UALVP2-CT-DICOM-CRAN-01`) and the canonical master boundary surface $G_0$. In earlier literature synthesis phases, an arbitrary $\pm 5\%$ scale uncertainty envelope was contemplated due to uncalibrated STL unit ambiguity. Gate B investigates this question through direct, rigid empirical registration paired with an independent free-scale diagnostic fit and bidirectional surface distance quantification.
+Phase 5 Gate B establishes the empirical physical scale and spatial registration between the ingested micro-CT volume (`UALVP2-CT-DICOM-CRAN-01`) and the canonical master boundary surface $G_0$. In earlier literature synthesis phases, an arbitrary $\pm 5\%$ scale uncertainty envelope was contemplated due to uncalibrated STL unit ambiguity. Gate B investigates this question through direct, rigid empirical registration paired with an independent free-scale diagnostic fit, primary outer-boundary distance quantification, and a whole-volume internal interface diagnostic.
 
 ### Key Audit Findings
 1. **Mandated Rigid Registration & Diagnostic Free-Scale Concordance**:
@@ -24,14 +24,14 @@ Phase 5 Gate B establishes the empirical physical scale and spatial registration
 3. **Objective, Frozen Intensity Threshold**: A primary segmentation threshold of **$T_{\text{primary}} = 20,864$** was determined via global Otsu analysis across all 396,750,848 volume voxels **strictly prior to and independent of any comparison with $G_0$**.
 4. **Decomposed Registration Pipeline**:
    - **Landmark-Only Rigid Registration (Kabsch SVD, $s=1.0$)**: Achieves an RMS residual of **$0.7959\text{ mm}$** and a mean residual of **$0.7693\text{ mm}$** across five documented anatomical landmarks.
-   - **Surface ICP Refinement ($s=1.0$, cutoff $4.0\text{ mm}$)**: Converges to a tiny sub-voxel translation norm of **$0.2472\text{ mm}$** and minute Euler rotations of $[+0.0181^\circ, +0.0218^\circ, -0.0407^\circ]$ ($< 0.05^\circ$), demonstrating that landmark alignment was already within the global convergence basin and ICP provided only fine sub-voxel settling.
-5. **Bidirectional Surface Residual Analysis**:
-   - **Forward ($G_0 \to S_{\text{CT}}$, 29,722 vertices)**: Median distance **$0.1633\text{ mm}$** ($< 1$ in-plane pixel width of $0.2076\text{ mm}$), mean **$0.4130\text{ mm}$**, RMS **$0.8766\text{ mm}$**; **$86.99\%$** of vertices lie within $< 0.5\text{ mm}$ and **$89.34\%$** lie within $< 1.0\text{ mm}$.
-   - **Reverse ($S_{\text{CT}} \to G_0$, 4,950,375 points)**: Median distance **$1.0928\text{ mm}$**, mean **$2.7279\text{ mm}$**, RMS **$4.6529\text{ mm}$**; **$44.56\%$** within $< 1.0\text{ mm}$ and **$72.88\%$** within $< 2.0\text{ mm}$ ($p_{95} = 11.1375\text{ mm}$). This difference arises naturally because $S_{\text{CT}}$ contains all reconstructed internal bone surfaces (endocranial cavity, trabecular channels, sinuses) that were excluded/repaired in creating the watertight outer boundary shell $G_0$.
-   - **Symmetric Summary**: Bidirectional mean distance **$1.5704\text{ mm}$**, bidirectional RMS **$3.3480\text{ mm}$**.
+   - **Surface ICP Refinement ($s=1.0$, cutoff $4.0\text{ mm}$)**: Converges to a translation magnitude of **$0.2472\text{ mm}$** (approximately one voxel spacing and below the $0.25\text{-mm}$ through-plane slice spacing) and minute Euler rotations of $[+0.0181^\circ, +0.0218^\circ, -0.0407^\circ]$ ($< 0.05^\circ$), demonstrating that landmark alignment was already within the global convergence basin and ICP provided only fine settling.
+5. **Surface Distance Residual Analysis & Whole-Volume Diagnostic**:
+   - **Primary Outer-Boundary Fidelity ($G_0 \to S_{\text{CT}}$, 29,722 vertices)**: Median distance **$0.1633\text{ mm}$** ($< 1$ in-plane pixel width of $0.2076\text{ mm}$), mean **$0.4130\text{ mm}$**, RMS **$0.8766\text{ mm}$**; **$86.99\%$** of vertices lie within $< 0.5\text{ mm}$ and **$89.34\%$** lie within $< 1.0\text{ mm}$. This serves as the authoritative metric of outer-boundary correspondence.
+   - **Whole-Volume CT Interface Diagnostic ($S_{\text{CT}} \to G_0$, 4,950,375 points)**: Median distance **$1.0928\text{ mm}$**, mean **$2.7279\text{ mm}$**, RMS **$4.6529\text{ mm}$**; **$44.56\%$** within $< 1.0\text{ mm}$ and **$72.88\%$** within $< 2.0\text{ mm}$ ($p_{95} = 11.1375\text{ mm}$). This is retained as an informative whole-volume internal-interface diagnostic rather than a symmetric boundary registration error, because $S_{\text{CT}}$ contains all reconstructed internal bone surfaces (endocranial cavity, trabecular channels, sinuses) that $G_0$ was never intended to represent.
+   - **Directed Spread Reference**: Reference two-way mean $1.5704\text{ mm}$, RMS $3.3480\text{ mm}$ (recorded as a directional spread summary across disparate geometric entities, not as a measure of boundary registration quality).
 6. **Outward-Normal Signed Distance**: Evaluated along the outward unit normal of $G_0$, the signed distance has a mean of **$-0.0454\text{ mm}$** ($\text{std} = 0.5868\text{ mm}$), with $46.93\%$ exterior and $53.07\%$ interior. The sub-tenth-millimeter mean confirms zero systematic expansion or contraction bias.
 7. **Anatomical Subregion Breakdown**: Agreement is tightest on external cortical bone (ventral palate: $100.0\% < 0.5\text{ mm}$, median $0.173\text{ mm}$; basicranium: $99.67\% < 0.5\text{ mm}$, median $0.201\text{ mm}$; frontoparietal dome: $87.98\% < 0.5\text{ mm}$, median $0.152\text{ mm}$). Residual elevations ($> 2.0\text{ mm}$, $5.8\%$ of $G_0$ vertices) concentrate specifically in complex endocranial foramina and thin temporal arches, consistent with post-segmentation digital mesh repair/closure rather than misregistration.
-8. **Epistemic Provenance Conclusion**: Geometric correspondence cannot by itself constitute legal or archival provenance. However, the sub-millimeter median forward distance and sub-voxel translation provide decisive geometric evidence **consistent with $G_0$ having been derived directly from this micro-CT volume**.
+8. **Epistemic Provenance Conclusion**: Geometric correspondence cannot by itself constitute legal or archival provenance. However, the sub-millimeter median forward distance and translation magnitude of $0.2472\text{ mm}$ (approximately one voxel spacing and below the $0.25\text{-mm}$ through-plane slice spacing) provide decisive geometric evidence **consistent with $G_0$ having been derived directly from this micro-CT volume**.
 
 Gate B is formally declared **PASSED & FROZEN**.
 
@@ -118,23 +118,27 @@ Using $\mathbf{T}_{\text{landmark}}$ as initialization, a point-to-plane Iterati
 - **Composite Rigid Transform ($\mathbf{T}_{\text{composite}} = \Delta \mathbf{T} \cdot \mathbf{T}_{\text{landmark}}$)**:
   $$\mathbf{R}_{\text{final}} = \begin{bmatrix} 0.99999968 & 0.00070978 & 0.00037954 \\ -0.00070966 & 0.99999970 & -0.00031674 \\ -0.00037976 & 0.00031647 & 0.99999988 \end{bmatrix}$$
   $$\mathbf{t}_{\text{final}} = \begin{bmatrix} -0.1392 \\ -0.0067 \\ +0.2041 \end{bmatrix}\text{ mm}$$
-- **Composite Translation Norm**: **$0.2472\text{ mm}$** ($< 1$ slice thickness of $0.250\text{ mm}$).
+- **Composite Translation Norm**: **$0.2472\text{ mm}$** (approximately one voxel spacing and below the $0.250\text{-mm}$ through-plane slice spacing).
 - **Euler Angles ($X, Y, Z$)**: $[+0.0181^\circ, +0.0218^\circ, -0.0407^\circ]$ (all $< 0.05^\circ$).
 
-This confirms that the initial coordinate systems were already aligned to within sub-degree rotation and $< 2.5\text{ mm}$ translation, and ICP merely performed a fine sub-voxel settling.
+This confirms that the initial coordinate systems were already aligned to within sub-degree rotation and $< 2.5\text{ mm}$ translation, and ICP merely performed a fine settling below the slice spacing.
 
 ---
 
-## 6. Bidirectional Surface Residual Analysis
+## 6. Surface Distance Residual Analysis & Whole-Volume Diagnostic
 
-A rigorous surface comparison requires examining both directions: forward ($G_0 \to S_{\text{CT}}$) and reverse ($S_{\text{CT}} \to G_0$).
+A rigorous evaluation of geometric correspondence must distinguish between:
+1. **Primary Outer-Boundary Fidelity ($G_0 \to S_{\text{CT}}$)**: Does the canonical outer boundary surface lie where the CT volume indicates the outer periosteal bone boundary lies?
+2. **Whole-Volume CT Interface Diagnostic ($S_{\text{CT}} \to G_0$)**: How far do the isosurface points extracted across the entire CT volume lie from the outer boundary shell $G_0$?
 
-| Distance Distribution Metric | Forward: $G_0 \to S_{\text{CT}}$ | Reverse: $S_{\text{CT}} \to G_0$ | Symmetric / Bidirectional Summary |
+Because $S_{\text{CT}}$ is the thresholded isosurface of the entire volume, it contains all internal bone–void interfaces (endocranial cavity, trabecular spaces, neurovascular canals, sinuses) that $G_0$ was never intended to represent. Consequently, $S_{\text{CT}} \to G_0$ is an internal-surface inclusion diagnostic, **not** the reciprocal or symmetric counterpart to $G_0 \to S_{\text{CT}}$. Derived summaries such as "bidirectional mean" or "bidirectional RMS" combine two distinct geometric interrogations and are reported strictly for reference spread, not as measures of boundary registration quality.
+
+| Distance Metric | Primary Outer Boundary: $G_0 \to S_{\text{CT}}$ | Whole-Volume CT Interface Diagnostic: $S_{\text{CT}} \to G_0$ | Directed Spread / Reference Summary |
 | :--- | :--- | :--- | :--- |
-| **Evaluated Point Count** | 29,722 vertices | 4,950,375 points | Full surface bidirectional coverage |
-| **Median Distance** | **$0.1633\text{ mm}$** ($< 1$ voxel) | **$1.0928\text{ mm}$** | Asymmetry reflects internal structures |
-| **Mean Distance** | **$0.4130\text{ mm}$** | **$2.7279\text{ mm}$** | Bidirectional Mean: **$1.5704\text{ mm}$** |
-| **RMS Distance** | **$0.8766\text{ mm}$** | **$4.6529\text{ mm}$** | Bidirectional RMS: **$3.3480\text{ mm}$** |
+| **Evaluated Point Count** | 29,722 vertices | 4,950,375 points | Full volume vs. outer boundary |
+| **Median Distance** | **$0.1633\text{ mm}$** ($< 1$ pixel) | **$1.0928\text{ mm}$** | Asymmetry reflects internal structures |
+| **Mean Distance** | **$0.4130\text{ mm}$** | **$2.7279\text{ mm}$** | Two-Way Spread Mean: $1.5704\text{ mm}$ (reference) |
+| **RMS Distance** | **$0.8766\text{ mm}$** | **$4.6529\text{ mm}$** | Two-Way Spread RMS: $3.3480\text{ mm}$ (reference) |
 | **75th Percentile ($p_{75}$)** | $0.2361\text{ mm}$ | $2.3873\text{ mm}$ | 75% within $\approx 1$ voxel (forward) |
 | **90th Percentile ($p_{90}$)** | $1.1530\text{ mm}$ | $8.5230\text{ mm}$ | Directed 95th %ile ($G_0 \to \text{CT}$): **$2.2784\text{ mm}$** |
 | **95th Percentile ($p_{95}$)** | $2.2784\text{ mm}$ | $11.1375\text{ mm}$ | Directed 95th %ile ($\text{CT} \to G_0$): **$11.1375\text{ mm}$** |
@@ -144,12 +148,13 @@ A rigorous surface comparison requires examining both directions: forward ($G_0 
 | **Fraction $< 1.0\text{ mm}$** | **$89.34\%$** | $44.56\%$ | 45% of all CT bone is on/near outer skin |
 | **Fraction $< 2.0\text{ mm}$** | **$93.97\%$** | $72.88\%$ | 73% within 2 mm of outer boundary |
 
-### 6.1 Epistemic Interpretation of Bidirectional Differences
-- **Why $G_0 \to S_{\text{CT}}$ is sub-millimeter ($0.1633\text{ mm}$ median, $86.99\% < 0.5\text{ mm}$)**:
+### 6.1 Epistemic Distinction Between Outer-Boundary Metric and Whole-Volume Diagnostic
+- **Why $G_0 \to S_{\text{CT}}$ is the primary boundary correspondence metric ($0.1633\text{ mm}$ median, $86.99\% < 0.5\text{ mm}$)**:
   $G_0$ represents the outer cranial boundary. Every vertex on $G_0$ finds its corresponding periosteal cortical bone interface in the CT scan, demonstrating near-perfect geometric agreement on the outer cranial envelope.
-- **Why $S_{\text{CT}} \to G_0$ exhibits a longer tail ($1.0928\text{ mm}$ median, $p_{95} = 11.14\text{ mm}$)**:
-  $S_{\text{CT}}$ is the isosurface of the *entire* 3D volume. It captures all internal bone surfaces—including the endocranial braincase walls, the vascular cancellous core, the semicircular canals, and the internal nasal passages. Because $G_0$ is a watertight outer shell that does not model internal bone cavities as exterior boundaries, internal CT points are located deep within the cranial interior ($5-28\text{ mm}$ from the outer surface).
-- This bidirectional contrast confirms that $G_0$ is a boundary envelope of the volume rather than an independent or disparate geometry.
+- **Why $S_{\text{CT}} \to G_0$ exhibits large residuals ($1.0928\text{ mm}$ median, $p_{95} = 11.14\text{ mm}$, $\max = 28.30\text{ mm}$)**:
+  $S_{\text{CT}}$ is the isosurface of the *entire* 3D volume. It captures all internal bone surfaces—including the endocranial braincase walls, the vascular cancellous core, the semicircular canals, and internal nasal passages. Because $G_0$ is a watertight outer shell that does not model internal bone cavities as exterior boundaries, internal CT points are located deep within the cranial interior ($5-28\text{ mm}$ from the outer surface). Those large values are dominated by internal surfaces that $G_0$ was never intended to represent.
+- **Symmetric Boundary Registration Note**:
+  A genuinely symmetric boundary comparison would require extracting the external bone boundary only from the CT volume ($S_{\text{CT, ext}} \leftrightarrow G_0$). While that represents a useful possible follow-up refinement, it is unnecessary to hold up Gate B given the decisive landmark alignment and sub-millimeter forward correspondence ($G_0 \to S_{\text{CT}}$).
 
 ---
 
@@ -173,7 +178,7 @@ The near-zero mean ($-45\ \mu\text{m}$) and balanced proportions ($\approx 47\% 
 | **Endocranial Braincase / Midline** | 455 | **$1.5239\text{ mm}$** | $1.8993\text{ mm}$ | $2.5697\text{ mm}$ | $4.9069\text{ mm}$ | **$36.92\%$** |
 
 ### 7.3 Interpretation of Subregion Deviations
-- **External Cortical Bone**: The ventral palate, basicranium, and frontoparietal dome show sub-voxel median accuracy ($0.15 - 0.20\text{ mm}$) with $> 88\%$ to $100\%$ of vertices matching within $0.5\text{ mm}$.
+- **External Cortical Bone**: The ventral palate, basicranium, and frontoparietal dome show high fidelity with median residuals of $0.15 - 0.20\text{ mm}$ (below the $0.25\text{-mm}$ through-plane slice spacing) and $> 88\%$ to $100\%$ of vertices matching within $0.5\text{ mm}$.
 - **Endocranial Braincase & Complex Foramina**: Larger residuals ($d > 2.0\text{ mm}$, $5.8\%$ of $G_0$ vertices) are concentrated around internal endocranial surfaces, nerve canals, and thin infratemporal fenestra margins. In $G_0$, these complex internal cavities were digitally bridged or sealed to create a watertight solid for FEA meshing. The elevated residuals are consistent with this post-segmentation digital mesh repair/closure rather than geometric misregistration.
 
 ---
@@ -184,7 +189,7 @@ A critical scientific distinction must be maintained:
 $$\text{Geometric Correspondence} \neq \text{Archival Provenance Proof}$$
 
 1. **What Rigid Registration & Diagnostic Similarity Establish**:
-   - The canonical master boundary surface $G_0$ and the micro-CT volume `UALVP2-CT-DICOM-CRAN-01` exhibit sub-millimeter median correspondence ($0.1633\text{ mm}$) and sub-voxel translation ($0.2472\text{ mm}$).
+   - The canonical master boundary surface $G_0$ and the micro-CT volume `UALVP2-CT-DICOM-CRAN-01` exhibit sub-millimeter median correspondence ($0.1633\text{ mm}$) and a translation magnitude of $0.2472\text{ mm}$ (approximately one voxel spacing and below the $0.25\text{-mm}$ through-plane slice spacing).
    - The independent free-scale diagnostic fit ($\hat{s} = 1.00494$) differs by $< 0.5\%$, reducing landmark RMS by only $\approx 78\ \mu\text{m}$.
    - **Conclusion**: The data support the use of unit scale ($s = 1.000000$), subject to the quantified registration/modeling residuals. Remaining geometric uncertainty is no longer represented as an arbitrary global $\pm 5\%$ scale parameter.
    - This provides decisive geometric evidence **consistent with $G_0$ having been derived directly from this micro-CT volume**.

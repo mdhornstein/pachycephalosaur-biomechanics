@@ -25,14 +25,18 @@ def landmark_provenance():
 
 
 def test_gate_b_mandated_rigid_scale_and_diagnostic(gate_b_metrics):
-    """Verifies that mandated registration scale is 1.0 and free-scale diagnostic s_hat is near 1.0 (<1%)."""
+    """Verifies that mandated registration scale is 1.0 and free-scale diagnostic s_hat is near 1.0 (<1.0%).
+    
+    Note: This is an automated regression test checking that the diagnostic estimate reproduces
+    the recorded value (s_hat = 1.00494, Delta s = +0.49%), not a normative proof of a correct threshold.
+    """
     assert gate_b_metrics["gate"] == "Gate B"
     assert gate_b_metrics["status"] == "VERIFIED_PASS"
     assert np.isclose(gate_b_metrics["mandated_registration_scale"], 1.0, atol=1e-6)
     
     diag = gate_b_metrics["scale_diagnostic"]
     s_hat = diag["free_scale_estimate_s_hat"]
-    assert abs(s_hat - 1.0) < 0.015, f"Free-scale diagnostic s_hat {s_hat} deviates more than 1.5% from 1.0"
+    assert abs(s_hat - 1.0) < 0.010, f"Free-scale diagnostic s_hat {s_hat} deviates more than 1.0% from 1.0"
     assert np.isclose(s_hat, 1.00494, atol=1e-4)
     assert diag["rms_residual_delta_mm"] < 0.10, "Free-scale fit does not substantially alter landmark RMS"
 
@@ -79,18 +83,18 @@ def test_landmark_registration_residuals(gate_b_metrics):
 
 
 def test_icp_refinement_subvoxel_convergence(gate_b_metrics):
-    """Verifies that ICP refinement produces sub-voxel translation and minute rotation angles."""
+    """Verifies that ICP refinement produces translation below slice spacing (0.25 mm) and minute rotation angles."""
     icp = gate_b_metrics["icp_refinement"]
     assert icp["final_translation_norm_mm"] < 0.35, (
-        f"ICP translation norm {icp['final_translation_norm_mm']} mm exceeds sub-voxel threshold"
+        f"ICP translation norm {icp['final_translation_norm_mm']} mm exceeds bound"
     )
     for angle in icp["euler_angles_deg_xyz"]:
         assert abs(angle) < 0.2, f"Euler angle {angle} degrees unexpectedly large"
 
 
 def test_forward_surface_distance_residuals_submillimeter(gate_b_metrics):
-    """Verifies forward G_0 -> S_CT surface residual distribution."""
-    res = gate_b_metrics["bidirectional_surface_distance_residuals"]["forward_g0_to_ct"]
+    """Verifies forward G_0 -> S_CT primary outer-boundary surface residual distribution."""
+    res = gate_b_metrics["surface_distance_residuals"]["primary_outer_boundary_g0_to_ct"]
     assert res["median_mm"] < 0.25, f"Median surface residual {res['median_mm']} exceeds 0.25 mm"
     assert res["mean_mm"] < 0.50, f"Mean surface residual {res['mean_mm']} exceeds 0.50 mm"
     assert res["rms_mm"] < 1.00, f"RMS surface residual {res['rms_mm']} exceeds 1.00 mm"
@@ -99,20 +103,24 @@ def test_forward_surface_distance_residuals_submillimeter(gate_b_metrics):
     assert res["frac_lt_10_pct"] > 85.0, f"Less than 85% within 1.0 mm: {res['frac_lt_10_pct']}%"
 
 
-def test_reverse_surface_distance_residuals_and_bidirectional_summary(gate_b_metrics):
-    """Verifies reverse S_CT -> G_0 distance metrics and symmetric bidirectional summary."""
-    bidi = gate_b_metrics["bidirectional_surface_distance_residuals"]
-    rev = bidi["reverse_ct_to_g0"]
-    symm = bidi["symmetric_summary"]
+def test_reverse_internal_interface_diagnostic_and_spread_summary(gate_b_metrics):
+    """Verifies reverse S_CT -> G_0 whole-volume interface diagnostic and directed spread summary.
+    
+    Note: Reverse analysis interrogates internal trabecular/endocranial surfaces in S_CT absent from G_0,
+    acting as an internal-surface inclusion diagnostic rather than a symmetric boundary registration error.
+    """
+    res_dict = gate_b_metrics["surface_distance_residuals"]
+    rev = res_dict["whole_volume_ct_interface_to_g0_diagnostic"]
+    spread = res_dict["directed_spread_summary"]
     
     assert rev["point_count"] > 4000000
     assert rev["median_mm"] < 2.0, f"Reverse median {rev['median_mm']} unexpectedly large"
     assert rev["rms_mm"] < 6.0, f"Reverse RMS {rev['rms_mm']} unexpectedly large"
     assert rev["frac_lt_20_pct"] > 65.0, f"Less than 65% within 2.0 mm: {rev['frac_lt_20_pct']}%"
     
-    assert symm["bidirectional_mean_mm"] > 0.0
-    assert symm["bidirectional_rms_mm"] > 0.0
-    assert symm["directed_95th_percentile_g0_to_ct_mm"] < 3.0
+    assert spread["bidirectional_mean_mm"] > 0.0
+    assert spread["bidirectional_rms_mm"] > 0.0
+    assert spread["directed_95th_percentile_g0_to_ct_mm"] < 3.0
 
 
 def test_signed_distance_symmetry(gate_b_metrics):

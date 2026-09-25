@@ -11,10 +11,10 @@ This script executes the reproducible Gate B workflow:
    to estimate s_hat and residual sensitivity.
 6. Performs ICP surface-to-surface refinement (s = 1.0) with explicit cutoff (4.0 mm)
    and convergence criteria.
-7. Evaluates bidirectional surface distance distributions:
-   - G_0 -> S_CT (outer boundary fidelity)
-   - S_CT -> G_0 (evaluation of CT volume surface points against outer shell)
-   - Symmetric bidirectional summaries (bidirectional mean, RMS, and directed percentiles).
+7. Evaluates surface distance distributions and diagnostics:
+   - G_0 -> S_CT (primary outer boundary fidelity)
+   - S_CT -> G_0 (whole-volume CT interface diagnostic against outer shell)
+   - Directed spread summaries (directed percentiles and two-way spread reference).
 8. Quantifies outward-normal signed distances and anatomical subregion distributions.
 9. Exports metrics to results/phase5/gate_b_registration_metrics.json.
 """
@@ -189,7 +189,7 @@ def run_point_to_plane_icp(
 
 
 def execute_gate_b_registration() -> dict:
-    """Runs the complete Gate B registration with free-scale diagnostic and bidirectional residuals."""
+    """Runs the complete Gate B registration with free-scale diagnostic and surface residuals."""
     t_start = time.time()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     
@@ -290,7 +290,7 @@ def execute_gate_b_registration() -> dict:
         np.arctan2(r_final[1, 0], r_final[0, 0])
     ])
     
-    # 7. Forward Residual Analysis: G_0 -> S_CT (Outer Boundary Fidelity)
+    # 7. Forward Residual Analysis: G_0 -> S_CT (Primary Outer Boundary Fidelity)
     r_inv = r_final.T
     t_inv = -r_inv @ t_final
     g0_in_ct = (r_inv @ g0_pts.T).T + t_inv
@@ -300,7 +300,7 @@ def execute_gate_b_registration() -> dict:
     
     g0_to_ct_metrics = {
         "direction": "G_0 vertices -> closest CT isosurface point",
-        "description": "Quantifies fidelity of the canonical outer boundary mesh relative to reconstructed CT bone interfaces",
+        "description": "Primary registration fidelity metric quantifying agreement between the canonical outer boundary mesh and reconstructed CT bone interfaces",
         "vertex_count": len(g0_pts),
         "median_mm": float(np.median(dists_g0_to_ct)),
         "mean_mm": float(np.mean(dists_g0_to_ct)),
@@ -314,17 +314,18 @@ def execute_gate_b_registration() -> dict:
         "frac_lt_10_pct": float(np.mean(dists_g0_to_ct < 1.0) * 100.0),
     }
     
-    # 8. Reverse Residual Analysis: S_CT -> G_0
+    # 8. Reverse Analysis: S_CT -> G_0 (Whole-Volume CT Interface Diagnostic)
     # Evaluate full 4.95M CT surface points against G_0
     ct_in_g0 = (r_final @ ct_pts.T).T + t_final
     dists_ct_to_g0, _ = g0_tree.query(ct_in_g0)
     
-    ct_to_g0_metrics = {
+    ct_to_g0_diagnostic = {
         "direction": "CT isosurface points -> closest G_0 vertex",
         "description": (
-            "Evaluates all reconstructed CT bone interfaces against the outer G_0 boundary shell. "
-            "Note that S_CT contains internal structures (endocranial cavity, trabecular channels, sinuses) "
-            "that are naturally absent from the watertight outer boundary surface G_0."
+            "Diagnostic evaluating all reconstructed CT bone interfaces against the outer G_0 boundary shell. "
+            "Because S_CT contains all internal bone-void interfaces (endocranial cavity, trabecular channels, sinuses) "
+            "that are naturally absent from the watertight outer boundary surface G_0, this is an internal-surface "
+            "volume-inclusion diagnostic rather than a symmetric boundary-registration error."
         ),
         "point_count": len(ct_pts),
         "median_mm": float(np.median(dists_ct_to_g0)),
@@ -340,14 +341,19 @@ def execute_gate_b_registration() -> dict:
         "frac_lt_20_pct": float(np.mean(dists_ct_to_g0 < 2.0) * 100.0),
     }
     
-    # Symmetric / Bidirectional Summary
-    bidirectional_summary = {
-        "bidirectional_mean_mm": float(0.5 * (g0_to_ct_metrics["mean_mm"] + ct_to_g0_metrics["mean_mm"])),
-        "bidirectional_rms_mm": float(np.sqrt(0.5 * (g0_to_ct_metrics["rms_mm"]**2 + ct_to_g0_metrics["rms_mm"]**2))),
+    # Directed Spread Summary
+    directed_spread_summary = {
+        "epistemic_note": (
+            "The forward G_0 -> S_CT metric interrogates outer boundary fidelity, while the reverse S_CT -> G_0 metric "
+            "interrogates whole-volume internal interfaces. They interrogate different geometric entities and should not "
+            "be conflated into a single symmetric boundary registration error."
+        ),
         "directed_95th_percentile_g0_to_ct_mm": g0_to_ct_metrics["p95_mm"],
-        "directed_95th_percentile_ct_to_g0_mm": ct_to_g0_metrics["p95_mm"],
+        "directed_95th_percentile_ct_to_g0_mm": ct_to_g0_diagnostic["p95_mm"],
         "directed_hausdorff_max_g0_to_ct_mm": g0_to_ct_metrics["max_mm"],
-        "directed_hausdorff_max_ct_to_g0_mm": ct_to_g0_metrics["max_mm"],
+        "directed_hausdorff_max_ct_to_g0_mm": ct_to_g0_diagnostic["max_mm"],
+        "bidirectional_mean_mm": float(0.5 * (g0_to_ct_metrics["mean_mm"] + ct_to_g0_diagnostic["mean_mm"])),
+        "bidirectional_rms_mm": float(np.sqrt(0.5 * (g0_to_ct_metrics["rms_mm"]**2 + ct_to_g0_diagnostic["rms_mm"]**2))),
     }
     
     # 9. Outward-Normal Signed Distance Analysis
@@ -422,10 +428,11 @@ def execute_gate_b_registration() -> dict:
             "The rigid registration is performed at unit scale (s = 1.000000), and an independent free-scale diagnostic "
             f"is consistent with approximately unit scale (s_hat = {s_hat:.5f}, Delta s = +0.49%). Remaining geometric "
             "uncertainty is therefore no longer represented as an arbitrary global +/-5% scale parameter, but supported by "
-            "unit scale subject to the quantified registration/modeling residuals. Sub-voxel translation norm (0.2472 mm) "
-            "and sub-millimeter median surface residual (0.1633 mm) provide decisive geometric evidence consistent with G_0 "
-            "being derived from this micro-CT volume. Residual elevations (>2.0 mm) concentrate specifically in complex "
-            "endocranial foramina and thin arches, consistent with post-segmentation digital mesh repair/closure rather than misregistration."
+            "unit scale subject to the quantified registration/modeling residuals. Translation magnitude of 0.2472 mm "
+            "(approximately one voxel spacing and below the 0.25-mm through-plane spacing) and sub-millimeter median forward "
+            "surface residual (0.1633 mm) provide decisive geometric evidence consistent with G_0 being derived from this "
+            "micro-CT volume. Residual elevations (>2.0 mm) concentrate specifically in complex endocranial foramina and thin arches, "
+            "consistent with post-segmentation digital mesh repair/closure rather than misregistration."
         ),
         "mandated_registration_scale": 1.000000,
         "scale_diagnostic": scale_diagnostic,
@@ -461,10 +468,10 @@ def execute_gate_b_registration() -> dict:
             "final_translation_norm_mm": float(np.linalg.norm(t_final)),
             "euler_angles_deg_xyz": euler_xyz.tolist(),
         },
-        "bidirectional_surface_distance_residuals": {
-            "forward_g0_to_ct": g0_to_ct_metrics,
-            "reverse_ct_to_g0": ct_to_g0_metrics,
-            "symmetric_summary": bidirectional_summary,
+        "surface_distance_residuals": {
+            "primary_outer_boundary_g0_to_ct": g0_to_ct_metrics,
+            "whole_volume_ct_interface_to_g0_diagnostic": ct_to_g0_diagnostic,
+            "directed_spread_summary": directed_spread_summary,
         },
         "signed_normal_distance": {
             "convention": "Displacement from G_0 along outward vertex normal to closest CT isosurface point",

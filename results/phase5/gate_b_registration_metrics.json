@@ -2,7 +2,7 @@
   "gate": "Gate B",
   "description": "CT-to-Surface Registration and Empirical Scale Verification",
   "status": "VERIFIED_PASS",
-  "epistemic_conclusion": "The rigid registration is performed at unit scale (s = 1.000000), and an independent free-scale diagnostic is consistent with approximately unit scale (s_hat = 1.00494, Delta s = +0.49%). Remaining geometric uncertainty is therefore no longer represented as an arbitrary global +/-5% scale parameter, but supported by unit scale subject to the quantified registration/modeling residuals. Sub-voxel translation norm (0.2472 mm) and sub-millimeter median surface residual (0.1633 mm) provide decisive geometric evidence consistent with G_0 being derived from this micro-CT volume. Residual elevations (>2.0 mm) concentrate specifically in complex endocranial foramina and thin arches, consistent with post-segmentation digital mesh repair/closure rather than misregistration.",
+  "epistemic_conclusion": "The rigid registration is performed at unit scale (s = 1.000000), and an independent free-scale diagnostic is consistent with approximately unit scale (s_hat = 1.00494, Delta s = +0.49%). Remaining geometric uncertainty is therefore no longer represented as an arbitrary global +/-5% scale parameter, but supported by unit scale subject to the quantified registration/modeling residuals. Translation magnitude of 0.2472 mm (approximately one voxel spacing and below the 0.25-mm through-plane spacing) and sub-millimeter median forward surface residual (0.1633 mm) provide decisive geometric evidence consistent with G_0 being derived from this micro-CT volume. Residual elevations (>2.0 mm) concentrate specifically in complex endocranial foramina and thin arches, consistent with post-segmentation digital mesh repair/closure rather than misregistration.",
   "mandated_registration_scale": 1.0,
   "scale_diagnostic": {
     "diagnostic_purpose": "Independent similarity fit allowing isotropic scale to vary to evaluate unit-scale concordance",
@@ -91,10 +91,10 @@
       -0.04066076845258547
     ]
   },
-  "bidirectional_surface_distance_residuals": {
-    "forward_g0_to_ct": {
+  "surface_distance_residuals": {
+    "primary_outer_boundary_g0_to_ct": {
       "direction": "G_0 vertices -> closest CT isosurface point",
-      "description": "Quantifies fidelity of the canonical outer boundary mesh relative to reconstructed CT bone interfaces",
+      "description": "Primary registration fidelity metric quantifying agreement between the canonical outer boundary mesh and reconstructed CT bone interfaces",
       "vertex_count": 29722,
       "median_mm": 0.16331251190716337,
       "mean_mm": 0.4129639267468502,
@@ -107,9 +107,9 @@
       "frac_lt_05_pct": 86.9894354350313,
       "frac_lt_10_pct": 89.33786420833053
     },
-    "reverse_ct_to_g0": {
+    "whole_volume_ct_interface_to_g0_diagnostic": {
       "direction": "CT isosurface points -> closest G_0 vertex",
-      "description": "Evaluates all reconstructed CT bone interfaces against the outer G_0 boundary shell. Note that S_CT contains internal structures (endocranial cavity, trabecular channels, sinuses) that are naturally absent from the watertight outer boundary surface G_0.",
+      "description": "Diagnostic evaluating all reconstructed CT bone interfaces against the outer G_0 boundary shell. Because S_CT contains all internal bone-void interfaces (endocranial cavity, trabecular channels, sinuses) that are naturally absent from the watertight outer boundary surface G_0, this is an internal-surface volume-inclusion diagnostic rather than a symmetric boundary-registration error.",
       "point_count": 4950375,
       "median_mm": 1.092781918715343,
       "mean_mm": 2.727863644279526,
@@ -123,13 +123,14 @@
       "frac_lt_10_pct": 44.5609070019948,
       "frac_lt_20_pct": 72.87769108400879
     },
-    "symmetric_summary": {
-      "bidirectional_mean_mm": 1.570413785513188,
-      "bidirectional_rms_mm": 3.3479933320136044,
+    "directed_spread_summary": {
+      "epistemic_note": "The forward G_0 -> S_CT metric interrogates outer boundary fidelity, while the reverse S_CT -> G_0 metric interrogates whole-volume internal interfaces. They interrogate different geometric entities and should not be conflated into a single symmetric boundary registration error.",
       "directed_95th_percentile_g0_to_ct_mm": 2.2784131198053337,
       "directed_95th_percentile_ct_to_g0_mm": 11.137480953486127,
       "directed_hausdorff_max_g0_to_ct_mm": 6.24373019601379,
-      "directed_hausdorff_max_ct_to_g0_mm": 28.303357762555418
+      "directed_hausdorff_max_ct_to_g0_mm": 28.303357762555418,
+      "bidirectional_mean_mm": 1.570413785513188,
+      "bidirectional_rms_mm": 3.3479933320136044
     }
   },
   "signed_normal_distance": {
@@ -173,5 +174,5 @@
       "frac_lt_05_pct": 36.92307692307693
     }
   },
-  "runtime_seconds": 12.96
+  "runtime_seconds": 14.76
 }
