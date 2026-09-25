@@ -1,256 +1,787 @@
-# Literature-to-Model Decisions Specification
+# Literature → Model Decisions: Canonical Bridge Specification
 
-**Document Role**: Scientific Requirements & Bridge Specification  
+**Document Role**: Scientific Requirements & Canonical Bridge Specification  
 **Status**: ACTIVE STANDARD (Model Decision Basis v1)  
-**Baseline Anchor**: Commit `2662be0` (`literature/stegoceras_biomechanics_literature_synthesis.md`)  
+**Prepared**: 2026-09-24  
+**Literature Baseline**: Commit `2662be0` (Literature Basis v1)  
+**Specimen**: *Stegoceras validum* UALVP 2  
 **Target Codebase**: `src/stegoceras_biomechanics/fea/`, `models/`, `simulations/`, `PLAN.md`  
+**Purpose**: Translate the frozen evidence base into explicit computational decisions and experimental gates.  
 
 ---
 
-## 🏛️ 1. Purpose & Scope
+1. What this document is for
 
-This specification translates the 600-line canonical literature synthesis ([`stegoceras_biomechanics_literature_synthesis.md`](../literature/stegoceras_biomechanics_literature_synthesis.md)), the specialist dossiers, and the independent audit ledger ([`LITERATURE_CORRECTIONS.md`](../literature/LITERATURE_CORRECTIONS.md)) into **concrete, non-negotiable requirements** for the computational biomechanics and uncertainty quantification (UQ) program.
+The literature synthesis answers scientific questions; the code and data answer computational questions. A bridge is needed so that a literature statement cannot silently become a model assumption.
 
-It establishes the formal bridge between historical paleobiological evidence and executable finite-element code, defining:
-1. **The Epistemic Invariants**: Hard rules governing what simulations can and cannot claim.
-2. **The Master Translation Matrix**: Direct mappings from literature findings to model implications, required experiments, and allowed interpretations.
-3. **The Material Model Hierarchy**: The staged progression from our frozen homogeneous baseline (Model A) to biologically informed internal architecture.
-4. **The Revised Computational Roadmap**: The explicit sequence of computational gates prioritizing direct CT/material characterization over unmotivated sampling campaigns.
+This document therefore uses a stricter chain:
 
-```
-                         THE SCIENTIFIC REQUIREMENTS PIPELINE
+Evidence → permitted model representation → discriminating test → interpretation limit
 
-    ┌──────────────────────────┐
-    │   Literature Basis v1    │  Traceable, audited historical evidence base
-    │     (Commit 2662be0)     │  (Synthesis, dossiers, audit-to-correction ledger)
-    └─────────────┬────────────┘
-                  │
-                  ▼
-    ┌──────────────────────────┐
-    │  LITERATURE-TO-MODEL     │  THIS SPECIFICATION: Translates findings into
-    │  DECISIONS SPECIFICATION │  mathematical invariants, model implications,
-    │ (LITERATURE_TO_MODEL_... │  and required computational experiments
-    └─────────────┬────────────┘
-                  │
-                  ▼
-    ┌──────────────────────────┐
-    │  UALVP 2 CT / Material   │  Empirical characterization of the 514-slice
-    │   Characterization Gate  │  DICOM volume (scale, intensity semantics, zonation)
-    └─────────────┬────────────┘
-                  │
-                  ▼
-    ┌──────────────────────────┐
-    │ Decisive A/B Experiment  │  Model A (Homogeneous) vs. Model B (Zonated)
-    │ (Material Heterogeneity) │  under identical geometry, loads, and BCs
-    └─────────────┬────────────┘
-                  │
-                  ▼
-    ┌──────────────────────────┐
-    │   Focused Sensitivity    │  Controlled discrete load-case families
-    │    & Scenario Analysis   │  and analytical parameter scaling
-    └─────────────┬────────────┘
-                  │
-                  ▼
-    ┌──────────────────────────┐
-    │     Probabilistic UQ     │  Targeted distribution propagation and
-    │   & Surrogate Modeling   │  surrogates conditional on actual cost/dimensionality
-    └──────────────────────────┘
-```
+The bridge is intentionally not a literature review and not a full Phase 5 UQ design. It is a decision specification for deciding what the next model should contain, what must be measured or verified before adding complexity, and what claims remain out of scope.
 
----
+The central rule is:
 
-## ⚖️ 2. Core Epistemic Invariants & Methodological Rules
+A literature observation earns representation in the model only when the representation is explicit, auditable, and accompanied by a test that could show the representation matters. Each decision below is also assigned a status and, where applicable, a failure/branch condition so that unresolved evidence produces an explicit next path rather than an implicit assumption.
 
-Every model, simulation script, and interpretation in this repository must strictly obey four foundational rules derived from the literature audit:
+2. Epistemic rules
 
-### Rule 1: Separation of Evidence, Model Parameter, and Fossil Assumption
-$$\text{Literature Evidence} \longrightarrow \text{Plausible Range} \longrightarrow \text{Chosen Model Parameter} \longrightarrow \text{Unproven Fossil Assumption}$$
-- Comparative literature informs plausible vertebrate skeletal property envelopes (e.g., cortical modulus $E \in [10, 25]\text{ GPa}$, cancellous modulus $E \in [0.5, 5.0]\text{ GPa}$).
-- From those plausible ranges, specific numerical values (such as our Phase 4 baseline $E = 17.0\text{ GPa}$ or prior literature values) are selected as **project model parameters**.
-- Every selected value remains an **explicit modeling assumption** for the fossil specimen, not an experimentally established physical measurement.
+The frozen synthesis distinguishes direct observation/report (DO), author interpretation (AI), model assumption (MA), inference (IN), synthesis (SYN), and unresolved/unchecked material. This document adds an operational rule to that distinction:
 
-### Rule 2: Strict Boundary Between Verification and Validation
-- **Numerical Verification**: Mesh convergence ($h$-refinement), grid convergence index (GCI) reporting, and patch tests measure *discretization error and solver accuracy*. Passing numerical verification proves the discrete mathematical equations are solved correctly; it provides **zero evidence** that the model accurately represents living dinosaur biology.
-- **Cross-Study Benchmark Reproduction**: Replicating an earlier computational result (e.g., Snively & Theodor 2011) establishes *code repeatability and benchmark consistency*; it does **not** validate living stress fields.
-- **Physical Validation**: In the absence of in vivo strain-gauge or force transducer measurements from living pachycephalosaurs (which are impossible), computational models can establish **comparative functional competence under specified hypotheses**, but **cannot** establish absolute biological ground-truth validation.
+Observed anatomy may define geometry or regions. It does not automatically define mechanical properties.
 
-### Rule 3: Exploitation of Closed-Form Analytical Scaling
-In linear isotropic elasticity on a fixed geometry with proportional boundary conditions:
-- Nodal displacements scale linearly with force and inversely with modulus: $\mathbf{u}(c_F F, c_E E) = \frac{c_F}{c_E} \mathbf{u}(F, E)$.
-- Cauchy and von Mises stresses scale linearly with force and are **completely independent of modulus**: $\boldsymbol{\sigma}(c_F F, c_E E) = c_F \boldsymbol{\sigma}(F, E)$.
-- Total strain energy scales quadratically with force and inversely with modulus: $U(c_F F, c_E E) = \frac{c_F^2}{c_E} U(F, E)$.
+A published model input is a benchmark input, not a biological measurement.
 
-**Computational Invariant**: Do **not** spend numerical simulation budgets repeatedly solving 3D finite-element systems solely to sample load magnitude $F$ or scalar modulus $E$ in a homogeneous linear model. These variations must be evaluated via closed-form analytical factorization. Numerical solves are reserved exclusively for variations that alter the structure of the stiffness matrix $\mathbf{K}$ (Poisson's ratio $\nu$, material zonation contrast, load orientation $\alpha$, contact patch area $A$, boundary spring compliance, and geometry).
+Continuous distributions require evidence for the distribution. A plausible range alone is a sensitivity envelope, not a probability law.
 
-### Rule 4: Uncertainty Taxonomy & Representation Discipline
-Uncertainties must be categorized and handled according to their mathematical nature:
-1. **Numerical Discretization Discrepancy ($\epsilon_{\text{num}}$)**: The observed output spread across mesh tiers ($h_1, h_2, h_3, h_4$). Must be reported as a deterministic numerical bounded interval, never treated as a random physical distribution.
-2. **Parametric Sensitivity Envelopes**: Continuous parameters with empirical support from extant vertebrate literature (e.g., tissue modulus contrast, Poisson's ratio). Evaluated via bounded intervals or supported probability distributions.
-3. **Discrete Model-Form Scenario Branches**: Structural, topological, and qualitative modeling alternatives (homogeneous vs. zonated; rigid condyle vs. cervical spring bed; static vs. dynamic). Because these lack an objective continuous probability measure, they **must be evaluated as discrete scenario branches and never smeared into arbitrary probability distributions**.
+Discrete model-form choices remain scenarios. Homogeneous vs. zonated material, rigid vs. alternative BCs, and static vs. dynamic formulations should not be blurred into one scalar random-variable framework.
 
----
+Numerical discretization is not biological uncertainty. Mesh-to-mesh differences are reported as output-specific numerical discrepancy unless a formal error estimator justifies stronger language.
 
-## 🗺️ 3. Master Literature-to-Model Translation Matrix
+No specimen-specific physical validation exists for UALVP 2. Solver correctness, equilibrium, benchmark reproduction, or mesh stabilization must not be called biological validation.
 
-The following table formalizes the translation from canonical literature findings into computational model decisions:
+Mechanical capability is not behavioral observation. A model can establish conditional mechanical response without establishing that an animal performed a particular behavior or that the structure evolved for that behavior.
 
-| Literature Finding & Provenance | Scientific Claim | Model Implication | Required Action / Experiment | Allowed Interpretation | Prohibited Interpretation |
-|---|---|---|---|---|---|
-| **Internal Cranial Architecture**<br>Histological evidence (Goodwin & Horner 2004) identified three histological zones in a subadult pachycephalosaurid, showing that vascularity and tissue organization remodel through ontogeny; micro-CT quantification (Nirody et al. 2022) demonstrates internal vascularity differences in an ontogenetic series of *Stegoceras*. [BIO-05, BIO-07, BIO-13] | Internal anatomical heterogeneity is well supported by histology and micro-CT; an anatomically informed heterogeneous mechanical model is justified as an experimental hypothesis to test. | Model A (homogeneous isotropic) is strictly a baseline control to isolate geometric effects; heterogeneous models are scientifically motivated hypotheses to evaluate. | Acquire UALVP 2 DICOM volume; build explicit material hierarchy (Models A $\to$ B $\to$ C $\to$ D); execute decisive Model A vs. Model B A/B experiment under identical mesh, loads, and BCs. | Quantifies the mechanical sensitivity of compliance, strain-energy distribution, and stress transmission to an anatomically informed internal trabecular/cortical zonation hypothesis. | Claiming Model A represents living tissue mechanics, or asserting that UALVP 2 has a proven static three-engineering-material structure or that dome homogeneity is biologically defensible. |
-| **Permineralization & Constitutive Parameters**<br>Living fossil bone properties cannot be measured directly. Extant vertebrate compact bone spans $E \in [10, 25]\text{ GPa}$; cancellous bone spans $E \in [0.5, 5.0]\text{ GPa}$. [FE-11, BIO-07] | Living tissue elasticity is fundamentally unmeasurable; literature bounds define plausible constitutive envelopes. | Specific modulus values (including $E = 17.0\text{ GPa}$) are chosen project modeling parameters, not specimen measurements. | Factor out scalar $E$ analytically for homogeneous runs; evaluate bounded sensitivity over stiffness contrast ratio ($E_{\text{cortex}} / E_{\text{core}}$) in heterogeneous models. | Evaluating structural sensitivity across the range of plausible vertebrate skeletal stiffnesses. | Asserting that $E = 17.0\text{ GPa}$ was measured for UALVP 2 by Snively & Theodor (2011) or represents an established biological constant for *Stegoceras*. |
-| **CT Attenuation & Beam Hardening**<br>CT numbers reflect taphonomic mineral infill and potential beam hardening, not living tissue densities. Very high CT values, including values above 2500 HU, were treated cautiously in the published UALVP 2 material assignment because beam-hardening artifacts could inflate apparent density. [BIO-07, CT-06, FE-20] | Hounsfield Units (HU) cannot be directly equated to bone mineral density or living elastic modulus. Capping high values is a modeling correction based on an imaging-artifact hypothesis, not proof that every >2500 HU voxel is an artifact. | Raw CT HU cannot simply be converted into $E(\mathbf{x})$ via clinical empirical power laws without explicit calibration and sensitivity analysis. | Audit the UALVP 2 DICOM volume: quantify intensity distributions, evaluate beam-hardening signatures, inspect rock matrix vs. bone contrast, and establish density segmentation thresholds. | Using CT attenuation as an anatomical guide to internal spatial boundaries, canal orientations, and relative porosity. | Automated conversion of uncalibrated fossil HU to living elastic modulus, or asserting that CT numbers directly measure living tissue properties. |
-| **Loading Kinematics & Contact Diversity**<br>Agonistic combat across extant taxa (Woodruff & Ackermans 2026) exhibits diverse contact surfaces, angles, velocities, and striking kinematics. [BIO-06, BIO-07, BIO-09] | "Headbutting" encompasses multiple distinct biomechanical events; load angle and contact patch are uncertain. | A single canonical normal load case is insufficient to characterize mechanical response across plausible loading scenarios (the published 1360 N case is a literature benchmark to potentially reproduce, distinct from our Phase 4 canonical 1000 N baseline). | Define a structured family of discrete load cases (normal strike, oblique $10^\circ\text{--}20^\circ$ strike, lateral/flank impact) over candidate design envelopes ($A \in [2500, 4000]\text{ mm}^2$ or $500\text{--}3000\text{ mm}^2$) — to be finalized after CT/geometry characterization. | Testing whether the cranial architecture is mechanically robust across diverse plausible loading scenarios. | Treating 1360 N as an observed biological impact force (rather than a literature benchmark), or treating candidate design envelopes ($A \in [2500, 4000]\text{ mm}^2$, $\alpha \in [0^\circ, 20^\circ]$) as literature-established biological distributions. |
-| **Cervical Restraint & Boundary Compliance**<br>UALVP 2 postcranial myology indicates pelvic and axial stabilization (Moore et al. 2022); living atlanto-occipital joints possess compliance. [BIO-07, BIO-10, FE-06] | Rigid condylar fixity produces artificial numerical stress singularities not present in living animals. | Rigid constraints serve as benchmark boundary conditions, but over-constrain the basicranium and distort local stresses. | Evaluate discrete boundary condition models: (1) rigid condyle + nuchal restraint (benchmark), (2) distributed elastic cervical spring bed. Deprioritize point stress singularities near constraints. | Analyzing load path transmission into the postcranial skeleton and assessing boundary compliance sensitivity. | Interpreting localized stress peaks at rigid constraint nodes as biological failure, or treating rigid fixity as representative of living cervical kinematics. |
-| **Discretization Sensitivity & Stress Metrics**<br>FEA verification literature proves that local peak stresses at singular points do not converge with mesh refinement. [FE-10, CT-09, FE-18] | Local peak von Mises stress is dominated by boundary artifacts and geometry singularities, not biological truth. | Point maximum stress cannot serve as the primary convergence or biological evaluation endpoint. | Use volume-averaged strain energy ($U$), global compliance, landmark displacements, and 95th-percentile regional stresses as primary quantities of interest (QoIs). | Demonstrating numerical convergence of energy and macro-scale load distribution pathways. | Using localized peak point stress to infer fracture initiation or skull failure. |
-| **Mathematical Linearity & Scaling Efficiency**<br>Linear elasticity satisfies closed-form scaling under proportional loading: $\mathbf{u} \propto F/E$, $\boldsymbol{\sigma} \propto F$, $U \propto F^2/E$. | Simulating multiple force magnitudes or modulus scalings on a linear homogeneous model yields zero new mathematical information. | Repeated 3D finite-element solves over scalar $F$ and $E$ are computationally redundant and wasteful. | Factor out $F$ and $E$ analytically. Dedicate numerical solver runs strictly to parameters that alter the system stiffness matrix $\mathbf{K}$ (geometry, $\nu$, zonation, BCs, load orientation). | Exact analytical propagation of force and modulus variation across all linear outputs. | Spending computational or cluster budgets on brute-force Monte Carlo sampling over $F$ and $E$ in linear models. |
-| **Discrete Model-Form Alternatives vs. UQ**<br>Structural modeling alternatives (homogeneous vs. zoned; rigid vs. spring BCs) lack continuous probability measures. [UQ-05, UQ-07, UQ-16] | Smearing discrete model choices into continuous probability distributions creates scientifically uninterpretable averages. | Model-form choices must be explored as discrete comparative branches, not collapsed into Monte Carlo distributions. | Formulate model-form alternatives as discrete scenario branches; restrict continuous probability distributions strictly to continuous parameters with empirical literature support. | Comparing the mechanical consequences of distinct biological or physical hypotheses. | Assigning arbitrary probability distributions over discrete structural models or boundary formulations. |
-| **Biomechanical Competence vs. Behavioral Fact**<br>Biomechanical literature establishes capability under modeled conditions, not historical occurrence (Goodwin & Horner 2004; Woodruff & Ackermans 2026). [BIO-05, BIO-08, BIO-09, BIO-11] | Mechanical capability does not prove that an animal engaged in a specific behavior. | FEA results cannot "prove" that *Stegoceras* engaged in head-to-head combat or establish living safety factors. | Frame all conclusions in terms of comparative mechanical competence, stress distribution pathways, and structural performance under competing hypotheses (combat, display, feeding trade-offs). | Establishing whether the hypertrophied dome was structurally competent to dissipate impact energy without high braincase strain. | Claiming that finite element simulations prove the occurrence of headbutting or refute display/social recognition hypotheses. |
+3. The current model that this bridge must interrogate
 
----
+The repository currently freezes a homogeneous linear-elastic Model A on a canonical UALVP 2 surface. The current configuration uses $E=17$ GPa, $\nu=0.30$, a 1,000 N downward load over an approximately 3,000 mm² dorsal patch, rigid translational fixation at the occipital condyle, and translational restraint at the nuchal crest. The Phase 4 mesh ladder is pure volumetric refinement on a fixed surface.
 
-## 🏗️ 4. Computational Architecture & Material Hierarchy
+The current results show a useful split in numerical behavior: total strain energy, apex displacement, and dorsal-dome stress summaries are comparatively stable, whereas global and endocranial/braincase 95th-percentile stress remain materially mesh-sensitive. That means the next scientific problem is not simply "run more meshes" or "sample more inputs"; it is to determine whether the internal biological model itself changes the conclusions.
 
-To transition from the surface-derived baseline to biological realism without conflating variables, the repository enforces an explicit **4-tier material modeling hierarchy**:
+Repository baseline/configuration: models/phase4/baseline.yaml
+Repository current-state record: docs/CURRENT_STATE.md
 
-```
-                       MATERIAL MODELING PROGRESSION
+4. Decision register
 
-    ┌────────────────────────────────────────────────────────┐
-    │ Model A: Homogeneous Isotropic Compact Bone Baseline   │
-    │ • Geometry: Watertight canonical surface G0            │  [COMPLETED]
-    │ • Material: E = 17.0 GPa, ν = 0.30                     │  Phase 4 Freeze
-    │ • Purpose: Numerical verification & baseline control   │
-    └───────────────────────────┬────────────────────────────┘
-                                │
-                                ▼
-    ┌────────────────────────────────────────────────────────┐
-    │ Model B: Histology-Informed Anatomical Zonation        │
-    │ • Zone 1 (Outer Cortex): Candidate compact bone        │  [ACTIVE NEXT GATE]
-    │   baseline (E_nom = 17.0 GPa; range 10–25 GPa)         │  Decisive A/B Test
-    │ • Zone 2 (Intermediate Core): Candidate trabecular core│  Model A vs. Model B
-    │   baseline (E_nom = 2.5 GPa; range 0.5–5.0 GPa, ν=0.30)│  plus contrast sweep
-    │ • Zone 3 (Deep Base): Candidate compact basicranium    │
-    │   baseline (E_nom = 17.0 GPa)                          │
-    │ • Sensitivity: Explicit stiffness-contrast sweep       │
-    │   (E_cortex / E_core ratio)                            │
-    │ • Purpose: Test structural effect of internal zonation │
-    └───────────────────────────┬────────────────────────────┘
-                                │
-                                ▼
-    ┌────────────────────────────────────────────────────────┐
-    │ Model C: CT-Informed Continuous/Voxelwise Heterogeneity│
-    │ • Direct mapping from audited UALVP 2 DICOM volume     │  [PHASE 8]
-    │ • Thresholded Hounsfield Units with artifact masking   │  Voxel-level
-    │ • Continuous density-stiffness relation E(HU)          │  heterogeneity
-    │ • Purpose: High-resolution anatomical fidelity         │
-    └───────────────────────────┬────────────────────────────┘
-                                │
-                                ▼
-    ┌────────────────────────────────────────────────────────┐
-    │ Model D: Anisotropic / Microstructural Formulation     │
-    │ • Orthotropic radial trabecular orientation            │  [CONDITIONAL]
-    │ • Explicit vascular canal geometry (Nirody et al. 2022)│  Triggered only if
-    │ • Purpose: Advanced microstructural mechanics          │  Model B/C requires it
-    └────────────────────────────────────────────────────────┘
-```
+D01 — Treat UALVP 2 as a specimen-specific benchmark, not a generic skull
 
-#### Model B Definition & Baseline Moduli Demotion
-Model B represents an anatomy- and histology-informed zonation hypothesis with a preregistered candidate baseline material contrast selected from documented vertebrate literature, combined with a separate stiffness-contrast sensitivity experiment ($E_{\text{cortex}}/E_{\text{core}}$):
-- **Candidate Baseline Moduli**: Outer cortex $E_{\text{cortex}} = 17.0\text{ GPa}$, cancellous/trabecular core $E_{\text{core}} = 2.5\text{ GPa}$ (nominal baseline within the plausible $0.5\text{--}5.0\text{ GPa}$ range), basicranium $E_{\text{base}} = 17.0\text{ GPa}$, $\nu = 0.30$. These numerical values are candidate engineering baselines for the experiment, not direct measurements of UALVP 2 tissue.
-- **Stiffness-Contrast Sensitivity Sweep**: A structured sweep over the contrast ratio ($E_{\text{cortex}}/E_{\text{core}} \in [2, 34]$) is required to determine whether biomechanical findings depend on the *existence of internal structural heterogeneity* versus the *specific numerical moduli chosen for that heterogeneity*.
+Status: established
 
-### The Decisive A/B Experiment Specification
-The immediate scientific priority is **not** a high-dimensional probabilistic UQ sweep, but the direct empirical test:
-> **Does internal material zonation materially alter cranial compliance, strain-energy distribution, and stress transmission to the endocranial braincase relative to our frozen homogeneous baseline (Model A)?**
+Evidence
 
-**Experiment Protocol**:
-1. **Geometry Invariant**: Both models execute on the exact same canonical surface mesh ($G_0$).
-2. **Loading Invariant**: Identical $3,000\text{ mm}^2$ dorsal apex load patch, identical $1,000\text{ N}$ total force magnitude, identical normal orientation.
-3. **Boundary Invariant**: Identical rigid occipital condyle and nuchal crest constraints.
-4. **Primary Comparison Quantities of Interest (QoIs)**:
-   - Total strain energy ($U_{\text{tot}}$) and compliance shift.
-   - Strain energy partition ($U_{\text{core}} / U_{\text{cortex}}$) within the internal dome.
-   - Endocranial braincase 95th-percentile von Mises stress ($\sigma_{\text{braincase}}^{95}$) and regional stress transmission patterns.
-   - Peak skull displacement ($\|\mathbf{u}\|_{\max}$).
+UALVP 2 is directly represented in the published Stegoceras FE literature, making it possible to compare a new pipeline against a specimen-specific prior model rather than an idealized generic dome.
 
-### Internal Material Interface & Volume-Mesh Representation
-A critical finite-element requirement for the Model A vs. Model B experiment is isolating biological material effects from numerical discretization artifacts:
+Model decision
 
-$$\Delta \text{QoI} = \Delta_{\text{material}} + \Delta_{\text{discretization}}$$
+Keep UALVP 2 as the fixed reference specimen for the near-term computational program. Preserve specimen, CT, geometry, and processing provenance as separate objects.
 
-To ensure that $\Delta_{\text{discretization}} = 0$ in the primary A/B comparison:
-1. **Identical Volume Mesh Topology ($G_0$)**: Model B must initially be solved on the **exact same tetrahedral volume mesh** as Model A ($h_3$ tier, 825,277 elements, sharing identical node coordinates, element connectivity, contact patch nodes, and boundary constraint DOFs).
-2. **Elementwise Spatial Material Assignment**: The internal zones (cortex, trabecular core, basicranium) are represented via **elementwise material tagging** on the existing mesh (assigning property tensors $(E_e, \nu_e)$ to each element $e$ based on anatomical coordinate bounding surfaces or voxel centroid queries from the registered CT volume).
-3. **Decoupling Discretization Discrepancy**: If an explicit conforming multi-domain mesh with sharp geometric internal boundary surfaces is subsequently introduced, any numerical discretization discrepancy resulting from remeshing must be characterized and reported separately, preventing remeshing errors from being misattributed to biological architecture.
+Required action
 
-### Evaluation Criteria & QoI Reporting Discipline
-Report the signed and relative effect of Model B versus Model A for each preregistered QoI:
+Build a provenance record connecting the DICOM volume, surface reconstruction, canonical surface, FE-ready geometry, and every subsequent material/load model.
 
-$$\Delta_{\text{rel}}(\text{QoI}) = \frac{\text{QoI}_B - \text{QoI}_A}{\text{QoI}_A}$$
+Discriminating test
 
-- **No Arbitrary Fixed Thresholds**: Do not use an arbitrary percentage cutoff (e.g., $>20\%$ stress or $>30\%$ compliance) as the criterion for scientific importance.
-- **Contextual Interpretation**: Classify the biomechanical importance of internal zonation only after rigorous comparison against:
-  1. **Numerical Discretization Discrepancy ($\epsilon_{\text{num}}$)**: Internal stress fields exhibit characterized mesh-tier sensitivity ($\pm 28.6\%$ for braincase stress across $h_1 \to h_4$); any material effect smaller than $\epsilon_{\text{num}}$ cannot be isolated from discretization noise.
-  2. **Boundary Condition & Model-Form Effects**: Shifts relative to cervical restraint compliance and load angle variations.
-  3. **Biological Parameter Uncertainty**: Shifts across the candidate stiffness-contrast envelope ($E_{\text{cortex}}/E_{\text{core}}$).
+Determine whether the current project volume/geometry is physically registered to the dataset underlying the 2011 model closely enough that differences can be attributed to modeling choices rather than specimen/data mismatch.
 
----
+Interpretation limit
 
-## 🚀 5. Revised Computational Roadmap & Milestone Gates
+Do not use UALVP 2 as a proxy for every ontogenetic stage or every Stegoceras individual.
 
-In accordance with the frozen literature review, the repository roadmap transitions from the completed Phase 4 FE baseline through a sequence of empirical gates:
+Failure / branch condition
 
-```mermaid
-flowchart TD
-    G0["Gate 0: Phase 4 FE Baseline Frozen (Commit 15a342f)"] --> G1["Gate 1: Literature Basis v1 Frozen (Commit 2662be0)"]
-    G1 --> G2["Gate 2: Model Decisions Specification (LITERATURE_TO_MODEL_DECISIONS.md)"]
-    G2 --> G3["Gate 3: UALVP 2 CT / Material Characterization Gate"]
-    
-    subgraph "Gate 3: CT Characterization Tasks"
-        T1["Acquire & verify 514-slice DICOM volume"] --> T2["Verify physical scale & STL registration"]
-        T2 --> T3["Characterize intensity semantics & artifacts"]
-        T3 --> T4["Reconstruct 2011 material inference logic"]
-    end
-    
-    G3 --> G4["Gate 4: Decisive Material A/B Experiment (Model A vs Model B)"]
-    G4 --> G5["Gate 5: Focused Sensitivity & Discrete Scenario Analysis"]
-    G5 --> G6["Gate 6: Probabilistic UQ & Active Learning Surrogates"]
-```
+If a proposed conclusion requires population-level or ontogenetic inference, the project must explicitly add evidence and models for that broader target rather than extrapolating from UALVP 2.
 
-### Gate 1: Literature Basis v1 *(Completed — Commit `2662be0`)*
-- Complete, corrected, and audited evidence base across synthesis, dossiers, and matrices.
-- 23 audit findings formally resolved and verified.
+D02 — Resolve CT scale and coordinate registration before treating geometry as quantitative
 
-### Gate 2: Model Decisions Specification *(Completed — This Document)*
-- Translation of literature findings into mathematical constraints and model implications.
-- Formal prohibition of brute-force analytical sampling ($F, E$) and arbitrary probability distributions over discrete model forms.
+Evidence
 
-### Gate 3: UALVP 2 CT / Material Characterization Gate *(Active Next Gate)*
-Before deploying broad uncertainty quantification, execute the empirical image audit:
-1. **Acquire & Preserve DICOM Volume**: Ingest the 514-slice, $0.210 \times 0.210 \times 0.250\text{ mm}$ high-resolution micro-CT scan of UALVP 2 from MorphoSource / UTCT / WitmerLab with cryptographic checksums.
-2. **Verify Physical Scale & Registration**: Reconcile the voxel grid coordinates with the canonical surface mesh ($G_0$), definitively resolving whether the earlier $\pm 5\%$ scale uncertainty was an artifact of uncalibrated STL export.
-3. **Characterize Image Data Semantics**: Quantify pixel-value distributions, dynamic range, beam-hardening profiles, intertrabecular rock matrix vs. bone attenuation contrast, and radial canal visibility.
-4. **Reconstruct Published Material Logic**: Establish exactly what Snively & Theodor (2011) inferred from the CT volume versus what was manually assigned as assumed boundary values.
+The current project has an explicit scale assumption in its Phase 4 model configuration, while the literature emphasizes that CT acquisition and surface processing propagate into FE geometry.
 
-### Gate 4: Decisive Material A/B Experiment
-- Construct Model B (histology/anatomy-informed 3-zone candidate baseline with stiffness-contrast sweep).
-- Execute controlled A/B comparison against Model A on identical volume mesh topology ($G_0$).
-- Quantify whether and how internal material zonation alters compliance, strain-energy distribution, and stress transmission/redistribution to the endocranial braincase.
+Status: required_gate
 
-### Gate 5: Focused Sensitivity & Discrete Scenario Analysis
-- Evaluate discrete load-case families over candidate design envelopes (varying strike angle $\alpha \in [0^\circ, 20^\circ]$, contact patch area $A \in [2500, 4000]\text{ mm}^2$ / $500\text{--}3000\text{ mm}^2$, and lateral strike position) — to be finalized after CT/material characterization and load-patch geometry audit.
-- Evaluate cervical boundary compliance via elastic spring foundations.
-- Apply closed-form analytical scaling for force magnitude $F$ and base modulus $E$.
+Model decision
 
-### Gate 6: Probabilistic UQ & Surrogate Modeling
-- Formulate parameter distributions strictly for continuous variables that cannot be factored out analytically.
-- Size the sampling campaign (LHS / Sobol) appropriately for the problem dimensionality and desired confidence bounds.
-- Deploy Gaussian Process / Polynomial Chaos surrogates only if full 3D solves prove computationally prohibitive for the required sample size.
+The physical scale relationship between the DICOM grid and the canonical surface becomes a Phase 5 data-validation gate, not a permanently adjustable uncertainty parameter. Resolve arbitrary global scale uncertainty arising from an unknown CT-to-surface unit relationship while retaining independently justified geometric uncertainties from segmentation, reconstruction, repair, or taphonomic distortion.
 
----
+Required action
 
-## 📚 6. Document Governance & Traceability
+Register the CT voxel grid to the canonical surface and document voxel spacing, orientation, origin/affine information, and registration residuals.
 
-- **Parent Document**: [`literature/stegoceras_biomechanics_literature_synthesis.md`](../literature/stegoceras_biomechanics_literature_synthesis.md) (Literature Basis v1)
-- **Authoritative Status**: Governs all simulation design in `src/stegoceras_biomechanics/fea/` and `simulations/`.
-- **Revision Policy**: Modifying any requirement or invariant in this specification requires documenting the scientific justification in [`docs/DECISIONS.md`](DECISIONS.md) with an explicit citation to peer-reviewed literature or empirical CT evidence.
+Discriminating test
+
+Quantify landmark or surface correspondence at multiple anatomical locations. Report the residual rather than merely stating that the datasets "align."
+
+Interpretation limit
+
+Do not carry an arbitrary ±5% geometric scale distribution after the scan-to-surface relationship has been directly established. Registration does not eliminate all geometric uncertainty.
+
+Failure / branch condition
+
+If the CT-to-surface correspondence is poor, do not immediately absorb the residual into a generic scale distribution. First determine whether the mismatch arises from provenance, segmentation, reconstruction, deformation, or registration error; only then define any remaining uncertainty explicitly.
+
+D03 — Freeze the outer geometry during material-model comparison
+
+Status: planned_experiment
+
+Evidence
+
+Surface representation, segmentation, smoothing, repair, and FE discretization can each change model outputs. The literature requires these effects to be distinguished rather than combined.
+
+Model decision
+
+The decisive material A/B experiment must hold the outer FE-ready geometry, mesh topology, load definition, and BC definition fixed.
+
+Required action
+
+If internal material zoning can be assigned directly to existing elements, prefer that implementation. If volumetric remeshing becomes necessary, treat the remeshing change as a separate confound and do not call the result a pure material A/B experiment.
+
+Discriminating test
+
+Verify node/element correspondence or provide an explicit mapping showing that the only intended change is material assignment.
+
+Interpretation limit
+
+An A/B result contaminated by simultaneous geometry or mesh changes cannot identify the effect of material architecture alone.
+
+Failure / branch condition
+
+If material assignment cannot be changed on the same FE mesh, create matched meshes and treat the mesh change as a separate numerical sensitivity experiment before interpreting the material comparison.
+
+D04 — Represent the observed internal architecture before attempting CT-to-modulus mapping
+
+Status: planned_experiment
+
+Evidence
+
+The frozen synthesis identifies compact superficial/deep layers, a lower-density/trabecular region, a dense basicranial region, and neurovascular canal architecture. This structural heterogeneity is an observation; the living constitutive properties are not directly measured.
+
+Model decision
+
+Build a simple anatomy-informed zonated model before attempting voxelwise $E(x)$. Keep the following hierarchy explicit:
+
+observed anatomy / histology
+        ↓
+mechanically meaningful region hypothesis
+        ↓
+engineering material assignment
+
+An observed or histological region is not itself an engineering property assignment.
+
+Initial representation
+
+A first heterogeneous model should distinguish the major mechanically meaningful zones supported by the evidence, while treating unresolved microscopic canals as architectural context unless the scan genuinely resolves them at a scale appropriate for continuum FE.
+
+Required action
+
+Create explicit zone definitions, segmentation provenance, interface rules, and a machine-readable element-to-zone map.
+
+Discriminating test
+
+Compare Model A (homogeneous) against Model B (zoned) under otherwise identical conditions.
+
+Interpretation limit
+
+The existence of internal architecture does not by itself establish its mechanical function or evolutionary purpose. A region label does not imply a particular modulus, strength, anisotropy, or constitutive law.
+
+Failure / branch condition
+
+If anatomy or histology supports a region but no defensible engineering assignment can be made, preserve the region as structural evidence and do not force a numerical property into the model.
+
+D05 — Treat CT intensity as evidence about architecture, not as a direct modulus measurement
+
+Status: required_gate
+
+Evidence
+
+The 2011 UALVP 2 work explicitly recognized permineralization and beam-hardening problems. The literature synthesis therefore rejects automatic clinical HU-to-stiffness transfer for this fossil.
+
+Model decision
+
+Characterize the DICOM intensity field first; do not implement an unverified voxelwise density-to-$E$ calibration.
+
+Required action
+
+Record pixel representation, intensity range, orientation, beam-hardening patterns, matrix/bone contrast, saturation/truncation behavior, and the spatial visibility of internal architecture.
+
+Discriminating test
+
+Determine whether intensity differences track anatomical regions consistently enough to support a defensible discrete classification. If quantitative CT-to-property calibration is not defensible, retain morphology/histology-informed zoning and use CT intensity as corroborating structural evidence rather than constitutive calibration.
+
+Interpretation limit
+
+CT-informed classification is not equivalent to measurement of fossilized or living elastic modulus.
+
+Failure / branch condition
+
+If intensity cannot reproducibly distinguish the proposed regions, do not force CT-derived material distinctions. If anatomy is supported but property calibration is not, retain the morphology-informed zoning branch; if neither is reproducible, keep Model A as the control and report the unresolved architecture explicitly.
+
+D06 — Keep the 17 GPa homogeneous value as a control parameter
+
+Status: established
+
+Evidence
+
+The synthesis explicitly classifies the homogeneous $E=17$ GPa, $\nu=0.30$ model as a project baseline used to isolate geometric and numerical effects. It is not a UALVP 2 specimen measurement.
+
+Model decision
+
+Retain Model A as the control arm. Do not silently replace it with a "better" material value merely because internal architecture is known.
+
+Required action
+
+Use the same Model A for regression/verification comparisons after Model B is introduced.
+
+Discriminating test
+
+Quantify how much each chosen QoI changes when moving A → B.
+
+Interpretation limit
+
+A change relative to 17 GPa establishes model sensitivity; it does not establish that either model is biologically exact.
+
+D07 — Use literature material ranges as sensitivity envelopes, not probability distributions
+
+Status: required_gate
+
+Evidence
+
+The synthesis identifies broad vertebrate constitutive ranges, but no specimen-specific probability law for fossil UALVP 2 material properties.
+
+Model decision
+
+For early material analysis, use bounded deterministic scenarios and/or one-at-a-time sensitivity around explicit nominal values. Do not assign arbitrary probability densities to $E$ or $\nu$.
+
+Required action
+
+Separate at least: (a) homogeneous compact-bone control; (b) anatomy-informed zonation; (c) bounded material sensitivity within defensible literature envelopes.
+
+Discriminating test
+
+Identify which QoIs actually move enough to justify adding probabilistic propagation later.
+
+Interpretation limit
+
+A plausible interval answers "what happens across this assumption envelope?" It does not answer "what is the probability that the fossil had this value?"
+
+D08 — Treat 1,360 N as a benchmark scenario, not a measured impact force
+
+Status: established
+
+Evidence
+
+Snively & Theodor's 1,360 N UALVP 2 force is a modeled benchmark derived from assumed animal mass, closing speed, and deceleration distance. The frozen synthesis explicitly rejects treating it as an empirically measured living impact force.
+
+Model decision
+
+Retain the published 1,360 N case as a reproducibility benchmark. Retain the current 1,000 N project case as a separate computational baseline.
+
+Required action
+
+Document exactly which quantity is being benchmarked: total force, spatial load distribution, direction, contact area, and support conditions.
+
+Discriminating test
+
+Reconstruct the published benchmark logic to the extent current data permit and identify every mismatch.
+
+Interpretation limit
+
+Neither 1,000 N nor 1,360 N should be described as "the" biological impact force.
+
+Failure / branch condition
+
+If a downstream analysis treats force magnitude as uncertain, keep the force scenario separate from behavioral interpretation and exploit analytical scaling while the linear assumptions remain valid.
+
+D09 — Do not spend FE solves sampling force magnitude when the current model is linear
+
+Status: established
+
+Evidence
+
+The current baseline is small-displacement linear elasticity with fixed stiffness and fixed load/contact geometry. In such a model, force scaling is analytical.
+
+Model decision
+
+For a fixed model and load pattern, use analytical scaling rather than repeated FE solves over force magnitude.
+
+Scaling rule
+
+For $F_2=kF_1$ under the same linear model:
+
+$$
+u_2=k u_1, \qquad \sigma_2=k\sigma_1, \qquad U_2=k^2U_1.
+$$
+
+Required action
+
+Reserve actual FE solves for changes in load direction, contact geometry, support, material architecture, or constitutive law.
+
+Interpretation limit
+
+This shortcut applies only while the stated linear model assumptions hold. It does not remove uncertainty in the biological force itself.
+
+D10 — Treat contact geometry as a scenario family, not a single behavioral truth
+
+Status: planned_experiment
+
+Evidence
+
+The prior literature varied load area, and recent synthesis emphasizes that extant "head-striking" behaviors differ substantially in surface, direction, and kinematics.
+
+Model decision
+
+Represent contact patch size, orientation, and distribution as explicit model scenarios. The existing 3,000 mm² patch is a project assumption/benchmark, not a measured biological contact area distribution.
+
+Required action
+
+Hold total force fixed initially while varying only contact geometry and/or direction to isolate load-placement effects.
+
+Discriminating test
+
+Determine whether regional braincase/dome QoIs are stable across a small, mechanistically motivated family of load placements.
+
+Interpretation limit
+
+A load case should be labeled by its modeled geometry (for example, dorsal distributed compression) rather than by a claimed behavior such as "the headbutt."
+
+Failure / branch condition
+
+If a load placement materially changes the conclusion, retain multiple scenario labels rather than selecting the scenario that best supports a preferred biological narrative.
+
+D11 — Keep current rigid constraints as a benchmark, then audit boundary-condition sensitivity
+
+Status: planned_experiment
+
+Evidence
+
+The 2011 model used occipital and nuchal constraints and reported artificial local stress near constraints. Cranial BCs are known to affect FE results.
+
+Model decision
+
+Preserve the current BCs as the reproducibility/control case. Introduce alternatives as discrete model-form scenarios rather than a continuous random field.
+
+Required action
+
+Generate a spatial mask of constrained and load-application regions. Report primary QoIs both with and without artifact-prone local regions when scientifically appropriate.
+
+Discriminating test
+
+Change only the BC formulation and quantify the effect on the predefined QoIs.
+
+Interpretation limit
+
+A local stress hotspot adjacent to a hard constraint cannot be interpreted as a biological hotspot without a BC-sensitivity check.
+
+D12 — Define convergence by output, not by element count
+
+Status: required_gate
+
+Evidence
+
+Mesh studies show that different QoIs converge at different rates. The present Phase 4 results already demonstrate stabilization of some global/dome quantities alongside persistent braincase-stress sensitivity.
+
+Model decision
+
+Track convergence separately for at least: strain energy, apex displacement, dome stress summary, braincase stress summary, and any spatially defined comparison metric that will be used in the paper.
+
+Required action
+
+Freeze geometry, element formulation, materials, loads, BCs, and solver settings during the convergence series.
+
+Discriminating test
+
+Report stepwise changes and stopping criteria per QoI. Do not collapse the outcome to a single "converged mesh" statement.
+
+Interpretation limit
+
+The existing finite-mesh difference should remain a numerical discretization discrepancy; it must not automatically become a biological UQ distribution.
+
+D13 — Choose primary outputs that support comparative inference
+
+Status: provisional
+
+Evidence
+
+Validation literature shows that broad patterns/comparative trends can be more stable than local absolute magnitudes, while pointwise maxima are especially vulnerable to singularities, constraints, and mesh effects.
+
+Model decision
+
+Prioritize regionally defined and comparative outputs over unconstrained global maxima.
+
+Primary QoIs
+
+Total strain energy.
+
+Apex displacement.
+
+Dorsal-dome regional stress summary.
+
+Endocranial/braincase-roof regional stress summary.
+
+A predeclared attenuation/comparison metric relating dome response to braincase response, where mathematically appropriate; the exact metric remains provisional until its numerical stability and scientific interpretation are established.
+
+Spatial pattern maps with constraint/load artifact regions explicitly marked.
+
+Required action
+
+Freeze the QoI definitions before the A/B experiment so that output selection does not follow the result.
+
+Interpretation limit
+
+Do not convert one local peak stress into a behavioral or evolutionary verdict.
+
+D14 — Separate numerical verification, benchmark reproduction, and biological validation
+
+Status: established
+
+Evidence
+
+The literature synthesis explicitly distinguishes code/analytical verification, mesh/discretization analysis, reproduction of earlier FE models, and physical validation against experimental data.
+
+Model decision
+
+The project should report four separate labels rather than a single generic "validated" status.
+
+Required action
+
+Maintain separate records for: (1) analytical/solver verification; (2) numerical convergence; (3) prior-study benchmark reproduction; and (4) physical validation, with (4) currently marked unavailable for UALVP 2.
+
+Interpretation limit
+
+A model can be computationally verified and still lack specimen-specific biological validation.
+
+Failure / branch condition
+
+If a claim would require physical validation that does not exist, downgrade the claim to computational/model-comparison language rather than substituting solver checks for biological validation.
+
+D15 — Make Model A vs. Model B the first scientific contrast after CT characterization
+
+Status: planned_experiment
+
+Evidence
+
+The literature establishes internal architectural heterogeneity in UALVP 2 but leaves its constitutive consequences unresolved. This creates a direct testable question.
+
+Model decision
+
+The first biological-model experiment should be:
+
+Does evidence-based internal material architecture materially alter the mechanical conclusions obtained from the homogeneous control?
+
+Required action
+
+Use the same outer geometry, mesh, force resultant, load footprint, and BCs. Change only the material-region assignment.
+
+Decision criteria
+
+Predefine the effect metrics and decision criteria for the selected QoIs before running the comparison. Interpret the magnitude of A→B differences relative to numerical discretization discrepancy and other established uncertainty scales rather than imposing a universal percentage threshold.
+
+Interpretation limit
+
+A small A/B difference would show robustness to this specific architectural refinement. A large difference would show model-form importance. Neither result alone determines the biological function of the dome.
+
+Failure / branch condition
+
+If A and B cannot be compared without changing geometry, mesh, loading, or BCs, pause the biological interpretation and redesign the comparison so those confounds are either fixed or separately quantified.
+
+D16 — Defer full probabilistic UQ until the uncertainty inventory is reduced
+
+Status: required_gate
+
+Evidence
+
+The literature supports a staged workflow: verification → convergence → uncertainty classification → local sensitivity → screening if needed → propagation/global sensitivity as warranted. Recent studies also show that stable global sensitivity indices can require substantial sample sizes and depend on the QoI.
+
+Model decision
+
+Do not lock in an arbitrary LHS size, Sobol budget, or surrogate architecture before the model-form and data questions have been interrogated.
+
+Required action
+
+After the A/B and focused load/BC/material tests, count the remaining genuinely uncertain continuous inputs and estimate the cost of a single trustworthy solve.
+
+Discriminating test
+
+Use OAT first. Use Morris only if the continuous input set becomes large enough that screening has value. Use LHS/MC/Sobol only after input ranges/distributions and QoIs are justified.
+
+Interpretation limit
+
+A larger sample size is not inherently more scientifically rigorous if the input distributions or model forms are not defensible.
+
+Failure / branch condition
+
+If the uncertainty inventory reduces to a small number of well-characterized inputs, use the simplest defensible analysis. If it expands substantially, document why screening or probabilistic propagation is required before selecting the computational design.
+
+D17 — Treat dynamic/nonlinear contact as a separate model-form project
+
+Status: deferred
+
+Evidence
+
+The existing FE formulation is linear static. The literature recognizes that real collision mechanics can be transient and nonlinear, but also that the current biological inputs do not uniquely constrain such a model.
+
+Model decision
+
+Do not present dynamic/contact FEA as a routine refinement of the current model. Activate it only for a specific biological question that the static model cannot answer.
+
+Required action
+
+Document the new physics, new inputs, and new validation requirements before opening that branch.
+
+Interpretation limit
+
+A dynamic model would answer a different question; it should not retrospectively erase limitations of the static benchmark.
+
+Failure / branch condition
+
+If a project question can be answered within the current static framework, keep the dynamic/nonlinear branch deferred. If the static model is demonstrably incapable of answering the question, open a separate model-form specification with its own inputs, verification, and validation gates.
+
+5. Phase 5 experimental sequence derived from the decisions
+
+Gate A — Acquire and preserve the volume
+
+Deliverables
+
+Immutable DICOM archive.
+
+File inventory and cryptographic checksums.
+
+DICOM header extraction.
+
+Explicit voxel spacing, image orientation, coordinate transform, and pixel-value interpretation.
+
+Provenance linking the volume to the specimen and current surface model.
+
+Gate to continue: the volume can be reconstructed deterministically and its physical coordinate system is known.
+
+Gate B — Establish CT-to-surface registration
+
+Deliverables
+
+Anatomical landmarks used for registration.
+
+Transformation matrix.
+
+Registration residuals.
+
+Statement of whether the canonical outer surface is an appropriate boundary derived from the same scan.
+
+Gate to continue: scale/coordinate mismatch is either resolved or explicitly quantified and handled as a defined model change.
+
+Gate C — Characterize image semantics before segmentation
+
+Questions
+
+What exactly do the stored voxel values represent?
+
+What is the observed intensity range and dynamic range?
+
+Where are beam-hardening or reconstruction artifacts visible?
+
+Can matrix, compact bone, lower-density/trabecular regions, and major internal structures be distinguished reproducibly?
+
+Which internal features are actually resolved at the scan's spatial scale?
+
+Gate to continue: an auditable statement exists about what the CT can and cannot justify.
+
+Gate D — Reconstruct the published material-inference logic
+
+This is not a demand to copy the 2011 model. The goal is to separate:
+
+information directly visible in the scan;
+
+thresholds or masks selected by the authors;
+
+material values imported from other literature;
+
+model-specific assumptions;
+
+and places where the published workflow is not reproducible from the available data.
+
+Gate to continue: every Model B input has a declared evidence class.
+
+Gate E — Build Model B
+
+Minimum intended structure
+
+Outer compact/cortical-like region.
+
+Lower-density/trabecular region.
+
+Dense basicranial/support region where defensible.
+
+Explicit treatment of major canals/cavities according to the resolution actually available.
+
+Model B should be deliberately simple. Complexity that cannot be traced to evidence is postponed.
+
+Gate to continue: the same benchmark load, BCs, and fixed outer geometry can be applied to A and B.
+
+Gate F — Execute the decisive A/B experiment
+
+Run A and B using identical:
+
+canonical outer geometry;
+
+FE mesh topology;
+
+load resultant and footprint;
+
+boundary conditions;
+
+solver tolerances;
+
+output definitions.
+
+The scientific comparison is the difference in the predefined QoIs, not which model produces a more visually complicated stress field.
+
+Gate G — Only then branch into focused sensitivity/model-form experiments
+
+Recommended first branches:
+
+Load direction/contact placement.
+
+Material magnitude within explicit non-probabilistic bounds.
+
+Boundary-condition alternatives.
+
+Segmentation/repair alternatives in demonstrably ambiguous internal regions.
+
+Only after those effects are characterized should the project decide whether a probabilistic UQ campaign is justified.
+
+6. What should not happen next
+
+The following actions are explicitly deferred by this bridge:
+
+A precommitted 48-point LHS or any other arbitrary sample count.
+
+A probability distribution for fossil $E$ or $\nu$ without empirical justification.
+
+A probability distribution for contact area merely because a range such as 2,500–4,000 mm² has been chosen as a sensitivity envelope.
+
+A claim that 17 GPa is a measured UALVP 2 property.
+
+Automatic conversion of CT intensity to elastic modulus.
+
+Treating the current mesh discrepancy as a biological uncertainty distribution.
+
+Declaring the UALVP 2 model "validated" from numerical equilibrium or mesh stabilization alone.
+
+Interpreting the 1,000 N project load or 1,360 N literature benchmark as the historical impact force.
+
+Treating "headbutting" as one uniquely defined force direction/contact geometry.
+
+Launching dynamic/contact FEA before a specific question requires it.
+
+Using FE outputs alone to decide the evolutionary function of the dome.
+
+7. Suggested machine-readable decision schema
+
+The project can represent each future modeling choice with a small record like:
+
+id: D15
+claim_class: observed_architecture
+literature_basis:
+  - BIO-05
+  - BIO-07
+  - BIO-13
+model_change:
+  from: Model_A_homogeneous
+  to: Model_B_zoned
+continuous_parameter: false
+scenario_type: model_form
+status: planned_experiment
+required_data:
+  - DICOM_characterization
+  - zone_definition
+  - element_zone_map
+paired_control: Model_A
+primary_qois:
+  - strain_energy
+  - apex_displacement
+  - dome_regional_stress
+  - braincase_regional_stress
+interpretation_limit: "Mechanical model response only; not direct evidence of behavior or evolutionary function."
+failure_branch: "If A/B cannot be isolated to material assignment, redesign the comparison before interpreting the result."
+
+The important property is not the exact YAML syntax. It is that a future model input should always be traceable to: why it exists, what evidence supports it, how it will be tested, and what the result is allowed to mean.
+
+8. Decision gates for the research program
+
+Gate 1 — Data gate
+
+Do not make a CT-derived material decision until the volume's semantics, scale, orientation, and artifacts are characterized.
+
+Gate 2 — Representation gate
+
+Do not implement voxelwise material mapping until discrete architecture can be extracted reproducibly and the CT-to-property problem is separately justified.
+
+Gate 3 — Model-form gate
+
+Do not start broad UQ until the homogeneous-versus-zoned comparison has established whether internal architecture materially affects the selected QoIs.
+
+Gate 4 — Uncertainty gate
+
+Do not assign probability distributions until each uncertain quantity has a scientific reason to be represented probabilistically. Keep model-form alternatives discrete.
+
+Gate 5 — Interpretation gate
+
+Do not turn mechanical output into a behavioral or evolutionary claim unless the required biological evidence exists outside the FE calculation.
+
+9. Minimal publication-grade audit trail
+
+Before the project leaves the deterministic/material-characterization stage, the repository should contain:
+
+immutable source DICOM + manifest;
+
+CT metadata extraction;
+
+CT-to-surface registration record;
+
+segmentation/repair provenance;
+
+Model A configuration frozen;
+
+Model B region definition + mapping;
+
+benchmark reconstruction notes for the 2011 UALVP 2 study;
+
+deterministic verification results;
+
+output-specific mesh-convergence records;
+
+A/B comparison table;
+
+artifact masks for loads and constraints;
+
+explicit list of interpretation claims that remain unsupported.
+
+10. Source basis
+
+This document was independently derived from the following project materials and does not use the legacy agent draft (now archived at docs/archive/2026-09-24_literature_to_model_decisions_v1_legacy.md) as its conceptual source:
+
+Literature Basis v1: literature/stegoceras_biomechanics_literature_synthesis.md at commit 2662be0.
+
+Current computational baseline: models/phase4/baseline.yaml on main.
+
+Current scientific state: docs/CURRENT_STATE.md on main.
+
+Repository overview: README.md on main.
+
+The review memo supplied with this task, which identifies 2662be0 as the stopping point for the literature-review loop and calls for a literature-to-model bridge followed by UALVP 2 CT/material characterization.
+
+Key literature claims carried into the bridge
+
+UALVP 2 was modeled directly in the 2011 Stegoceras FE study and is therefore an unusually useful specimen-specific benchmark.
+
+UALVP 2 has heterogeneous internal architecture visible in CT/histological evidence.
+
+The 2011 study did not treat fossil CT intensity as a simple direct living-bone stiffness measurement because of permineralization and beam hardening.
+
+The 2011 1,360 N force is a modeled benchmark scenario, not a measured impact force.
+
+Cranial FE outputs depend on geometry, materials, loading, BCs, and numerical resolution.
+
+Mesh convergence is numerical verification, not biological validation.
+
+Model-form uncertainty and discretization discrepancy should not be collapsed into one probability distribution.
+
+Sensitivity/UQ should be staged and justified by the actual remaining uncertain inputs and computational cost.
+
+11. Bottom line
+
+The immediate scientific question is narrower than the project's eventual UQ ambition:
+
+Once the actual UALVP 2 CT data are characterized, does an evidence-based internal material architecture change the mechanical conclusions of the homogeneous control enough to justify treating material model form as a first-order source of uncertainty?
+
+That question is experimentally tractable with the existing pipeline. It also creates a clean decision point for everything downstream: load/contact sensitivity, BC scenarios, probabilistic propagation, surrogate modeling, and—only if scientifically required—a dynamic/nonlinear branch.
+
+Until that decision is made, the appropriate output is not a large uncertainty ensemble. It is a traceable data characterization, a reproducible material inference, and a controlled A/B mechanical test.

@@ -25,7 +25,7 @@ Quantify cranial stress distribution, compliance, and energy absorption in *Steg
    - **Static Equilibrium Confirmed**: Normalized force and moment residuals $\le 1.53 \times 10^{-12}$ (machine precision).
 2. **Literature Basis v1 & Model Decision Basis v1 Frozen**:
    - Canonical synthesis ([`literature/stegoceras_biomechanics_literature_synthesis.md`](literature/stegoceras_biomechanics_literature_synthesis.md)), dossiers, and audit-to-correction ledger ([`literature/LITERATURE_CORRECTIONS.md`](literature/LITERATURE_CORRECTIONS.md)) fully resolved.
-   - Model decisions bridge specification codified in [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md) as **Model Decision Basis v1**.
+   - Model decisions bridge specification codified in [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md) as **Model Decision Basis v1** (17-decision register D01–D17 and 7 experimental gates A–G; legacy draft preserved in [`docs/archive/`](docs/archive/)).
 
 ---
 

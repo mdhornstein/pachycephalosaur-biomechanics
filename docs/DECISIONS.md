@@ -70,3 +70,20 @@ This document records key scientific, modeling, and architectural decisions made
   4. Model-form alternatives (homogeneous vs. zoned) are discrete scenario branches that must not be smeared into arbitrary continuous distributions.
   5. The decisive next scientific question is empirical: *What does the actual UALVP 2 DICOM volume allow us to say about internal architecture, and does introducing evidence-based material zonation (Model B) materially alter cranial compliance, strain-energy distribution, and stress transmission/redistribution to the endocranial braincase relative to Model A?*
 - **Evidence**: [`literature/stegoceras_biomechanics_literature_synthesis.md`](../literature/stegoceras_biomechanics_literature_synthesis.md), [`literature/LITERATURE_CORRECTIONS.md`](../literature/LITERATURE_CORRECTIONS.md), and [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) (Model Decision Basis v1).
+
+---
+
+## D008 — Adopt Independent Canonical Bridge Specification (Model Decision Basis v1)
+- **Date**: 2026-09-24
+- **Status**: ACCEPTED
+- **Decision**: Adopt the independent 17-decision, 7-gate bridge specification as the authoritative canonical [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md), formally supplanting the prior agent-authored draft (which is preserved in [`docs/archive/2026-09-24_literature_to_model_decisions_v1_legacy.md`](archive/2026-09-24_literature_to_model_decisions_v1_legacy.md)).
+- **Rationale**: The independent specification establishes an auditable, rigorous decision register (D01–D17) connecting literature evidence to computational models:
+  1. *Specimen Provenance (D01)*: Explicit provenance tracking linking DICOM volume to canonical surface.
+  2. *Empirical Verification Gates (D02, D05)*: Direct data-validation gates for physical CT scale registration and image intensity semantics before segmentation.
+  3. *Controlled Material A/B Experiment (D03, D04, D06, D15)*: Holding outer geometry, mesh topology, loads, and BCs invariant while evaluating evidence-based internal architecture against the Model A homogeneous control.
+  4. *Analytical Shortcuts & Scenario Discipline (D07, D08, D09, D10, D11)*: Analytical scaling of force magnitude ($u \propto F/E, \sigma \propto F, U \propto F^2/E$); discrete scenario branching for contact patch geometry and boundary compliance rather than arbitrary probability distributions.
+  5. *Output-Specific Convergence & Comparative QoIs (D12, D13)*: Convergence tracked per-QoI; prioritizing regional energy and stress distributions over local singularity-dominated peak stresses.
+  6. *Strict Verification vs. Validation Boundaries (D14)*: Separate tracking for solver verification, numerical convergence, prior benchmark reproduction, and biological validation (marked unavailable for UALVP 2).
+  7. *Staged UQ & Deferred Complexities (D16, D17)*: Deferring broad LHS sampling and dynamic/contact FEA until continuous uncertainty inventory and model forms are experimentally justified.
+- **Evidence**: [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md) and [`literature/stegoceras_biomechanics_literature_synthesis.md`](../literature/stegoceras_biomechanics_literature_synthesis.md).
+

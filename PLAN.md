@@ -93,7 +93,7 @@ flowchart TD
 
 ### Literature Basis v1 & Model Decisions Specification *(Completed — Model Decision Basis v1)*
 - Master literature synthesis ([`literature/stegoceras_biomechanics_literature_synthesis.md`](literature/stegoceras_biomechanics_literature_synthesis.md)), dossiers, and audit-to-correction ledger ([`literature/LITERATURE_CORRECTIONS.md`](literature/LITERATURE_CORRECTIONS.md)).
-- Bridge specification ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md)) codifying epistemic rules, mathematical scaling laws, volume-mesh representation discipline, and prohibited/allowed interpretations.
+- Canonical bridge specification ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md)) codifying epistemic rules, a 17-decision register (D01–D17), 7 experimental gates (Gates A–G), volume-mesh representation discipline, and prohibited/allowed interpretations (prior draft preserved in [`docs/archive/`](docs/archive/)).
 
 ### Phase 5: UALVP 2 CT Characterization & Material A/B Experiment *(Active Next Phase)*
 - **CT Characterization Gate**:
