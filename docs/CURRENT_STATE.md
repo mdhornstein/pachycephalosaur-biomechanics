@@ -143,5 +143,6 @@ From [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_
 - **Phase 4 Status**: **VERIFIED & FROZEN** (commit `15a342f`).
 - **Literature Basis v1**: **FROZEN** (commit `2662be0`).
 - **Model Decision Basis v1**: **FROZEN** ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](LITERATURE_TO_MODEL_DECISIONS.md); Decisions D007, D008, D009).
-- **Phase 5 Status**: **ACTIVE NEXT GATE** — UALVP 2 CT Characterization & Material A/B Experiment.
-- **Immediate Next Action (Gate A)**: Ingest, cryptographically verify, and extract metadata from the 514-slice UALVP 2 micro-CT DICOM volume ($0.210 \times 0.210 \times 0.250\text{ mm}$) from MorphoSource / UTCT / WitmerLab.
+- **Phase 5 Status**: **ACTIVE** — UALVP 2 CT Characterization & Material A/B Experiment.
+- **Phase 5 Gate A (DICOM Ingestion & Header Audit)**: **VERIFIED & FROZEN** ([`reports/phase5_gate_a_dicom_report.md`](../reports/phase5_gate_a_dicom_report.md); 514 slices verified, true voxel spacing $0.207572 \times 0.207572 \times 0.250000\text{ mm}$, unsigned 16-bit intensity $[0, 65535]$, manifest in [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json)).
+- **Immediate Next Action (Gate B)**: Establish CT-to-surface registration, compute rigid transformation matrix and residuals between the DICOM grid and canonical surface $G_0$, and empirically resolve scale alignment.

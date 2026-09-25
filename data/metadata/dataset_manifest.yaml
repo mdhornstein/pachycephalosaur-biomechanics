@@ -23,14 +23,14 @@ datasets:
     specimen_id: "UALVP 2"
     specimen_status: "referred_specimen"
     taxon: "Stegoceras validum"
-    element: "Cranium (Raw Volumetric CT)"
+    element: "Cranium (Scanner-Native Raw CT Projections/Sinograms)"
     repository: "University of Texas High-Resolution X-ray CT Facility (UTCT) / WitmerLab"
     media_id: "NOT_PUBLICLY_DEPOSITED"
-    source_url: "https://www.morphosource.org/concern/media/000018284"
+    source_url: "https://www.morphosource.org/concern/media/000018283"
     provenance_tier: "primary_scan"
     contributor: "WitmerLab (Ohio University)"
     facility: "University of Texas High-Resolution X-ray CT Facility (UTCT)"
-    file_type: "DICOM / 16-bit TIFF volumetric slice stack"
+    file_type: "Raw sinogram / projection data"
     file_size_bytes: "UNKNOWN"
     voxel_dimensions_mm:
       x: "UNKNOWN"
@@ -41,11 +41,39 @@ datasets:
     license: "CC BY-NC 4.0 (contributor policy)"
     download_status: "not_publicly_deposited"
     requires_authentication: true
-    local_path: "data/raw/dicom/cranium/"
+    local_path: "data/raw/dicom/raw_projections/"
     sha256_checksum: "UNKNOWN"
-    checksum_status: "pending_acquisition"
-    notes: "High-resolution micro-CT of UALVP 2 cranium scanned at UTCT; primary scan basis for WitmerLab segmentations and Snively & Theodor (2011) FEA. Raw volumetric slice stack is not publicly downloadable as a discrete media file on MorphoSource."
-    evidence_source: "MorphoSource Media 000018284 lineage metadata; Snively & Theodor 2011 PLoS ONE"
+    checksum_status: "not_available"
+    notes: "Original scanner sinograms/projection data acquired at UTCT on 12 March 2010. Scanner-native projection files are not deposited on MorphoSource."
+    evidence_source: "UTCT Archive 2218 documentation (contents.doc)"
+
+  - dataset_id: "UALVP2-CT-DICOM-CRAN-01"
+    specimen_id: "UALVP 2"
+    specimen_status: "referred_specimen"
+    taxon: "Stegoceras validum"
+    element: "Cranium (Deposited Reconstructed DICOM Image Series)"
+    repository: "MorphoSource (Media 000018283) / WitmerLab / UTCT"
+    media_id: "000018283"
+    source_url: "https://www.morphosource.org/concern/media/000018283"
+    provenance_tier: "primary_scan"
+    contributor: "WitmerLab (Ohio University)"
+    facility: "University of Texas High-Resolution X-ray CT Facility (UTCT)"
+    file_type: "DICOM (514 slices, unsigned 16-bit integer, 1024x754)"
+    file_size_bytes: 794370168
+    voxel_dimensions_mm:
+      x: 0.207572
+      y: 0.207572
+      z: 0.250000
+    physical_units: "mm"
+    coordinate_frame: "DICOM Patient Coordinate System (+X right, +Y posterior, +Z dorsal/superior)"
+    license: "CC BY-NC 4.0 (MorphoSource 3D Use Limited Agreement)"
+    download_status: "downloaded_and_verified"
+    requires_authentication: true
+    local_path: "data/raw/dicom/cranium/"
+    sha256_checksum: "b6e16d6b31e39e2f9f2e319f1c6b760c8a164ded853c60c1cae2540a20c5a9d3"
+    checksum_status: "verified"
+    notes: "514-slice micro-CT volumetric image series of UALVP 2 cranium deposited by Lawrence Witmer on MorphoSource as Media 000018283. Verified with zero CRC errors, uniform derived slice-plane spacing (0.250000 mm), and raw 16-bit unsigned intensity range [0, 65535]. Per-slice cryptographic hashes recorded in data/metadata/dicom_slice_manifest.json."
+    evidence_source: "MorphoSource Media 000018283 manifest; UTCT Archive 2218 contents.doc; pydicom header audit"
 
   - dataset_id: "UALVP2-CT-RAW-MAND-01"
     specimen_id: "UALVP 2"
