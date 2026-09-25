@@ -1,7 +1,7 @@
 # Phase 3 Design (Retrospective Reconstruction): Published Model Audit & Provisional Benchmark Specification
 
 > [!NOTE]
-> **Retrospective Reconstruction**: This document reconstructs the scientific design intent for Phase 3 based on contemporaneous milestone artifacts, commits `79c8cb6`, `925809c`, and `255ee46`, [`reports/phase3_recommended_benchmark.md`](../../reports/phase3_recommended_benchmark.md), [`reports/snively_theodor_model_reconstruction.md`](../../reports/snively_theodor_model_reconstruction.md), and Decisions `D001`–`D002`. It was codified during the Research Design & Traceability Milestone to preserve design intent without rewriting history.
+> **Retrospective Reconstruction**: This document reconstructs the scientific design intent for Phase 3 based on contemporaneous milestone artifacts, commits `79c8cb6`, `925809c`, and `255ee46`, [`reports/phase3_recommended_benchmark.md`](../../reports/phase3_recommended_benchmark.md), [`reports/snively_theodor_model_reconstruction.md`](../../reports/snively_theodor_model_reconstruction.md), and Decisions `D001`–`D002`. It was codified during the Research Design & Traceability Milestone to preserve design intent without rewriting history. This reconstruction should not be treated as evidence that the documented design was fully specified in this exact form before execution.
 
 **Document Role**: Retrospectively Reconstructed Phase Design  
 **Status**: RETROSPECTIVELY RECONSTRUCTED & FROZEN  

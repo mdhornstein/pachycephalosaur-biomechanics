@@ -105,3 +105,9 @@ Scientific Report (reports/)
        ↓
 Decision & Living State (docs/DECISIONS.md, docs/CURRENT_STATE.md)
 ```
+
+**Required Provenance Identifiers**:
+- **Execution Commit**: `<commit SHA at which computation was executed and machine-readable results generated>`
+- **Report / Documentation Commit**: `<commit SHA containing the finalized scientific report>`  
+*(Rule: Numerical results must identify the commit that generated them; reports must separately identify the commit containing the final report.)*
+

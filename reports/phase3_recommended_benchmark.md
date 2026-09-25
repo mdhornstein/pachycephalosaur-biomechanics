@@ -199,7 +199,10 @@ Results:
 [`data/metadata/biomechanics_input_matrix.csv`](../data/metadata/biomechanics_input_matrix.csv)
 
 Execution commit:
-`255ee46` (Final Phase 3 specification refinement commit; initial delivery in `79c8cb6`)
+`79c8cb6` (Phase 3 input audit, dimensional check, and benchmark specification execution)
+
+Report/documentation commit:
+`255ee46` (Final Phase 3 specification refinement and validation hierarchy freeze)
 
 Report:
 [`reports/phase3_recommended_benchmark.md`](phase3_recommended_benchmark.md) *(this report)*

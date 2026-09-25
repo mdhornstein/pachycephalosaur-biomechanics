@@ -1,7 +1,10 @@
 # Phase 5 Gate A Design: DICOM Volume Ingestion & Cryptographic Header Audit
 
-**Document Role**: Phase/Gate Scientific & Computational Design  
-**Status**: COMPLETED & FROZEN  
+> [!IMPORTANT]
+> **Historical status: Retrospective reconstruction created after execution. This document reconstructs the Gate A design from the contemporaneous decision basis, HANDOFF, implementation, tests, and execution artifacts. It was not the pre-execution design document. This reconstruction should not be treated as evidence that the documented design was fully specified in this exact form before execution.**
+
+**Document Role**: Retrospectively Reconstructed Phase/Gate Design  
+**Status**: RETROSPECTIVELY RECONSTRUCTED & FROZEN  
 **Governing Standard**: Model Decision Basis v1 ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](../LITERATURE_TO_MODEL_DECISIONS.md) §4.1; Decision D008)  
 **Specimen**: *Stegoceras validum* UALVP 2  
 **Dataset**: `UALVP2-CT-DICOM-CRAN-01` (MorphoSource Media `000018283`, 514 Slices)  

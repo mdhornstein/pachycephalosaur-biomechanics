@@ -1,7 +1,10 @@
 # Phase 5 Gate B Design: CT-to-Surface Registration & Empirical Scale Verification
 
-**Document Role**: Phase/Gate Scientific & Computational Design  
-**Status**: COMPLETED & FROZEN  
+> [!IMPORTANT]
+> **Historical status: Retrospective reconstruction created after execution. This document reconstructs the Gate B design from the contemporaneous decision basis, HANDOFF, implementation, tests, and execution artifacts. It was not the pre-execution design document. This reconstruction should not be treated as evidence that the documented design was fully specified in this exact form before execution.**
+
+**Document Role**: Retrospectively Reconstructed Phase/Gate Design  
+**Status**: RETROSPECTIVELY RECONSTRUCTED & FROZEN  
 **Governing Standard**: Model Decision Basis v1 ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](../LITERATURE_TO_MODEL_DECISIONS.md) §4.2; Decision D010)  
 **Specimen**: *Stegoceras validum* UALVP 2  
 **Input Geometries**: Canonical Surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`) & CT Volume `UALVP2-CT-DICOM-CRAN-01`  

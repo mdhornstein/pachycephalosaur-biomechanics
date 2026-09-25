@@ -259,7 +259,10 @@ Results:
 `simulations/phase4/solution_*.npz`
 
 Execution commit:
-`b7aa8d0` (Solver decoupling & production execution); Phase 4 frozen at `15a342f`
+`b7aa8d0` (Solver decoupling, production execution of 3-tier hierarchy, and convergence verification)
+
+Report/documentation commit:
+`15a342f` (Phase 4 Freeze, benchmark report reconciliation, and documentation system freeze)
 
 Report:
 [`reports/phase4_fea_benchmark_report.md`](phase4_fea_benchmark_report.md) *(this report)*

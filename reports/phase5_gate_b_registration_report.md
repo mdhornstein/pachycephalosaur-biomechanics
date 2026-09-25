@@ -233,7 +233,10 @@ Results:
 [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json)
 
 Execution commit:
-`ca32eba` (Initial registration execution); refined in `b1117a5` and `fa0cf58`
+`ca32eba` (Primary 6-DOF Kabsch registration, Free-Scale similarity diagnostic, ICP refinement, and metric generation)
+
+Report/documentation commit:
+`fa0cf58` (Refinement of diagnostic terminology, whole-volume interface diagnostic, and dimensional translation description)
 
 Report:
 [`reports/phase5_gate_b_registration_report.md`](phase5_gate_b_registration_report.md) *(this report)*

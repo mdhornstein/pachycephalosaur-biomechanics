@@ -1,7 +1,7 @@
 # Phase 4 Design (Retrospective Reconstruction): Surface-Derived FEA Benchmark & Discretization Sensitivity
 
 > [!NOTE]
-> **Retrospective Reconstruction**: This document reconstructs the scientific design intent for Phase 4 based on contemporaneous milestone artifacts, commits `8c94bbe` through `15a342f`, [`reports/phase4_fea_benchmark_report.md`](../../reports/phase4_fea_benchmark_report.md), [`models/phase4/baseline.yaml`](../../models/phase4/baseline.yaml), [`results/phase4/mesh_convergence_comparison.json`](../../results/phase4/mesh_convergence_comparison.json), and Decisions `D003`–`D006`. It was codified during the Research Design & Traceability Milestone to preserve design intent without rewriting history.
+> **Retrospective Reconstruction**: This document reconstructs the scientific design intent for Phase 4 based on contemporaneous milestone artifacts, commits `8c94bbe` through `15a342f`, [`reports/phase4_fea_benchmark_report.md`](../../reports/phase4_fea_benchmark_report.md), [`models/phase4/baseline.yaml`](../../models/phase4/baseline.yaml), [`results/phase4/mesh_convergence_comparison.json`](../../results/phase4/mesh_convergence_comparison.json), and Decisions `D003`–`D006`. It was codified during the Research Design & Traceability Milestone to preserve design intent without rewriting history. This reconstruction should not be treated as evidence that the documented design was fully specified in this exact form before execution.
 
 **Document Role**: Retrospectively Reconstructed Phase Design  
 **Status**: RETROSPECTIVELY RECONSTRUCTED & FROZEN  

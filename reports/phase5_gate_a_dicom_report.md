@@ -146,7 +146,10 @@ Results:
 [`data/metadata/dataset_manifest.yaml`](../data/metadata/dataset_manifest.yaml)
 
 Execution commit:
-`5f575d8` (Initial ingestion and audit); refined in `1c7a125`
+`5f575d8` (Initial DICOM archive extraction, per-slice SHA-256 computation, and slice manifest generation)
+
+Report/documentation commit:
+`1c7a125` (Refinement of Gate A epistemic language, coordinate semantics, and regression tests)
 
 Report:
 [`reports/phase5_gate_a_dicom_report.md`](phase5_gate_a_dicom_report.md) *(this report)*
