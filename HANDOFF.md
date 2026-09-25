@@ -24,7 +24,7 @@ Quantify cranial stress distribution, compliance, and strain energy absorption i
    - **Dorsal Load Patch Verified**: Surface-connected dual-graph Dijkstra wavefront algorithm strictly confined to the dorsal dome ($Z \ge 80.0\text{ mm}$, single connected component, zero ventral/internal penetration).
    - **Static Equilibrium Confirmed**: Normalized force and moment residuals $\le 1.53 \times 10^{-12}$ (machine precision).
 2. **Literature Basis v1 & Model Decision Basis v1 Frozen**:
-   - Canonical synthesis ([`literature/stegoceras_biomechanics_literature_synthesis.md`](literature/stegoceras_biomechanics_literature_synthesis.md)), dossiers, and audit-to-correction ledger ([`literature/LITERATURE_CORRECTIONS.md`](literature/LITERATURE_CORRECTIONS.md)) fully resolved.
+   - Core literature citations and the evidence chain have been audited and corrected sufficiently to freeze Literature Basis v1 ([`literature/stegoceras_biomechanics_literature_synthesis.md`](literature/stegoceras_biomechanics_literature_synthesis.md), [`literature/LITERATURE_CORRECTIONS.md`](literature/LITERATURE_CORRECTIONS.md)); residual peripheral records remain explicitly marked where verification is incomplete.
    - Model decisions bridge specification codified in [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md) as **Model Decision Basis v1** (17-decision register D01–D17 and 7 experimental gates A–G; legacy draft preserved in [`docs/archive/`](docs/archive/)).
 
 ---
@@ -61,7 +61,7 @@ Per [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS
 2. **Verify Physical Scale & Coordinates**: Register the voxel grid against the canonical surface mesh ($G_0$).
 3. **Characterize Image Data Semantics**: Quantify pixel values, beam hardening, rock matrix vs. bone contrast, and internal architecture visibility.
 4. **Reconstruct Published Material Inference Logic**: Document what Snively & Theodor (2011) inferred from CT vs. what was assumed.
-5. **Execute Decisive Model A vs. Model B Test**: Compare Model A against Model B (histology/anatomy-informed 3-zone candidate baseline with stiffness-contrast sweep) on identical volume mesh topology ($G_0$) to determine if internal zonation materially alters cranial compliance, strain-energy distribution, and stress transmission/redistribution to the endocranial braincase.
+5. **Execute Decisive Model A vs. Model B Test**: Compare Model A against Model B (histology/anatomy-informed 3-zone candidate baseline with stiffness-contrast sweep) on the identical $h_3$ volume mesh generated from frozen canonical boundary surface $G_0$ to determine if internal zonation materially alters cranial compliance, strain-energy distribution, and stress transmission/redistribution to the endocranial braincase.
 
 ---
 

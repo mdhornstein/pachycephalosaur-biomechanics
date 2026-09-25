@@ -106,7 +106,7 @@ flowchart TD
   4. Reconstruct published material inference logic from Snively & Theodor (2011).
 - **Decisive Material A/B Experiment**:
   - Implement **Model B** (histology/anatomy-informed 3-zone candidate baseline with stiffness-contrast sensitivity sweep).
-  - Solve Model A vs. Model B on identical volume mesh topology ($G_0$), loads ($3000\text{ mm}^2$, $1000\text{ N}$), and boundary conditions via elementwise material assignment.
+  - Solve Model A vs. Model B on the identical $h_3$ volume mesh (generated from frozen canonical boundary surface $G_0$), loads ($3000\text{ mm}^2$, $1000\text{ N}$), and boundary conditions via elementwise material assignment.
   - Determine whether evidence-based internal material architecture materially alters compliance, strain-energy partitioning, and stress transmission/redistribution to the endocranial braincase.
 
 ### Phase 6: Focused Sensitivity & Discrete Scenario Analysis

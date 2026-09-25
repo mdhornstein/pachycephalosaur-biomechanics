@@ -121,9 +121,9 @@ From [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_
    - In contrast, internal stress fields exhibit non-decaying mesh-tier differences: global 95th% stress shifted $-18.10\%$ and endocranial braincase 95th% stress shifted $-28.64\%$ ($2.823 \to 2.383 \to 2.015\text{ MPa}$).
    - This reflects ongoing discrete geometric resolution of complex non-convex internal cavities away from the dorsal load zone.
    - **Epistemic Classification (Decisions D12, D009)**: This is reported deterministically as an output-specific numerical discretization discrepancy ($\Delta_{\text{num}} = -28.64\%$). Per Decision D009, it must **never** be treated as a biological uncertainty distribution or a symmetric error bound ($\pm 28.6\%$).
-2. **Stopping Rule & Model A/B Invariant**:
+2. **Stopping Rule & Model A/B Mesh Invariant**:
    - The 825k-element medium mesh ($h_3$) represents the practical computational limit for direct sparse LU solves on 16 GB workstation hardware without out-of-core memory thrashing.
-   - Rather than pursuing intractable multi-million element solves, Phase 5 enforces the **Mesh Invariant Principle** (Decisions D03, D15): Model B will be solved on this exact $h_3$ mesh topology ($G_0$) via elementwise material assignment. This guarantees that the discretization discrepancy remains identical ($\Delta_{\text{discretization}} = 0$) during the decisive A/B comparison.
+   - Rather than pursuing intractable multi-million element solves, Phase 5 enforces the **Mesh Invariant Principle** (Decisions D03, D15): Model A and Model B will use the identical canonical geometry, identical $h_3$ volume mesh (generated from frozen canonical boundary surface $G_0$), loads, and boundary conditions via elementwise material assignment. Holding the discretization fixed prevents differences in mesh resolution from being a changing factor in the A/B comparison; it controls mesh resolution as an experimental variable without implying zero discretization error or identical numerical error across differing constitutive fields.
 
 ---
 
