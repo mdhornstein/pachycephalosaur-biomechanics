@@ -94,7 +94,7 @@ Specifically:
 ---
 
 ## 7. Interpretation Limits
-- **Geometric Evidence vs. Archival Provenance**: Geometric congruence provides decisive physical evidence consistent with $G_0$ being derived directly from this CT volume, but does not substitute for archival custody documentation.
+- **Geometric Evidence vs. Archival Provenance**: Geometric congruence provides strong physical evidence consistent with $G_0$ being derived directly from this CT volume, but does not substitute for archival custody documentation.
 - **Reverse Distance Metric ($S_{\text{CT}} \to G_0$)**: $S_{\text{CT}}$ contains all internal bone-void interfaces (endocranial cavity, trabecular channels, sinuses) that $G_0$ was never intended to represent. The reverse distance distribution is a whole-volume inclusion diagnostic, **not** a symmetric boundary registration error.
 - **Translation Anisotropy**: The translation magnitude ($0.2472\text{ mm}$) is below the $0.250\text{-mm}$ through-plane slice spacing and approximately one voxel spacing overall.
 

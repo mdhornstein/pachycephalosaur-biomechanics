@@ -430,7 +430,7 @@ def execute_gate_b_registration() -> dict:
             "uncertainty is therefore no longer represented as an arbitrary global +/-5% scale parameter, but supported by "
             "unit scale subject to the quantified registration/modeling residuals. Translation magnitude of 0.2472 mm "
             "(approximately one voxel spacing and below the 0.25-mm through-plane spacing) and sub-millimeter median forward "
-            "surface residual (0.1633 mm) provide decisive geometric evidence consistent with G_0 being derived from this "
+            "surface residual (0.1633 mm) provide strong geometric evidence consistent with G_0 being derived from this "
             "micro-CT volume. Residual elevations (>2.0 mm) concentrate specifically in complex endocranial foramina and thin arches, "
             "consistent with post-segmentation digital mesh repair/closure rather than misregistration."
         ),

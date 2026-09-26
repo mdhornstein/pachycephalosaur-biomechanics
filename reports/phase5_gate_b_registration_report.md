@@ -31,7 +31,7 @@ Phase 5 Gate B establishes the empirical physical scale and spatial registration
    - **Directed Spread Reference**: Reference two-way mean $1.5704\text{ mm}$, RMS $3.3480\text{ mm}$ (recorded as a directional spread summary across disparate geometric entities, not as a measure of boundary registration quality).
 6. **Outward-Normal Signed Distance**: Evaluated along the outward unit normal of $G_0$, the signed distance has a mean of **$-0.0454\text{ mm}$** ($\text{std} = 0.5868\text{ mm}$), with $46.93\%$ exterior and $53.07\%$ interior. The sub-tenth-millimeter mean confirms zero systematic expansion or contraction bias.
 7. **Anatomical Subregion Breakdown**: Agreement is tightest on external cortical bone (ventral palate: $100.0\% < 0.5\text{ mm}$, median $0.173\text{ mm}$; basicranium: $99.67\% < 0.5\text{ mm}$, median $0.201\text{ mm}$; frontoparietal dome: $87.98\% < 0.5\text{ mm}$, median $0.152\text{ mm}$). Residual elevations ($> 2.0\text{ mm}$, $5.8\%$ of $G_0$ vertices) concentrate specifically in complex endocranial foramina and thin temporal arches, consistent with post-segmentation digital mesh repair/closure rather than misregistration.
-8. **Epistemic Provenance Conclusion**: Geometric correspondence cannot by itself constitute legal or archival provenance. However, the sub-millimeter median forward distance and translation magnitude of $0.2472\text{ mm}$ (approximately one voxel spacing and below the $0.25\text{-mm}$ through-plane slice spacing) provide decisive geometric evidence **consistent with $G_0$ having been derived directly from this micro-CT volume**.
+8. **Epistemic Provenance Conclusion**: Geometric correspondence cannot by itself constitute legal or archival provenance. However, the sub-millimeter median forward distance and translation magnitude of $0.2472\text{ mm}$ (approximately one voxel spacing and below the $0.25\text{-mm}$ through-plane slice spacing) provide strong geometric evidence consistent with $G_0$ having been derived directly from this micro-CT volume.
 
 Gate B is formally declared **PASSED & FROZEN**.
 
@@ -150,11 +150,11 @@ Because $S_{\text{CT}}$ is the thresholded isosurface of the entire volume, it c
 
 ### 6.1 Epistemic Distinction Between Outer-Boundary Metric and Whole-Volume Diagnostic
 - **Why $G_0 \to S_{\text{CT}}$ is the primary boundary correspondence metric ($0.1633\text{ mm}$ median, $86.99\% < 0.5\text{ mm}$)**:
-  $G_0$ represents the outer cranial boundary. Every vertex on $G_0$ finds its corresponding periosteal cortical bone interface in the CT scan, demonstrating near-perfect geometric agreement on the outer cranial envelope.
+  $G_0$ represents the outer cranial boundary. Every vertex on $G_0$ finds its corresponding periosteal cortical bone interface in the CT scan, demonstrating close geometric correspondence on the outer cranial envelope.
 - **Why $S_{\text{CT}} \to G_0$ exhibits large residuals ($1.0928\text{ mm}$ median, $p_{95} = 11.14\text{ mm}$, $\max = 28.30\text{ mm}$)**:
   $S_{\text{CT}}$ is the isosurface of the *entire* 3D volume. It captures all internal bone surfaces—including the endocranial braincase walls, the vascular cancellous core, the semicircular canals, and internal nasal passages. Because $G_0$ is a watertight outer shell that does not model internal bone cavities as exterior boundaries, internal CT points are located deep within the cranial interior ($5-28\text{ mm}$ from the outer surface). Those large values are dominated by internal surfaces that $G_0$ was never intended to represent.
 - **Symmetric Boundary Registration Note**:
-  A genuinely symmetric boundary comparison would require extracting the external bone boundary only from the CT volume ($S_{\text{CT, ext}} \leftrightarrow G_0$). While that represents a useful possible follow-up refinement, it is unnecessary to hold up Gate B given the decisive landmark alignment and sub-millimeter forward correspondence ($G_0 \to S_{\text{CT}}$).
+  A genuinely symmetric boundary comparison would require extracting the external bone boundary only from the CT volume ($S_{\text{CT, ext}} \leftrightarrow G_0$). While that represents a useful possible follow-up refinement, it is unnecessary to hold up Gate B given the close landmark alignment and sub-millimeter forward correspondence ($G_0 \to S_{\text{CT}}$).
 
 ---
 
@@ -192,7 +192,7 @@ $$\text{Geometric Correspondence} \neq \text{Archival Provenance Proof}$$
    - The canonical master boundary surface $G_0$ and the micro-CT volume `UALVP2-CT-DICOM-CRAN-01` exhibit sub-millimeter median correspondence ($0.1633\text{ mm}$) and a translation magnitude of $0.2472\text{ mm}$ (approximately one voxel spacing and below the $0.25\text{-mm}$ through-plane slice spacing).
    - The independent free-scale diagnostic fit ($\hat{s} = 1.00494$) differs by $< 0.5\%$, reducing landmark RMS by only $\approx 78\ \mu\text{m}$.
    - **Conclusion**: The data support the use of unit scale ($s = 1.000000$), subject to the quantified registration/modeling residuals. Remaining geometric uncertainty is no longer represented as an arbitrary global $\pm 5\%$ scale parameter.
-   - This provides decisive geometric evidence **consistent with $G_0$ having been derived directly from this micro-CT volume**.
+   - This provides strong geometric evidence consistent with $G_0$ having been derived directly from this micro-CT volume.
 2. **What Requires Archival Documentation**:
    - Historical provenance—the chain of custody establishing that the STL mesh was exported from this specific reconstruction session on 12 March 2010—relies on the UTCT Archive 2218 documentation, WitmerLab deposition records, and specimen accession records for UALVP 2.
 3. **Synthesis**:
