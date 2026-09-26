@@ -1,8 +1,8 @@
-"""Deferred CT volume segmentation and tissue density masking.
+"""Deferred high-resolution CT volume segmentation and heterogeneous material mapping.
 
 Roadmap Status:
-- Phase 8: High-Resolution CT Segmentation & Heterogeneous Material Mapping
-- Contingent on acquisition of primary micro-CT volumetric slice data (DICOM/TIFF stack).
-- Current repository data contain surface extractions (STLs) from MorphoSource media 000018284,
-  not the raw 3D volume stack required for voxel-wise density thresholding.
+- Phase 5 ingested primary micro-CT volumetric slice data (DICOM series Media 000018283; Gate A),
+  verified spatial scale and registration to canonical surface G_0 (Gate B), and characterized
+  volumetric image semantics and attenuation zonation (Gate C).
+- Phase 8: Full voxel-wise high-resolution segmentation and heterogeneous material mapping.
 """

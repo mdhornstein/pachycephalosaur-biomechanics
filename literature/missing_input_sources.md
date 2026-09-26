@@ -8,7 +8,7 @@
 
 ## 🔍 Overview
 
-This document systematically investigates alternative scientific sources, published paleohistological studies, comparative biomechanics literature, and surrogate modeling strategies for all model parameters identified as `UNAVAILABLE` or `LITERATURE_ONLY` in [`data/metadata/biomechanics_input_matrix.csv`](file:///Users/michael/Library/CloudStorage/GoogleDrive-mdhornstein@gmail.com/My%20Drive/AA%20Projects/pachycephalosaurus-biomechanics/data/metadata/biomechanics_input_matrix.csv).
+This document systematically investigates alternative scientific sources, published paleohistological studies, comparative biomechanics literature, and surrogate modeling strategies for all model parameters identified as `UNAVAILABLE` or `LITERATURE_ONLY` in [`data/metadata/biomechanics_input_matrix.csv`](../data/metadata/biomechanics_input_matrix.csv).
 
 ---
 

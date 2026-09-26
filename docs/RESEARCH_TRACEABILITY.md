@@ -47,7 +47,8 @@ The table below maps each major completed, active, and planned phase/gate across
 | **Phase 4** (Surface-Derived FEA Benchmark & Discretization Sensitivity) | Under standardized compressive loading on canonical surface $G_0$, does the 3D linear elastic FEA pipeline achieve static equilibrium, energy balance, and stable global metrics under pure volumetric $h$-refinement, and how do localized stresses respond? | [`docs/phase_design/PHASE4_DESIGN_RECONSTRUCTED.md`](phase_design/PHASE4_DESIGN_RECONSTRUCTED.md) *(Retrospective)* | 1. `uv run python -m stegoceras_biomechanics.fea.solve_production --tier all`<br>2. `uv run python -m stegoceras_biomechanics.fea.plot_results` | `stegoceras_biomechanics.fea.solve_production` | `stegoceras_biomechanics.fea.plot_results` (derives aspect ratios, apex displacements, regional stress sensitivities, and convergence comparison) | `stegoceras_biomechanics.fea.plot_results` (Figures 08–12) | [`results/phase4/mesh_convergence_comparison.json`](../results/phase4/mesh_convergence_comparison.json), [`results/phase4/metrics_*.json`](../results/phase4/), `simulations/phase4/solution_*.npz` | [`reports/phase4_fea_benchmark_report.md`](../reports/phase4_fea_benchmark_report.md) | Decisions [`D003`–`D006`](DECISIONS.md)<br>• **Exec**: `b7aa8d0`<br>• **Report**: `15a342f` |
 | **Phase 5 Gate A** (DICOM Ingestion & Header Audit) | Is the MorphoSource UALVP 2 cranium series (Media 000018283) an intact, uncorrupted, geometrically documented micro-CT series matching the physical specimen, and what are its precise spatial and intensity semantics? | [`docs/phase_design/PHASE5_GATE_A_DESIGN.md`](phase_design/PHASE5_GATE_A_DESIGN.md) *(Retrospective)* | 1. `uv run python scripts/ingest_data.py audit`<br>2. `uv run pytest tests/test_gate_a_dicom.py -v` | `stegoceras_biomechanics.io.ingest` | Per-slice cryptographic hashing, geometric metadata extraction, and intensity dynamic range auditing | *None* | [`data/metadata/dataset_manifest.yaml`](../data/metadata/dataset_manifest.yaml), [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json) | [`reports/phase5_gate_a_dicom_report.md`](../reports/phase5_gate_a_dicom_report.md) | Model Decision Basis v1 §4.1<br>• **Exec**: `5f575d8`<br>• **Report**: `1c7a125` |
 | **Phase 5 Gate B** (CT-to-Surface Registration & Empirical Scale Verification) | What is the physical scale and spatial registration relationship between canonical surface $G_0$ and the micro-CT volume, does empirical registration support unit scale ($s = 1.000000$), and does $G_0$ match the outer periosteal bone boundary? | [`docs/phase_design/PHASE5_GATE_B_DESIGN.md`](phase_design/PHASE5_GATE_B_DESIGN.md) *(Retrospective)* | 1. `uv run python scripts/register_ct_to_surface.py`<br>2. `uv run pytest tests/test_gate_b_registration.py -v` | `scripts/register_ct_to_surface.py` | Integrated in registration script: Umeyama free-scale diagnostic, forward surface distance, reverse interface diagnostic, normal signed distance | *None* (JSON metric export) | [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json) | [`reports/phase5_gate_b_registration_report.md`](../reports/phase5_gate_b_registration_report.md) | Decision [`D010`](DECISIONS.md)<br>• **Exec**: `ca32eba`<br>• **Report**: `bb61195` |
-| **Phase 5 Gate C** (Image Semantics & Attenuation Characterization) *(ACTIVE NEXT)* | What are the numerical image semantics, attenuation dynamic range, artifact profiles, and tissue contrast distributions in the CT volume, and do they support or refute discrete radiological zonation in the dome? | [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](phase_design/PHASE5_GATE_C_DESIGN.md) *(Prospective)* | 1. `uv run python scripts/characterize_image_semantics.py`<br>2. `uv run pytest tests/test_gate_c_semantics.py -v` | `scripts/characterize_image_semantics.py` *(planned)* | Attenuation histogram profiling, beam-hardening transect analysis, tissue contrast gradient analysis | Attenuation profiles, intensity histograms, artifact transects in `reports/figures/` | `results/phase5/gate_c_semantics_metrics.json` *(planned)* | `reports/phase5_gate_c_semantics_report.md` *(planned)* | Expected Decision `D011`<br>• **Exec**: *(Pending)*<br>• **Report**: *(Pending)* |
+| **Phase 5 Gate C** (Image Semantics & Attenuation Characterization) | What are the numerical image semantics, attenuation dynamic range, artifact profiles, and tissue contrast distributions in the CT volume, and do they support or refute discrete radiological zonation in the dome? | [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](phase_design/PHASE5_GATE_C_DESIGN.md) *(Prospective)* | 1. `uv run python scripts/characterize_image_semantics.py`<br>2. `uv run pytest tests/test_gate_c_semantics.py -v` | [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py) | Full-volume 16-bit dynamic range audit (396.8M voxels), 5 anatomical tissue ROI moments, tissue contrast analysis (CNR, Bhattacharyya distance, ROC AUC), beam-hardening cupping evaluation | Figures 13 & 14 in `reports/figures/` | [`results/phase5/gate_c_semantics_metrics.json`](../results/phase5/gate_c_semantics_metrics.json) | [`reports/phase5_gate_c_semantics_report.md`](../reports/phase5_gate_c_semantics_report.md) | Decision [`D011`](DECISIONS.md)<br>• **Exec**: `acccb96`<br>• **Report**: `acccb96` |
+| **Phase 5 Gate D** (Reconstruct Published Material Inference Logic) *(ACTIVE NEXT)* | What explicit mathematical and logical rules were used in published literature to assign heterogeneous material properties to pachycephalosaur skull models, and can they be formalized as reproducible code? | [`docs/phase_design/PHASE5_GATE_D_DESIGN.md`](phase_design/PHASE5_GATE_D_DESIGN.md) *(Planned)* | 1. `uv run python scripts/reconstruct_material_logic.py`<br>2. `uv run pytest tests/test_gate_d_materials.py -v` | `scripts/reconstruct_material_logic.py` *(planned)* | Comparative mapping of Snively & Theodor (2011), Schott et al. (2011), and modern bone property syntheses | Material property assignment comparison curves | `results/phase5/gate_d_material_metrics.json` *(planned)* | `reports/phase5_gate_d_material_report.md` *(planned)* | Expected Decision `D012`<br>• **Exec**: *(Pending)*<br>• **Report**: *(Pending)* |
 
 ---
 
@@ -278,43 +279,89 @@ Each phase/gate documents the following minimal tuple:
 
 ---
 
-### Phase 5 Gate C: Image Semantics & Attenuation Characterization *(ACTIVE NEXT)*
+### Phase 5 Gate C: Image Semantics & Attenuation Characterization
 
 - **Scientific Question**: What are the numerical image semantics, attenuation dynamic range, artifact profiles, and tissue contrast distributions in the CT volume, and do they support or refute discrete radiological zonation in the dome?
 - **Design Document**: [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](phase_design/PHASE5_GATE_C_DESIGN.md) *(Prospective)*
-- **Environment**: Python 3.12 (`uv`), dependencies in [`pyproject.toml`](../pyproject.toml) (`numpy`, `scipy`, `pydicom`, `pyvista`, `matplotlib`, `pytest`)
-- **Execution Commit**: *(Pending execution)*
-- **Report / Documentation Commit**: *(Pending report)*
+- **Environment**: Python 3.12 (`uv`), dependencies in [`pyproject.toml`](../pyproject.toml) (`numpy`, `scipy`, `pydicom`, `matplotlib`, `scikit-learn`, `pytest`)
+- **Execution Commit**: `acccb96` *(Primary characterization pipeline, metrics derivation, and figure generation)*
+- **Report / Documentation Commit**: `acccb96` *(Formal report, decision D011, and living state updates)*
 - **Execution Command(s)**:
   ```bash
-  # Step 1: Run attenuation characterization and profile extraction
+  # Step 1: Run attenuation characterization, ROI sampling, transect extraction, and figure generation
   uv run python scripts/characterize_image_semantics.py
 
   # Step 2: Run automated verification tests
   uv run pytest tests/test_gate_c_semantics.py -v
   ```
 - **Primary Computational Entry Point(s)**:
-  - `scripts/characterize_image_semantics.py` *(planned)*
+  - [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py)
 - **Reusable Source Modules**:
-  - `stegoceras_biomechanics.ct.semantics` *(planned)*
+  - [`src/stegoceras_biomechanics/ct/semantics.py`](../src/stegoceras_biomechanics/ct/semantics.py): `load_ct_volume()`, `compute_dynamic_range_audit()`, `build_roi_definitions()`, `extract_roi_samples()`, `compute_roi_moments()`, `compute_tissue_contrast_and_separability()`, `sample_transect_ray()`, `evaluate_cupping_profile()`
 - **Post-processing / Analysis Entry Point(s)**:
-  - Histogram dynamic range extraction, beam-hardening transect analysis, tissue contrast gradient analysis
+  - Integrated in [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py):
+    - Evaluates 100% full-volume histogram accounting ($396,857,344$ voxels).
+    - Derives statistical moments and SNR across 5 anatomical ROIs.
+    - Evaluates tissue contrast-to-noise ratio ($\text{CNR} = 0.0616$), Bhattacharyya distance ($D_B = 0.0134$), and ROC AUC ($0.5132$) between dorsal cortex (Zone 3) and cancellous core (Zone 2).
+    - Quantifies beam-hardening / cupping artifact ($11.34\%$ drop across $24.7\text{-mm}$ bone section).
 - **Figure-generation Entry Point(s)**:
-  - Frontoparietal attenuation profile curves, full-volume intensity histogram, and beam-hardening transects in `reports/figures/`
+  - [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py):
+    - `reports/figures/figure13_ct_intensity_semantics.png`
+    - `reports/figures/figure14_dome_attenuation_transects.png`
 - **Input Artifacts & Cryptographic Checksums**:
-  - 514 Cranium micro-CT slices: `data/raw/dicom/cranium/`
+  - 514 Cranium micro-CT slices: `data/raw/dicom/cranium/` (SHA-256 verified in [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json))
   - Gate B composite transformation $\mathbf{T}_{\text{composite}}$: [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json)
   - Canonical master surface $G_0$: [`data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl`](../data/meshes/cleaned/stegoceras_ualvp2_canonical_master.stl)
 - **Machine-Readable Result Artifacts**:
-  - `results/phase5/gate_c_semantics_metrics.json` *(planned)*
+  - [`results/phase5/gate_c_semantics_metrics.json`](../results/phase5/gate_c_semantics_metrics.json)
 - **Figure Artifacts**:
-  - Planned: `reports/figures/13_ct_intensity_histogram.png`, `reports/figures/14_dome_attenuation_transects.png`
+  - [`reports/figures/figure13_ct_intensity_semantics.png`](../reports/figures/figure13_ct_intensity_semantics.png)
+  - [`reports/figures/figure14_dome_attenuation_transects.png`](../reports/figures/figure14_dome_attenuation_transects.png)
 - **Automated Verification Tests**:
-  - `tests/test_gate_c_semantics.py` *(planned)*
+  - [`tests/test_gate_c_semantics.py`](../tests/test_gate_c_semantics.py) (7 tests: status and volume metadata, 100% histogram conservation, ROI completeness and SNR moments, zonation indistinguishability, cupping artifact, transect continuity, figure existence)
 - **Formal Report**:
-  - `reports/phase5_gate_c_semantics_report.md` *(planned)*
+  - [`reports/phase5_gate_c_semantics_report.md`](../reports/phase5_gate_c_semantics_report.md)
 - **Resulting Decision / State Update**:
-  - Planned Decision `D011`.
+  - Decision [`D011`](DECISIONS.md) in [`docs/DECISIONS.md`](DECISIONS.md); Phase 5 Gate C Freeze in [`docs/CURRENT_STATE.md`](CURRENT_STATE.md) and [`HANDOFF.md`](../HANDOFF.md).
+
+---
+
+### Phase 5 Gate D: Reconstruct Published Material Inference Logic *(ACTIVE NEXT)*
+
+- **Scientific Question**: What explicit mathematical and logical rules were used in published literature to assign heterogeneous material properties to pachycephalosaur skull models, and can they be formalized as reproducible code?
+- **Design Document**: [`docs/phase_design/PHASE5_GATE_D_DESIGN.md`](phase_design/PHASE5_GATE_D_DESIGN.md) *(Planned)*
+- **Environment**: Python 3.12 (`uv`), dependencies in [`pyproject.toml`](../pyproject.toml)
+- **Execution Commit**: *(Pending execution)*
+- **Report / Documentation Commit**: *(Pending report)*
+- **Execution Command(s)**:
+  ```bash
+  # Step 1: Run material inference logic reconstruction
+  uv run python scripts/reconstruct_material_logic.py
+
+  # Step 2: Run automated verification tests
+  uv run pytest tests/test_gate_d_materials.py -v
+  ```
+- **Primary Computational Entry Point(s)**:
+  - `scripts/reconstruct_material_logic.py` *(planned)*
+- **Reusable Source Modules**:
+  - `stegoceras_biomechanics.materials.inference` *(planned)*
+- **Post-processing / Analysis Entry Point(s)**:
+  - Comparative mapping of Snively & Theodor (2011), Schott et al. (2011), and modern bone property syntheses
+- **Figure-generation Entry Point(s)**:
+  - Material assignment comparison curves in `reports/figures/`
+- **Input Artifacts & Cryptographic Checksums**:
+  - Literature synthesis: [`literature/stegoceras_biomechanics_literature_synthesis.md`](../literature/stegoceras_biomechanics_literature_synthesis.md)
+  - Input matrix: [`data/metadata/biomechanics_input_matrix.csv`](../data/metadata/biomechanics_input_matrix.csv)
+- **Machine-Readable Result Artifacts**:
+  - `results/phase5/gate_d_material_metrics.json` *(planned)*
+- **Figure Artifacts**:
+  - Planned: `reports/figures/15_material_inference_logic.png`
+- **Automated Verification Tests**:
+  - `tests/test_gate_d_materials.py` *(planned)*
+- **Formal Report**:
+  - `reports/phase5_gate_d_material_report.md` *(planned)*
+- **Resulting Decision / State Update**:
+  - Expected Decision `D012`.
 
 ---
 

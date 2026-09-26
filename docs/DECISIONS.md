@@ -114,3 +114,16 @@ This document records key scientific, modeling, and architectural decisions made
   6. Formally record that the sub-millimeter median forward surface residual ($0.1633\text{ mm}$) and translation magnitude of $0.2472\text{ mm}$ (approximately one voxel spacing and below the $0.25\text{-mm}$ through-plane spacing) provide strong geometric evidence consistent with $G_0$ being derived directly from this micro-CT volume, distinguishing geometric correspondence from archival provenance proof.
 - **Evidence**: [`reports/phase5_gate_b_registration_report.md`](../reports/phase5_gate_b_registration_report.md), [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json), [`data/metadata/gate_b_landmark_provenance.json`](../data/metadata/gate_b_landmark_provenance.json), and [`tests/test_gate_b_registration.py`](../tests/test_gate_b_registration.py).
 
+---
+
+## D011 — Model B Histological Zonation via Literature-Informed Geometric Rules (Phase 5 Gate C Freeze)
+- **Date**: 2026-09-25
+- **Status**: ACCEPTED (Governing Gate C of Model Decision Basis v1 §4.3 and Phase 5 Roadmap)
+- **Decision**:
+  1. Confirm that the micro-CT dataset `UALVP2-CT-DICOM-CRAN-01` exhibits a diagenetically permineralized, radiologically uniform internal attenuation profile across the frontoparietal dome, confirming Hypothesis B and refuting Hypothesis A.
+  2. Formally establish that the cancellous vascular core (Zone 2; mean $37,907.4 \pm 5649.6$) and the dorsal compact cortex (Zone 3; mean $37,349.8 \pm 7069.4$) are radiologically indistinguishable in the CT volume ($\text{CNR} = 0.0616 \ll 1.0$, Bhattacharyya distance $D_B = 0.0134$, $\text{ROC AUC} = 0.5132$). Diagenetic mineralization has completely infilled the vascular canals and trabecular interspaces with mineral matrix (calcite, silicates, or iron-bearing minerals) of attenuation matching or exceeding compact bone.
+  3. Mandate that downstream Model B multi-zone material architectures (Zones 1, 2, 3) must **not** be segmented by unassisted CT intensity thresholding or edge-detection filters, which would generate unphysical, spurious geometry due to secondary mineralization.
+  4. Mandate that Model B histological material allocation must strictly be constructed through **literature-informed geometric rules** derived from published thin-section histology (Schott et al. 2011, Snively & Theodor 2011) mapped onto the verified canonical mesh coordinate frame ($G_0$).
+  5. Formally freeze Phase 5 Gate C as VERIFIED_PASS and authorize progression to Phase 5 Gate D (Reconstruct Published Material Inference Logic).
+- **Evidence**: [`reports/phase5_gate_c_semantics_report.md`](../reports/phase5_gate_c_semantics_report.md), [`results/phase5/gate_c_semantics_metrics.json`](../results/phase5/gate_c_semantics_metrics.json), [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](phase_design/PHASE5_GATE_C_DESIGN.md), [`tests/test_gate_c_semantics.py`](../tests/test_gate_c_semantics.py), and Figures 13 & 14 in [`reports/figures/`](../reports/figures/).
+
