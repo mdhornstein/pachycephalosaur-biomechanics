@@ -1,8 +1,8 @@
 {
   "gate": "Gate C",
-  "description": "Image Data Semantics and Attenuation Characterization",
+  "description": "Image Data Semantics and Reconstructed Intensity Characterization",
   "status": "VERIFIED_PASS",
-  "epistemic_conclusion": "Empirical micro-CT attenuation characterization refutes Hypothesis A (discrete radiological zonation) and confirms Hypothesis B (diagenetically permineralized, uniform attenuation profile). The frontoparietal dome core (Zone 2, mean=37907.4) and dorsal compact cortex (Zone 3, mean=37349.8) exhibit near-zero contrast (CNR = 0.0616 << 1.0, Bhattacharyya distance D_B = 0.0134), demonstrating that diagenetic mineral infill has permineralized vascular canals to bone-equivalent attenuation. Consequently, internal anatomical zonation cannot be directly segmented by thresholding or edge-detection operators from this CT dataset. To avoid epistemic overclaiming, Model B multi-zone material architecture must be constructed through literature-informed geometric rules based on published histological section descriptions (Schott et al. 2011, Snively & Theodor 2011) mapped onto the verified anatomical coordinate frame.",
+  "epistemic_conclusion": "The empirical data support the conclusion that reconstructed CT image intensity alone does not provide sufficient contrast to recover the hypothesized Zone 2/Zone 3 boundary in the sampled frontoparietal dome regions. Among bone-classified voxels, the sampled dorsal compact cortex (Zone 3, mean=37349.8) and deep dome core (Zone 2, mean=37907.4) exhibit near-zero contrast (CNR = 0.0616 << 1.0, Bhattacharyya distance D_B = 0.0134, descriptive ROC AUC = 0.5132 across spatially correlated voxels), and this poor separability persists across a pre-specified threshold sensitivity range (T in [15000, 25000], CNR <= 0.26, descriptive AUC in [0.45, 0.55]). Analysis of unfiltered voxels reveals a non-trivial low-intensity fraction in the dome core (16.2% at Otsu threshold, with 11.8% < 10,000), representing internal lower-density voids, vascular canals, or matrix channels, consistent with published observations of spatial trabecular heterogeneity (Snively & Theodor 2011). The causal mechanism for the observed similarity among bone voxels remains uncertain; diagenetic mineral infill is a plausible explanation, but the analysis does not rule out reconstruction effects, residual beam hardening (11.34% cupping measured across the cross-section), partial volume averaging, or genuine tissue similarity in the sampled regions. Consequently, downstream Model B multi-zone material architecture cannot be directly segmented by thresholding or edge-detection operators from this CT dataset, and must instead be constructed through literature-informed geometric rules from published histological thin sections (Schott et al. 2011, Snively & Theodor 2011) mapped onto the verified canonical coordinate frame.",
   "specimen": "Stegoceras validum UALVP 2",
   "dataset": "UALVP2-CT-DICOM-CRAN-01",
   "volume_metadata": {
@@ -50,6 +50,499 @@
       "otsu_threshold": 20864,
       "background_mode": 6015.908203125,
       "bone_mode": 34175.478515625
+    }
+  },
+  "bone_mask_distribution": {
+    "total_bone_voxels": 65371767,
+    "bone_fraction_pct": 16.472359145758936,
+    "mean_intensity": 36579.346876962954,
+    "std_intensity": 6427.560511188771,
+    "median_intensity": 36812.0,
+    "iqr_intensity": 9735.0,
+    "detected_peaks": [
+      {
+        "center_intensity": 34041.945,
+        "count": 1630489
+      },
+      {
+        "center_intensity": 41189.305,
+        "count": 1495838
+      }
+    ],
+    "interpretation": "Across the full cranial volume, the bone-classified mask exhibits two broad overlapping modes: a primary cranial bone mode at ~34,000 and a secondary high-intensity mode at ~41,200 corresponding to dense diagenetic sedimentary rock matrix fill in the endocranial braincase and cavity spaces."
+  },
+  "threshold_sensitivity": {
+    "ambient_air": {
+      "total_voxels": 125000,
+      "thresholds": {
+        "15000": {
+          "threshold": 15000,
+          "bone_voxel_count": 0,
+          "bone_fraction_pct": 0.0,
+          "low_intensity_voxel_count": 125000,
+          "low_intensity_fraction_pct": 100.0,
+          "bone_mean": NaN,
+          "bone_std": NaN,
+          "bone_median": NaN,
+          "bone_iqr": NaN,
+          "bone_snr": NaN,
+          "low_mean": 423.927576,
+          "low_std": 1585.0799930334001,
+          "low_median": 0.0,
+          "low_iqr": 0.0
+        },
+        "18000": {
+          "threshold": 18000,
+          "bone_voxel_count": 0,
+          "bone_fraction_pct": 0.0,
+          "low_intensity_voxel_count": 125000,
+          "low_intensity_fraction_pct": 100.0,
+          "bone_mean": NaN,
+          "bone_std": NaN,
+          "bone_median": NaN,
+          "bone_iqr": NaN,
+          "bone_snr": NaN,
+          "low_mean": 423.927576,
+          "low_std": 1585.0799930334001,
+          "low_median": 0.0,
+          "low_iqr": 0.0
+        },
+        "20864": {
+          "threshold": 20864,
+          "bone_voxel_count": 0,
+          "bone_fraction_pct": 0.0,
+          "low_intensity_voxel_count": 125000,
+          "low_intensity_fraction_pct": 100.0,
+          "bone_mean": NaN,
+          "bone_std": NaN,
+          "bone_median": NaN,
+          "bone_iqr": NaN,
+          "bone_snr": NaN,
+          "low_mean": 423.927576,
+          "low_std": 1585.0799930334001,
+          "low_median": 0.0,
+          "low_iqr": 0.0
+        },
+        "23000": {
+          "threshold": 23000,
+          "bone_voxel_count": 0,
+          "bone_fraction_pct": 0.0,
+          "low_intensity_voxel_count": 125000,
+          "low_intensity_fraction_pct": 100.0,
+          "bone_mean": NaN,
+          "bone_std": NaN,
+          "bone_median": NaN,
+          "bone_iqr": NaN,
+          "bone_snr": NaN,
+          "low_mean": 423.927576,
+          "low_std": 1585.0799930334001,
+          "low_median": 0.0,
+          "low_iqr": 0.0
+        },
+        "25000": {
+          "threshold": 25000,
+          "bone_voxel_count": 0,
+          "bone_fraction_pct": 0.0,
+          "low_intensity_voxel_count": 125000,
+          "low_intensity_fraction_pct": 100.0,
+          "bone_mean": NaN,
+          "bone_std": NaN,
+          "bone_median": NaN,
+          "bone_iqr": NaN,
+          "bone_snr": NaN,
+          "low_mean": 423.927576,
+          "low_std": 1585.0799930334001,
+          "low_median": 0.0,
+          "low_iqr": 0.0
+        }
+      }
+    },
+    "dorsal_cortex_zone3": {
+      "total_voxels": 10080,
+      "thresholds": {
+        "15000": {
+          "threshold": 15000,
+          "bone_voxel_count": 871,
+          "bone_fraction_pct": 8.640873015873016,
+          "low_intensity_voxel_count": 9209,
+          "low_intensity_fraction_pct": 91.35912698412699,
+          "bone_mean": 34451.083811710676,
+          "bone_std": 9583.719591516618,
+          "bone_median": 37852.0,
+          "bone_iqr": 16026.5,
+          "bone_snr": 3.5947508149347693,
+          "low_mean": 6270.339016179824,
+          "low_std": 1027.0348149866415,
+          "low_median": 6119.0,
+          "low_iqr": 707.0
+        },
+        "18000": {
+          "threshold": 18000,
+          "bone_voxel_count": 796,
+          "bone_fraction_pct": 7.896825396825396,
+          "low_intensity_voxel_count": 9284,
+          "low_intensity_fraction_pct": 92.1031746031746,
+          "bone_mean": 36156.522613065325,
+          "bone_std": 8164.456256423724,
+          "bone_median": 38804.5,
+          "bone_iqr": 11881.0,
+          "bone_snr": 4.428527935907267,
+          "low_mean": 6351.772296423956,
+          "low_std": 1366.0735705182055,
+          "low_median": 6125.0,
+          "low_iqr": 717.0
+        },
+        "20864": {
+          "threshold": 20864,
+          "bone_voxel_count": 743,
+          "bone_fraction_pct": 7.371031746031746,
+          "low_intensity_voxel_count": 9337,
+          "low_intensity_fraction_pct": 92.62896825396825,
+          "bone_mean": 37349.75639300135,
+          "bone_std": 7069.44506312539,
+          "bone_median": 39387.0,
+          "bone_iqr": 9994.5,
+          "bone_snr": 5.28326566788385,
+          "low_mean": 6426.001606511728,
+          "low_std": 1680.7451036858251,
+          "low_median": 6130.0,
+          "low_iqr": 722.0
+        },
+        "23000": {
+          "threshold": 23000,
+          "bone_voxel_count": 701,
+          "bone_fraction_pct": 6.95436507936508,
+          "low_intensity_voxel_count": 9379,
+          "low_intensity_fraction_pct": 93.04563492063492,
+          "bone_mean": 38283.22111269615,
+          "bone_std": 6126.875546867346,
+          "bone_median": 39913.0,
+          "bone_iqr": 8530.0,
+          "bone_snr": 6.248408478326322,
+          "low_mean": 6494.712442691119,
+          "low_std": 1965.4945290515368,
+          "low_median": 6132.0,
+          "low_iqr": 728.0
+        },
+        "25000": {
+          "threshold": 25000,
+          "bone_voxel_count": 673,
+          "bone_fraction_pct": 6.676587301587301,
+          "low_intensity_voxel_count": 9407,
+          "low_intensity_fraction_pct": 93.3234126984127,
+          "bone_mean": 38879.2852897474,
+          "bone_std": 5495.047948043694,
+          "bone_median": 40216.0,
+          "bone_iqr": 7691.0,
+          "bone_snr": 7.075331399717615,
+          "low_mean": 6546.687254172425,
+          "low_std": 2181.10975660862,
+          "low_median": 6134.0,
+          "low_iqr": 732.0
+        }
+      }
+    },
+    "dome_core_zone2": {
+      "total_voxels": 34272,
+      "thresholds": {
+        "15000": {
+          "threshold": 15000,
+          "bone_voxel_count": 29385,
+          "bone_fraction_pct": 85.7405462184874,
+          "low_intensity_voxel_count": 4887,
+          "low_intensity_fraction_pct": 14.259453781512605,
+          "bone_mean": 37455.05948613238,
+          "bone_std": 6329.133161549165,
+          "bone_median": 37823.0,
+          "bone_iqr": 7359.0,
+          "bone_snr": 5.917881411261791,
+          "low_mean": 8084.7491303458155,
+          "low_std": 2189.5415231343122,
+          "low_median": 7478.0,
+          "low_iqr": 2289.5
+        },
+        "18000": {
+          "threshold": 18000,
+          "bone_voxel_count": 29056,
+          "bone_fraction_pct": 84.78057889822595,
+          "low_intensity_voxel_count": 5216,
+          "low_intensity_fraction_pct": 15.219421101774042,
+          "bone_mean": 37692.49834801762,
+          "bone_std": 5955.445112507479,
+          "bone_median": 37899.5,
+          "bone_iqr": 7265.25,
+          "bone_snr": 6.329081644771902,
+          "low_mean": 8614.620398773006,
+          "low_std": 2951.459099565678,
+          "low_median": 7613.0,
+          "low_iqr": 2902.5
+        },
+        "20864": {
+          "threshold": 20864,
+          "bone_voxel_count": 28717,
+          "bone_fraction_pct": 83.79143323996266,
+          "low_intensity_voxel_count": 5555,
+          "low_intensity_fraction_pct": 16.20856676003735,
+          "bone_mean": 37907.427342689,
+          "bone_std": 5649.624082684029,
+          "bone_median": 37971.0,
+          "bone_iqr": 7189.0,
+          "bone_snr": 6.709725600836773,
+          "low_mean": 9278.03798379838,
+          "low_std": 3872.312035963497,
+          "low_median": 7754.0,
+          "low_iqr": 3797.5
+        },
+        "23000": {
+          "threshold": 23000,
+          "bone_voxel_count": 28335,
+          "bone_fraction_pct": 82.67682072829132,
+          "low_intensity_voxel_count": 5937,
+          "low_intensity_fraction_pct": 17.323179271708682,
+          "bone_mean": 38121.44069172402,
+          "bone_std": 5375.902595977984,
+          "bone_median": 38059.0,
+          "bone_iqr": 7094.5,
+          "bone_snr": 7.0911702753403345,
+          "low_mean": 10098.71483914435,
+          "low_std": 4883.472987858827,
+          "low_median": 7921.0,
+          "low_iqr": 5056.0
+        },
+        "25000": {
+          "threshold": 25000,
+          "bone_voxel_count": 27823,
+          "bone_fraction_pct": 81.18288982259571,
+          "low_intensity_voxel_count": 6449,
+          "low_intensity_fraction_pct": 18.817110177404295,
+          "bone_mean": 38380.9105775797,
+          "bone_std": 5069.530855283922,
+          "bone_median": 38174.0,
+          "bone_iqr": 7000.5,
+          "bone_snr": 7.570899886638554,
+          "low_mean": 11204.065281438983,
+          "low_std": 6012.410277676553,
+          "low_median": 8209.0,
+          "low_iqr": 7767.0
+        }
+      }
+    },
+    "basicranium_zone1": {
+      "total_voxels": 16800,
+      "thresholds": {
+        "15000": {
+          "threshold": 15000,
+          "bone_voxel_count": 14736,
+          "bone_fraction_pct": 87.71428571428571,
+          "low_intensity_voxel_count": 2064,
+          "low_intensity_fraction_pct": 12.285714285714286,
+          "bone_mean": 37077.444082519,
+          "bone_std": 5232.8908782368535,
+          "bone_median": 37070.5,
+          "bone_iqr": 6964.0,
+          "bone_snr": 7.085460970860471,
+          "low_mean": 7254.0,
+          "low_std": 2039.127620696746,
+          "low_median": 6588.0,
+          "low_iqr": 1665.75
+        },
+        "18000": {
+          "threshold": 18000,
+          "bone_voxel_count": 14656,
+          "bone_fraction_pct": 87.23809523809524,
+          "low_intensity_voxel_count": 2144,
+          "low_intensity_fraction_pct": 12.761904761904763,
+          "bone_mean": 37190.367562772924,
+          "bone_std": 5017.834378381098,
+          "bone_median": 37111.0,
+          "bone_iqr": 6925.0,
+          "bone_snr": 7.411637124374687,
+          "low_mean": 7594.890391791045,
+          "low_std": 2652.510752404992,
+          "low_median": 6645.5,
+          "low_iqr": 1884.0
+        },
+        "20864": {
+          "threshold": 20864,
+          "bone_voxel_count": 14583,
+          "bone_fraction_pct": 86.80357142857143,
+          "low_intensity_voxel_count": 2217,
+          "low_intensity_fraction_pct": 13.19642857142857,
+          "bone_mean": 37279.42288966605,
+          "bone_std": 4869.21436004408,
+          "bone_median": 37139.0,
+          "bone_iqr": 6901.5,
+          "bone_snr": 7.656147405539271,
+          "low_mean": 7983.603067207939,
+          "low_std": 3356.024519019404,
+          "low_median": 6678.0,
+          "low_iqr": 2195.0
+        },
+        "23000": {
+          "threshold": 23000,
+          "bone_voxel_count": 14521,
+          "bone_fraction_pct": 86.43452380952381,
+          "low_intensity_voxel_count": 2279,
+          "low_intensity_fraction_pct": 13.565476190476192,
+          "bone_mean": 37345.041526065696,
+          "bone_std": 4774.523933526355,
+          "bone_median": 37159.0,
+          "bone_iqr": 6880.0,
+          "bone_snr": 7.821730929827698,
+          "low_mean": 8362.494076349276,
+          "low_std": 4012.514487604783,
+          "low_median": 6709.0,
+          "low_iqr": 2621.5
+        },
+        "25000": {
+          "threshold": 25000,
+          "bone_voxel_count": 14465,
+          "bone_fraction_pct": 86.10119047619048,
+          "low_intensity_voxel_count": 2335,
+          "low_intensity_fraction_pct": 13.898809523809524,
+          "bone_mean": 37396.70618734878,
+          "bone_std": 4710.708523214698,
+          "bone_median": 37181.0,
+          "bone_iqr": 6857.0,
+          "bone_snr": 7.938658484823507,
+          "low_mean": 8737.523340471093,
+          "low_std": 4631.061620973063,
+          "low_median": 6740.0,
+          "low_iqr": 3036.5
+        }
+      }
+    },
+    "sedimentary_matrix": {
+      "total_voxels": 28800,
+      "thresholds": {
+        "15000": {
+          "threshold": 15000,
+          "bone_voxel_count": 28595,
+          "bone_fraction_pct": 99.28819444444444,
+          "low_intensity_voxel_count": 205,
+          "low_intensity_fraction_pct": 0.7118055555555556,
+          "bone_mean": 41469.43815352334,
+          "bone_std": 5137.906963410029,
+          "bone_median": 42421.0,
+          "bone_iqr": 6403.0,
+          "bone_snr": 8.071270742901905,
+          "low_mean": 9064.380487804878,
+          "low_std": 2731.6403097879297,
+          "low_median": 8591.0,
+          "low_iqr": 4082.0
+        },
+        "18000": {
+          "threshold": 18000,
+          "bone_voxel_count": 28563,
+          "bone_fraction_pct": 99.17708333333334,
+          "low_intensity_voxel_count": 237,
+          "low_intensity_fraction_pct": 0.8229166666666666,
+          "bone_mean": 41497.5931799881,
+          "bone_std": 5071.314878477999,
+          "bone_median": 42430.0,
+          "bone_iqr": 6392.0,
+          "bone_snr": 8.182807452185328,
+          "low_mean": 10046.531645569621,
+          "low_std": 3572.5424913322004,
+          "low_median": 8931.0,
+          "low_iqr": 5878.0
+        },
+        "20864": {
+          "threshold": 20864,
+          "bone_voxel_count": 28520,
+          "bone_fraction_pct": 99.02777777777779,
+          "low_intensity_voxel_count": 280,
+          "low_intensity_fraction_pct": 0.9722222222222222,
+          "bone_mean": 41530.88853436185,
+          "bone_std": 5001.964351974526,
+          "bone_median": 42441.0,
+          "bone_iqr": 6371.25,
+          "bone_snr": 8.302915737087876,
+          "low_mean": 11485.146428571428,
+          "low_std": 4723.341959655725,
+          "low_median": 10115.5,
+          "low_iqr": 7676.75
+        },
+        "23000": {
+          "threshold": 23000,
+          "bone_voxel_count": 28473,
+          "bone_fraction_pct": 98.86458333333333,
+          "low_intensity_voxel_count": 327,
+          "low_intensity_fraction_pct": 1.1354166666666667,
+          "bone_mean": 41563.10114845643,
+          "bone_std": 4942.747856486159,
+          "bone_median": 42449.0,
+          "bone_iqr": 6356.0,
+          "bone_snr": 8.408905806092237,
+          "low_mean": 12998.785932721712,
+          "low_std": 5727.039355269455,
+          "low_median": 11518.0,
+          "low_iqr": 10681.5
+        },
+        "25000": {
+          "threshold": 25000,
+          "bone_voxel_count": 28393,
+          "bone_fraction_pct": 98.58680555555556,
+          "low_intensity_voxel_count": 407,
+          "low_intensity_fraction_pct": 1.4131944444444444,
+          "bone_mean": 41612.27534955799,
+          "bone_std": 4861.905249096572,
+          "bone_median": 42460.0,
+          "bone_iqr": 6316.0,
+          "bone_snr": 8.558841280851839,
+          "low_mean": 15182.918918918918,
+          "low_std": 6775.6590330751005,
+          "low_median": 14919.0,
+          "low_iqr": 13518.0
+        }
+      }
+    }
+  },
+  "cortex_vs_core_sensitivity_sweep": {
+    "15000": {
+      "threshold": 15000,
+      "cortex_bone_count": 871,
+      "core_bone_count": 29385,
+      "cortex_mean": 34451.083811710676,
+      "core_mean": 37455.05948613238,
+      "cnr": 0.2615560570920845,
+      "descriptive_roc_auc": 0.4486674101905754
+    },
+    "18000": {
+      "threshold": 18000,
+      "cortex_bone_count": 796,
+      "core_bone_count": 29056,
+      "cortex_mean": 36156.522613065325,
+      "core_mean": 37692.49834801762,
+      "cnr": 0.15199065628567263,
+      "descriptive_roc_auc": 0.48469149159896396
+    },
+    "20864": {
+      "threshold": 20864,
+      "cortex_bone_count": 743,
+      "core_bone_count": 28717,
+      "cortex_mean": 37349.75639300135,
+      "core_mean": 37907.427342689,
+      "cnr": 0.061623805955461707,
+      "descriptive_roc_auc": 0.5131830878872682
+    },
+    "23000": {
+      "threshold": 23000,
+      "cortex_bone_count": 701,
+      "core_bone_count": 28335,
+      "cortex_mean": 38283.22111269615,
+      "core_mean": 38121.44069172402,
+      "cnr": 0.019847903403264287,
+      "descriptive_roc_auc": 0.5374810544416242
+    },
+    "25000": {
+      "threshold": 25000,
+      "cortex_bone_count": 673,
+      "core_bone_count": 27823,
+      "cortex_mean": 38879.2852897474,
+      "core_mean": 38380.9105775797,
+      "cnr": 0.0666602314806013,
+      "descriptive_roc_auc": 0.551386954222775
     }
   },
   "anatomical_rois": {
@@ -140,6 +633,140 @@
           65.0
         ],
         "bone_only": false
+      }
+    },
+    "statistics_unfiltered": {
+      "ambient_air": {
+        "voxel_count": 125000,
+        "mean": 423.927576,
+        "std": 1585.0799930334001,
+        "median": 0.0,
+        "iqr": 0.0,
+        "skewness": 3.4745436639018115,
+        "min": 0.0,
+        "max": 6972.0,
+        "p05": 0.0,
+        "p95": 6238.0,
+        "snr": 0.2674486952476897
+      },
+      "dorsal_cortex_zone3": {
+        "voxel_count": 10080,
+        "mean": 8705.40138888889,
+        "std": 8461.231622362078,
+        "median": 6181.0,
+        "iqr": 840.0,
+        "skewness": 3.3359012690493435,
+        "min": 3829.0,
+        "max": 47717.0,
+        "p05": 5303.9,
+        "p95": 35604.89999999994,
+        "snr": 1.0288574734062945
+      },
+      "dome_core_zone2": {
+        "voxel_count": 34272,
+        "mean": 33267.013655462186,
+        "std": 11853.015411550437,
+        "median": 36778.0,
+        "iqr": 9924.5,
+        "skewness": -1.2077989653638324,
+        "min": 3842.0,
+        "max": 51298.0,
+        "p05": 6938.55,
+        "p95": 46333.45,
+        "snr": 2.806628735422414
+      },
+      "basicranium_zone1": {
+        "voxel_count": 16800,
+        "mean": 33413.420952380955,
+        "std": 10971.713643775678,
+        "median": 36175.0,
+        "iqr": 8189.25,
+        "skewness": -1.506264286756936,
+        "min": 4168.0,
+        "max": 50858.0,
+        "p05": 6352.9,
+        "p95": 45245.0,
+        "snr": 3.04541496772809
+      },
+      "sedimentary_matrix": {
+        "voxel_count": 28800,
+        "mean": 41238.77715277778,
+        "std": 5803.850219160573,
+        "median": 42391.0,
+        "iqr": 6484.25,
+        "skewness": -1.8407988706718827,
+        "min": 3176.0,
+        "max": 53027.0,
+        "p05": 31053.95,
+        "p95": 48169.05,
+        "snr": 7.105417196438653
+      }
+    },
+    "statistics_bone_classified": {
+      "ambient_air": {
+        "voxel_count": 125000,
+        "mean": 423.927576,
+        "std": 1585.0799930334001,
+        "median": 0.0,
+        "iqr": 0.0,
+        "skewness": 3.4745436639018115,
+        "min": 0.0,
+        "max": 6972.0,
+        "p05": 0.0,
+        "p95": 6238.0,
+        "snr": 0.2674486952476897
+      },
+      "dorsal_cortex_zone3": {
+        "voxel_count": 743,
+        "mean": 37349.75639300135,
+        "std": 7069.44506312539,
+        "median": 39387.0,
+        "iqr": 9994.5,
+        "skewness": -0.8438074771222951,
+        "min": 20900.0,
+        "max": 47717.0,
+        "p05": 22516.9,
+        "p95": 45239.2,
+        "snr": 5.28326566788385
+      },
+      "dome_core_zone2": {
+        "voxel_count": 28717,
+        "mean": 37907.427342689,
+        "std": 5649.624082684029,
+        "median": 37971.0,
+        "iqr": 7189.0,
+        "skewness": -0.45316893439791806,
+        "min": 20867.0,
+        "max": 51298.0,
+        "p05": 26977.8,
+        "p95": 46698.0,
+        "snr": 6.709725600836773
+      },
+      "basicranium_zone1": {
+        "voxel_count": 14583,
+        "mean": 37279.42288966605,
+        "std": 4869.21436004408,
+        "median": 37139.0,
+        "iqr": 6901.5,
+        "skewness": -0.04945734348786882,
+        "min": 20927.0,
+        "max": 50858.0,
+        "p05": 29756.1,
+        "p95": 45473.9,
+        "snr": 7.656147405539271
+      },
+      "sedimentary_matrix": {
+        "voxel_count": 28800,
+        "mean": 41238.77715277778,
+        "std": 5803.850219160573,
+        "median": 42391.0,
+        "iqr": 6484.25,
+        "skewness": -1.8407988706718827,
+        "min": 3176.0,
+        "max": 53027.0,
+        "p05": 31053.95,
+        "p95": 48169.05,
+        "snr": 7.105417196438653
       }
     },
     "statistics": {
@@ -257,7 +884,7 @@
     "periphery_mean": 40421.029411764706,
     "center_mean": 35836.94117647059,
     "cupping_drop_pct": 11.340849805175672,
-    "interpretation": "Minimal or negative cupping drop indicates that industrial scanner beam-hardening correction was successfully applied during reconstruction, and diagenetic mineral infill maintains high attenuation throughout the central dome core."
+    "interpretation": "A residual radial intensity drop of 11.34% was measured across the analyzed cross-section. This demonstrates non-negligible spatial intensity variation across the dome; the present analysis does not establish the magnitude of the uncorrected artifact or quantify correction effectiveness."
   },
   "dome_transects": {
     "vertical_depth_summit": {
@@ -305,5 +932,5 @@
     "reports/figures/figure13_ct_intensity_semantics.png",
     "reports/figures/figure14_dome_attenuation_transects.png"
   ],
-  "runtime_seconds": 11.8
+  "runtime_seconds": 14.21
 }

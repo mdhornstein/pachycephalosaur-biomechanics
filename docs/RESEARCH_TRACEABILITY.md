@@ -279,16 +279,16 @@ Each phase/gate documents the following minimal tuple:
 
 ---
 
-### Phase 5 Gate C: Image Semantics & Attenuation Characterization
+### Phase 5 Gate C: Image Semantics & Reconstructed Intensity Characterization
 
-- **Scientific Question**: What are the numerical image semantics, attenuation dynamic range, artifact profiles, and tissue contrast distributions in the CT volume, and do they support or refute discrete radiological zonation in the dome?
+- **Scientific Question**: What are the numerical image semantics, reconstructed CT intensity dynamic range, artifact profiles, and tissue contrast distributions in the CT volume, and do they support or refute discrete radiological zonation in the dome?
 - **Design Document**: [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](phase_design/PHASE5_GATE_C_DESIGN.md) *(Prospective)*
 - **Environment**: Python 3.12 (`uv`), dependencies in [`pyproject.toml`](../pyproject.toml) (`numpy`, `scipy`, `pydicom`, `matplotlib`, `scikit-learn`, `pytest`)
-- **Execution Commit**: `cb90ccc` *(Primary characterization pipeline, metrics derivation, and figure generation)*
-- **Report / Documentation Commit**: `cb90ccc` *(Formal report, decision D011, and living state updates)*
+- **Execution Commit**: `cb90ccc` *(Amended in subsequent commit with threshold sensitivity, bone-mask distribution, descriptive AUC, and literature reconciliation)*
+- **Report / Documentation Commit**: `cb90ccc` *(Amended in subsequent commit)*
 - **Execution Command(s)**:
   ```bash
-  # Step 1: Run attenuation characterization, ROI sampling, transect extraction, and figure generation
+  # Step 1: Run intensity characterization, threshold sensitivity, transect extraction, and figure generation
   uv run python scripts/characterize_image_semantics.py
 
   # Step 2: Run automated verification tests
@@ -297,17 +297,19 @@ Each phase/gate documents the following minimal tuple:
 - **Primary Computational Entry Point(s)**:
   - [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py)
 - **Reusable Source Modules**:
-  - [`src/stegoceras_biomechanics/ct/semantics.py`](../src/stegoceras_biomechanics/ct/semantics.py): `load_ct_volume()`, `compute_dynamic_range_audit()`, `build_roi_definitions()`, `extract_roi_samples()`, `compute_roi_moments()`, `compute_tissue_contrast_and_separability()`, `sample_transect_ray()`, `evaluate_cupping_profile()`
+  - [`src/stegoceras_biomechanics/ct/semantics.py`](../src/stegoceras_biomechanics/ct/semantics.py): `load_ct_volume()`, `compute_dynamic_range_audit()`, `compute_bone_mask_distribution()`, `build_roi_definitions()`, `extract_roi_samples()`, `evaluate_threshold_sensitivity()`, `compute_roi_moments()`, `compute_tissue_contrast_and_separability()`, `sample_transect_ray()`, `evaluate_cupping_profile()`
 - **Post-processing / Analysis Entry Point(s)**:
   - Integrated in [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py):
     - Evaluates 100% full-volume histogram accounting ($396,857,344$ voxels).
-    - Derives statistical moments and SNR across 5 anatomical ROIs.
-    - Evaluates tissue contrast-to-noise ratio ($\text{CNR} = 0.0616$), Bhattacharyya distance ($D_B = 0.0134$), and ROC AUC ($0.5132$) between dorsal cortex (Zone 3) and cancellous core (Zone 2).
-    - Quantifies beam-hardening / cupping artifact ($11.34\%$ drop across $24.7\text{-mm}$ bone section).
+    - Evaluates full-volume bone mask distribution and peak modes ($34,042$ bone vs $41,189$ matrix).
+    - Extracts 5 anatomical ROIs without selection bias, evaluating threshold sensitivity across $T \in [15000, 25000]$.
+    - Identifies $16.2\%$ low-intensity voxels in dome core ($11.8\% < 10,000$), aligning with spatial trabecular heterogeneity.
+    - Evaluates descriptive tissue contrast ($\text{CNR} = 0.0616$, $D_B = 0.0134$, descriptive $\text{ROC AUC} = 0.5132$) between dorsal cortex (Zone 3) and dome core (Zone 2).
+    - Quantifies residual radial intensity drop ($11.34\%$ drop across $24.7\text{-mm}$ bone section).
 - **Figure-generation Entry Point(s)**:
   - [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py):
-    - `reports/figures/figure13_ct_intensity_semantics.png`
-    - `reports/figures/figure14_dome_attenuation_transects.png`
+    - `reports/figures/figure13_ct_intensity_semantics.png` (4 panels: full-volume & bone mask histogram, ROI boxplots with low-intensity %, threshold sensitivity sweep, KDE overlap)
+    - `reports/figures/figure14_dome_attenuation_transects.png` (3 panels: vertical depth, coronal transverse, anteroposterior)
 - **Input Artifacts & Cryptographic Checksums**:
   - 514 Cranium micro-CT slices: `data/raw/dicom/cranium/` (SHA-256 verified in [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json))
   - Gate B composite transformation $\mathbf{T}_{\text{composite}}$: [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json)
@@ -318,11 +320,11 @@ Each phase/gate documents the following minimal tuple:
   - [`reports/figures/figure13_ct_intensity_semantics.png`](../reports/figures/figure13_ct_intensity_semantics.png)
   - [`reports/figures/figure14_dome_attenuation_transects.png`](../reports/figures/figure14_dome_attenuation_transects.png)
 - **Automated Verification Tests**:
-  - [`tests/test_gate_c_semantics.py`](../tests/test_gate_c_semantics.py) (7 tests: status and volume metadata, 100% histogram conservation, ROI completeness and SNR moments, zonation indistinguishability, cupping artifact, transect continuity, figure existence)
+  - [`tests/test_gate_c_semantics.py`](../tests/test_gate_c_semantics.py) (8 tests: status & metadata, 100% histogram conservation, bone mask distribution & peaks, ROI completeness & threshold sensitivity, tissue separability consistency, cupping profile, transect continuity, figure existence)
 - **Formal Report**:
   - [`reports/phase5_gate_c_semantics_report.md`](../reports/phase5_gate_c_semantics_report.md)
 - **Resulting Decision / State Update**:
-  - Decision [`D011`](DECISIONS.md) in [`docs/DECISIONS.md`](DECISIONS.md); Phase 5 Gate C Freeze in [`docs/CURRENT_STATE.md`](CURRENT_STATE.md) and [`HANDOFF.md`](../HANDOFF.md).
+  - Decision [`D011`](DECISIONS.md) in [`docs/DECISIONS.md`](DECISIONS.md); Phase 5 Gate C Freeze (Amended) in [`docs/CURRENT_STATE.md`](CURRENT_STATE.md) and [`HANDOFF.md`](../HANDOFF.md).
 
 ---
 

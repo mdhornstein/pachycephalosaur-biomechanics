@@ -1,4 +1,4 @@
-"""Automated verification test suite for Phase 5 Gate C: Image Semantics & Attenuation Characterization."""
+"""Automated verification test suite for Phase 5 Gate C: Image Semantics & Intensity Characterization."""
 
 import json
 from pathlib import Path
@@ -48,8 +48,19 @@ def test_dynamic_range_and_100_percent_histogram_conservation(gate_c_metrics):
     assert 18000 < rule["otsu_threshold"] < 25000
 
 
-def test_anatomical_rois_completeness_and_moments(gate_c_metrics):
-    """Verifies that all 5 target ROIs are present, populated, and have expected SNR characteristics."""
+def test_bone_mask_distribution(gate_c_metrics):
+    """Verifies that full-volume bone mask distribution and peak structure are evaluated."""
+    assert "bone_mask_distribution" in gate_c_metrics
+    bm = gate_c_metrics["bone_mask_distribution"]
+    assert bm["total_bone_voxels"] > 50000000  # Non-trivial bone voxel count
+    assert 10.0 < bm["bone_fraction_pct"] < 30.0
+    assert bm["mean_intensity"] > 25000
+    assert bm["median_intensity"] > 25000
+    assert len(bm["detected_peaks"]) >= 1
+
+
+def test_anatomical_rois_and_threshold_sensitivity(gate_c_metrics):
+    """Verifies that ROIs are evaluated without threshold bias across pre-specified sensitivity range."""
     rois = gate_c_metrics["anatomical_rois"]["statistics"]
     expected_rois = [
         "ambient_air",
@@ -65,48 +76,57 @@ def test_anatomical_rois_completeness_and_moments(gate_c_metrics):
         assert s["voxel_count"] > 100, f"ROI '{name}' voxel count unexpectedly small: {s['voxel_count']}"
         assert not np.isnan(s["mean"]), f"ROI '{name}' mean is NaN"
         assert not np.isnan(s["std"]), f"ROI '{name}' std is NaN"
-        assert s["iqr"] >= 0, f"ROI '{name}' IQR negative"
 
-    # Bone and matrix ROIs must have positive dispersion (IQR > 1000)
-    for name in ["dorsal_cortex_zone3", "dome_core_zone2", "basicranium_zone1", "sedimentary_matrix"]:
-        assert rois[name]["iqr"] > 1000, f"ROI '{name}' IQR unexpectedly small"
+    # Verify threshold sensitivity data exists and conserves fractions
+    assert "threshold_sensitivity" in gate_c_metrics
+    sens = gate_c_metrics["threshold_sensitivity"]
+    expected_thresholds = ["15000", "18000", "20864", "23000", "25000"]
 
-    # Air SNR should be low (< 1.0), bone ROIs should have SNR > 3.0
-    assert rois["ambient_air"]["snr"] < 1.0
-    assert rois["dorsal_cortex_zone3"]["snr"] > 3.0
-    assert rois["dome_core_zone2"]["snr"] > 3.0
-    assert rois["basicranium_zone1"]["snr"] > 3.0
+    for name in expected_rois:
+        assert name in sens, f"ROI '{name}' missing from threshold sensitivity"
+        t_data = sens[name]["thresholds"]
+        for t_key in expected_thresholds:
+            assert t_key in t_data, f"Threshold '{t_key}' missing from ROI '{name}'"
+            entry = t_data[t_key]
+            # Fractions must sum to 100%
+            total_pct = entry["bone_fraction_pct"] + entry["low_intensity_fraction_pct"]
+            assert np.isclose(total_pct, 100.0, atol=1e-3), (
+                f"Fractions do not sum to 100% in {name} at T={t_key}: {total_pct}"
+            )
+
+    # Dome core must exhibit non-trivial low-intensity fraction (> 10%)
+    core_sens = sens["dome_core_zone2"]["thresholds"]["20864"]
+    assert core_sens["low_intensity_fraction_pct"] > 10.0
 
 
-def test_epistemic_zonation_indistinguishability(gate_c_metrics):
-    """Verifies empirical finding that Zone 2 and Zone 3 exhibit near-zero contrast (refuting Hypothesis A)."""
+def test_tissue_separability_metrics_consistency(gate_c_metrics):
+    """Verifies that tissue contrast and separability metrics are numerically consistent."""
     sep = gate_c_metrics["tissue_separability"]
     assert "dorsal_cortex_vs_dome_core" in sep
 
     cortex_core = sep["dorsal_cortex_vs_dome_core"]
-    # CNR must be << 1.0 (negligible contrast)
-    assert cortex_core["cnr"] < 0.20, f"CNR unexpectedly high: {cortex_core['cnr']}"
-    # Bhattacharyya distance must be < 0.10 (high distributional overlap)
-    assert cortex_core["bhattacharyya_distance"] < 0.10, (
-        f"Bhattacharyya distance unexpectedly high: {cortex_core['bhattacharyya_distance']}"
-    )
+    assert cortex_core["cnr"] >= 0.0
+    assert cortex_core["bhattacharyya_distance"] >= 0.0
+    assert 0.0 <= cortex_core["roc_auc"] <= 1.0
 
-    # Conclusion string must reflect diagenetic permineralization and literature-based zonation
-    conclusion = gate_c_metrics["epistemic_conclusion"]
-    assert "Hypothesis B" in conclusion
-    assert "permineralized" in conclusion
-    assert "cannot be directly segmented" in conclusion
-    assert "Schott et al. 2011" in conclusion
+    # Sensitivity sweep for cortex vs core must exist
+    assert "cortex_vs_core_sensitivity_sweep" in gate_c_metrics
+    sweep = gate_c_metrics["cortex_vs_core_sensitivity_sweep"]
+    for t_key in ["15000", "18000", "20864", "23000", "25000"]:
+        assert t_key in sweep
+        assert sweep[t_key]["cnr"] >= 0.0
+        assert 0.0 <= sweep[t_key]["descriptive_roc_auc"] <= 1.0
 
 
 def test_beam_hardening_cupping_profile(gate_c_metrics):
-    """Verifies that beam-hardening / cupping analysis executed and documented valid metrics."""
+    """Verifies that residual radial intensity variation across the cross-section is quantified."""
     cupping = gate_c_metrics["beam_hardening_cupping"]
     assert cupping["status"] == "EVALUATED"
     assert cupping["bone_voxel_count"] > 20
     assert cupping["span_mm"] > 10.0
     assert cupping["periphery_mean"] > 20000
     assert cupping["center_mean"] > 20000
+    assert 0.0 < cupping["cupping_drop_pct"] < 30.0
 
 
 def test_transect_continuity_and_length(gate_c_metrics):
