@@ -29,7 +29,7 @@ Phase 5 Gate B establishes the empirical physical scale and spatial registration
    - **Primary Outer-Boundary Fidelity ($G_0 \to S_{\text{CT}}$, 29,722 vertices)**: Median distance **$0.1633\text{ mm}$** ($< 1$ in-plane pixel width of $0.2076\text{ mm}$), mean **$0.4130\text{ mm}$**, RMS **$0.8766\text{ mm}$**; **$86.99\%$** of vertices lie within $< 0.5\text{ mm}$ and **$89.34\%$** lie within $< 1.0\text{ mm}$. This serves as the authoritative metric of outer-boundary correspondence.
    - **Whole-Volume CT Interface Diagnostic ($S_{\text{CT}} \to G_0$, 4,950,375 points)**: Median distance **$1.0928\text{ mm}$**, mean **$2.7279\text{ mm}$**, RMS **$4.6529\text{ mm}$**; **$44.56\%$** within $< 1.0\text{ mm}$ and **$72.88\%$** within $< 2.0\text{ mm}$ ($p_{95} = 11.1375\text{ mm}$). This is retained as an informative whole-volume internal-interface diagnostic rather than a symmetric boundary registration error, because $S_{\text{CT}}$ contains all reconstructed internal bone surfaces (endocranial cavity, trabecular channels, sinuses) that $G_0$ was never intended to represent.
    - **Directed Spread Reference**: Reference two-way mean $1.5704\text{ mm}$, RMS $3.3480\text{ mm}$ (recorded as a directional spread summary across disparate geometric entities, not as a measure of boundary registration quality).
-6. **Outward-Normal Signed Distance**: Evaluated along the outward unit normal of $G_0$, the signed distance has a mean of **$-0.0454\text{ mm}$** ($\text{std} = 0.5868\text{ mm}$), with $46.93\%$ exterior and $53.07\%$ interior. The sub-tenth-millimeter mean confirms zero systematic expansion or contraction bias.
+6. **Outward-Normal Signed Distance**: Evaluated along the outward unit normal of $G_0$, the signed distance has a mean of **$-0.0454\text{ mm}$** ($\text{std} = 0.5868\text{ mm}$), with $46.93\%$ exterior and $53.07\%$ interior. The small mean signed distance provides no evidence of a substantial global expansion or contraction bias.
 7. **Anatomical Subregion Breakdown**: Agreement is tightest on external cortical bone (ventral palate: $100.0\% < 0.5\text{ mm}$, median $0.173\text{ mm}$; basicranium: $99.67\% < 0.5\text{ mm}$, median $0.201\text{ mm}$; frontoparietal dome: $87.98\% < 0.5\text{ mm}$, median $0.152\text{ mm}$). Residual elevations ($> 2.0\text{ mm}$, $5.8\%$ of $G_0$ vertices) concentrate specifically in complex endocranial foramina and thin temporal arches, consistent with post-segmentation digital mesh repair/closure rather than misregistration.
 8. **Epistemic Provenance Conclusion**: Geometric correspondence cannot by itself constitute legal or archival provenance. However, the sub-millimeter median forward distance and translation magnitude of $0.2472\text{ mm}$ (approximately one voxel spacing and below the $0.25\text{-mm}$ through-plane slice spacing) provide strong geometric evidence consistent with $G_0$ having been derived directly from this micro-CT volume.
 
@@ -167,7 +167,7 @@ $$d_{\text{signed}} = (\mathbf{p}_{\text{CT}} - \mathbf{v}_{G_0}) \cdot \mathbf{
 - **Exterior Proportion ($d > 0$)**: **$46.93\%$**
 - **Interior Proportion ($d < 0$)**: **$53.07\%$**
 
-The near-zero mean ($-45\ \mu\text{m}$) and balanced proportions ($\approx 47\% / 53\%$) demonstrate that $G_0$ has zero systematic global dilation or shrinkage bias relative to the CT volume.
+The near-zero mean ($-45\ \mu\text{m}$) and balanced proportions ($\approx 47\% / 53\%$) provide no evidence of a substantial global dilation or shrinkage bias relative to the CT volume.
 
 ### 7.2 Anatomical Subregion Breakdown ($G_0 \to S_{\text{CT}}$)
 | Anatomical Subregion | Vertex Count | Median (mm) | Mean (mm) | RMS (mm) | 95th %ile (mm) | Fraction $< 0.5\text{ mm}$ |
@@ -251,7 +251,7 @@ $$\text{Geometric Correspondence} \neq \text{Archival Provenance Proof}$$
 ### Report provenance
 - **Governing Design**: [`docs/phase_design/PHASE5_GATE_B_DESIGN.md`](../docs/phase_design/PHASE5_GATE_B_DESIGN.md) *(Retrospective Reconstruction)*
 - **Execution commit**: `ca32eba` (Primary 6-DOF Kabsch registration, Free-Scale similarity diagnostic, ICP refinement, and metric generation)
-- **Report / documentation commit**: `fa0cf58` (Refinement of diagnostic terminology, whole-volume interface diagnostic, and dimensional translation description)
+- **Report / documentation commit**: `bb61195` (Epistemic wording refinement and provenance harmonization; initial delivery in `fa0cf58`)
 - **Verification tests**: `uv run pytest tests/test_gate_b_registration.py -v` (10 tests verifying rigid scale constraint, Umeyama diagnostic, zero-based coordinate convention, objective threshold frozen rule, landmark residuals, ICP convergence, and subregion accuracy)
 - **Governing decisions**: Decision [`D010`](../docs/DECISIONS.md) in [`docs/DECISIONS.md`](../docs/DECISIONS.md); Phase 5 Gate B Freeze in [`docs/CURRENT_STATE.md`](../docs/CURRENT_STATE.md) and [`HANDOFF.md`](../HANDOFF.md)
 
