@@ -167,8 +167,8 @@ This milestone is computationally reproducible under the project's standard envi
 
 ### Provenance Commits
 - **Governing Design**: [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](../docs/phase_design/PHASE5_GATE_C_DESIGN.md) *(Prospective)*
-- **Execution Commit**: `acccb96` *(Primary characterization pipeline, metrics derivation, and figure generation)*
-- **Report / Documentation Commit**: `acccb96` *(Formal report, decision D011, and living state updates)*
+- **Execution Commit**: `cb90ccc` *(Primary characterization pipeline, metrics derivation, and figure generation)*
+- **Report / Documentation Commit**: `cb90ccc` *(Formal report, decision D011, and living state updates)*
 
 ### Command-line Recipe
 ```bash
