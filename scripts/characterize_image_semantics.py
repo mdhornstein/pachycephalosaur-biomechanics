@@ -156,10 +156,14 @@ def plot_figure_13(
     for idx, (key, _, _) in enumerate(roi_order):
         sens_entry = threshold_sensitivity.get(key, {}).get("thresholds", {}).get(str(otsu_t), {})
         low_pct = sens_entry.get("low_intensity_fraction_pct", 0.0)
+        if key == "dorsal_cortex_zone3":
+            text_str = f"Low (Air*):\n{low_pct:.1f}%"
+        else:
+            text_str = f"Low:\n{low_pct:.1f}%"
         ax_box.text(
             idx + 1,
             2000,
-            f"Low:\n{low_pct:.1f}%",
+            text_str,
             ha="center",
             va="bottom",
             fontsize=8,
@@ -168,6 +172,15 @@ def plot_figure_13(
             bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.8, edgecolor="#cccccc"),
         )
 
+    ax_box.text(
+        0.03,
+        0.04,
+        "*Dorsal cortex bounding box intersects outer skull into ambient air (92.6% air, 7.4% bone)",
+        transform=ax_box.transAxes,
+        fontsize=7.5,
+        fontstyle="italic",
+        color="#555555",
+    )
     ax_box.set_title("B. Anatomical ROI Intensity Distributions (High-Intensity Subset)", fontsize=11, fontweight="bold")
     ax_box.set_ylabel("Reconstructed CT Intensity (16-bit)", fontsize=9.5)
     ax_box.set_ylim(-1000, 55000)
@@ -184,9 +197,20 @@ def plot_figure_13(
         t_data = threshold_sensitivity[key]["thresholds"]
         low_pcts = [t_data[str(t)]["low_intensity_fraction_pct"] for t in thresh_keys]
         clean_label = label.replace("\n", " ")
+        if key == "dorsal_cortex_zone3":
+            clean_label = "Dorsal Cortex (Outer Air Envelope*)"
         ax_sens.plot(thresh_keys, low_pcts, marker="o", lw=2, color=color, label=clean_label)
 
     ax_sens.axvline(otsu_t, color="#d62728", linestyle="--", lw=1.5, label=f"Otsu Cutoff ({otsu_t})")
+    ax_sens.text(
+        0.03,
+        0.04,
+        "*Dorsal cortex low fraction reflects ambient air outside sloping skull surface",
+        transform=ax_sens.transAxes,
+        fontsize=7.5,
+        fontstyle="italic",
+        color="#555555",
+    )
     ax_sens.set_title("C. Post Hoc Threshold Sensitivity Sweep (Low-Intensity Fraction)", fontsize=11, fontweight="bold")
     ax_sens.set_xlabel("Candidate Bone Threshold $T$", fontsize=9.5)
     ax_sens.set_ylabel("Low-Intensity Voxel Fraction (%)", fontsize=9.5)
@@ -195,7 +219,7 @@ def plot_figure_13(
     ax_sens.grid(True, linestyle=":", alpha=0.5)
 
     # -------------------------------------------------------------
-    # Panel D: Kernel Density Overlap (Zonation Indistinguishability)
+    # Panel D: Fitted Parametric Overlap (Zonation Indistinguishability)
     # -------------------------------------------------------------
     ax_kde = axes[1, 1]
     eval_range = np.linspace(15000, 55000, 300)
@@ -205,11 +229,20 @@ def plot_figure_13(
         sig = roi_stats_bone[key]["std"]
         pdf = (1.0 / (sig * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((eval_range - mu) / sig) ** 2)
         clean_label = label.replace("\n", " ")
-        ax_kde.plot(eval_range, pdf, lw=2.2, color=color, label=f"{clean_label} (μ={mu:.0f})")
+        ax_kde.plot(eval_range, pdf, lw=2.2, color=color, label=f"{clean_label} (Fit: μ={mu:.0f}, σ={sig:.0f})")
         ax_kde.fill_between(eval_range, pdf, color=color, alpha=0.15)
 
     ax_kde.axvline(otsu_t, color="#d62728", linestyle="--", lw=1.5, label=f"Otsu ({otsu_t})")
-    ax_kde.set_title("D. Tissue Contrast Overlap & Zonation Indistinguishability", fontsize=11, fontweight="bold")
+    ax_kde.text(
+        0.03,
+        0.04,
+        "Parametric Gaussian fits to high-intensity bone-candidate subsets",
+        transform=ax_kde.transAxes,
+        fontsize=7.5,
+        fontstyle="italic",
+        color="#555555",
+    )
+    ax_kde.set_title("D. Fitted Normal Distributions & Zonation Overlap", fontsize=11, fontweight="bold")
     ax_kde.set_xlabel("Reconstructed CT Intensity (16-bit)", fontsize=9.5)
     ax_kde.set_ylabel("Probability Density", fontsize=9.5)
     ax_kde.set_xlim(15000, 55000)
