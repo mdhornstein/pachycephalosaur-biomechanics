@@ -206,9 +206,9 @@ $$\text{Geometric Correspondence} \neq \text{Archival Provenance Proof}$$
 
 - **Phase 5 Gate B Status**: **VERIFIED & FROZEN**.
 - **Scale Factor Decision**: Scale is fixed at $s = 1.000000$, supported by the free-scale diagnostic ($\hat{s} = 1.00494$).
-- **Next Scientific Gate**: **Phase 5 Gate C — Image Semantics & Attenuation Characterization**.
-  - Audit attenuation histogram across cranial tissues (air, matrix, compact dome bone, cancellous bone).
-  - Investigate whether radial/depth attenuation gradients exist in the dome to inform Model B zonation boundaries.
+- **Next Scientific Gate**: **Phase 5 Gate C — Image Semantics & Reconstructed Intensity Characterization**.
+  - Audit reconstructed CT image intensity histogram across cranial tissues (air, matrix, compact dome bone, cancellous bone).
+  - Investigate whether radial/depth intensity gradients exist in the dome to inform Model B zonation boundaries.
 
 ---
 
