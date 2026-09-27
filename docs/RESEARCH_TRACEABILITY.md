@@ -308,8 +308,8 @@ Each phase/gate documents the following minimal tuple:
     - Quantifies residual radial intensity drop ($11.34\%$ drop across $24.7\text{-mm}$ bone section).
 - **Figure-generation Entry Point(s)**:
   - [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py):
-    - `reports/figures/figure13_ct_intensity_semantics.png` (4 panels: full-volume & high-intensity mask histogram, ROI boxplots with low-intensity %, post hoc threshold sensitivity sweep, KDE overlap)
-    - `reports/figures/figure14_dome_attenuation_transects.png` (3 panels: vertical depth, coronal transverse, anteroposterior)
+    - `reports/figures/13_ct_intensity_semantics.png` (4 panels: full-volume & high-intensity mask histogram, ROI boxplots with low-intensity %, post hoc threshold sensitivity sweep, normal fit overlap)
+    - `reports/figures/14_dome_intensity_transects.png` (3 panels: vertical depth, coronal transverse, anteroposterior)
 - **Input Artifacts & Cryptographic Checksums**:
   - 514 Cranium micro-CT slices: `data/raw/dicom/cranium/` (SHA-256 verified in [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json))
   - Gate B composite transformation $\mathbf{T}_{\text{composite}}$: [`results/phase5/gate_b_registration_metrics.json`](../results/phase5/gate_b_registration_metrics.json)
@@ -317,8 +317,8 @@ Each phase/gate documents the following minimal tuple:
 - **Machine-Readable Result Artifacts**:
   - [`results/phase5/gate_c_semantics_metrics.json`](../results/phase5/gate_c_semantics_metrics.json)
 - **Figure Artifacts**:
-  - [`reports/figures/figure13_ct_intensity_semantics.png`](../reports/figures/figure13_ct_intensity_semantics.png)
-  - [`reports/figures/figure14_dome_attenuation_transects.png`](../reports/figures/figure14_dome_attenuation_transects.png)
+  - [`reports/figures/13_ct_intensity_semantics.png`](../reports/figures/13_ct_intensity_semantics.png)
+  - [`reports/figures/14_dome_intensity_transects.png`](../reports/figures/14_dome_intensity_transects.png)
 - **Automated Verification Tests**:
   - [`tests/test_gate_c_semantics.py`](../tests/test_gate_c_semantics.py) (8 tests: status & metadata, 100% histogram conservation, high-intensity mask distribution & peaks, ROI completeness & post hoc threshold sensitivity, tissue separability consistency, cupping profile, transect continuity, figure existence)
 - **Formal Report**:

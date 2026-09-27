@@ -500,7 +500,7 @@ def execute_gate_c_characterization() -> Dict[str, Any]:
 
     # 9. Render Publication Figures
     print("Rendering publication figures...")
-    fig13_path = FIGURES_DIR / "figure13_ct_intensity_semantics.png"
+    fig13_path = FIGURES_DIR / "13_ct_intensity_semantics.png"
     plot_figure_13(
         dynamic_range,
         bone_mask_dist,
@@ -511,7 +511,7 @@ def execute_gate_c_characterization() -> Dict[str, Any]:
         fig13_path,
     )
 
-    fig14_path = FIGURES_DIR / "figure14_dome_attenuation_transects.png"
+    fig14_path = FIGURES_DIR / "14_dome_intensity_transects.png"
     plot_figure_14(transect_vert, transect_trans, transect_ap, cupping_result, otsu_threshold, fig14_path)
 
     # 10. Epistemic Synthesis & Objective Determination

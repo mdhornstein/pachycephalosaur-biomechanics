@@ -159,8 +159,8 @@ def test_transect_continuity_and_length(gate_c_metrics):
 
 def test_publication_figures_exist_and_nonempty():
     """Verifies that generated publication Figures 13 and 14 exist on disk with positive size."""
-    fig13 = FIGURES_DIR / "figure13_ct_intensity_semantics.png"
-    fig14 = FIGURES_DIR / "figure14_dome_attenuation_transects.png"
+    fig13 = FIGURES_DIR / "13_ct_intensity_semantics.png"
+    fig14 = FIGURES_DIR / "14_dome_intensity_transects.png"
 
     assert fig13.exists(), f"Figure 13 missing at {fig13}"
     assert fig14.exists(), f"Figure 14 missing at {fig14}"

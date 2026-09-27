@@ -8,8 +8,8 @@
 **Dataset**: `UALVP2-CT-DICOM-CRAN-01` (514 Slices, 16-bit Unsigned, Matrix $754 \times 1024 \times 514$)  
 **Generated Artifacts**:
 - Machine-Readable Metrics: [`results/phase5/gate_c_semantics_metrics.json`](../results/phase5/gate_c_semantics_metrics.json)
-- Figure 13 (Full-Volume Dynamic Range, High-Intensity Mask, & Post Hoc Threshold Sensitivity): [`reports/figures/figure13_ct_intensity_semantics.png`](figures/figure13_ct_intensity_semantics.png)
-- Figure 14 (Dome Depth Transects & Cupping Profile): [`reports/figures/figure14_dome_attenuation_transects.png`](figures/figure14_dome_attenuation_transects.png)
+- Figure 13 (Full-Volume Dynamic Range, High-Intensity Mask, & Post Hoc Threshold Sensitivity): [`reports/figures/13_ct_intensity_semantics.png`](figures/13_ct_intensity_semantics.png)
+- Figure 14 (Dome Depth Transects & Cupping Profile): [`reports/figures/14_dome_intensity_transects.png`](figures/14_dome_intensity_transects.png)
 
 ---
 
@@ -139,7 +139,7 @@ Histogram peak detection identifies two distinct macroscopic modes:
 
 The global high-intensity mask contains at least two broad intensity modes, demonstrating that a single global intensity threshold does not uniquely identify bone material. In contrast, within the frontoparietal dome bone (cortex and core), the intensity distribution is unimodal, centered at $\sim 37,000-38,000$, with no secondary bone mode.
 
-![Figure 13](figures/figure13_ct_intensity_semantics.png)
+![Figure 13](figures/13_ct_intensity_semantics.png)
 *Figure 13: Full-volume CT intensity semantics, tissue ROI distributions, and post hoc threshold sensitivity. (A) Full-volume 16-bit histogram showing bimodal separation between air (mode 6016) and bone/matrix (mode 34175) separated by the objective Otsu threshold (20864), with high-intensity mask distribution overlay showing cranial bone peak (34042) and matrix peak (41189). (B) Boxplots of tissue ROI distributions for high-intensity bone-candidate voxels, annotated with low-intensity fraction percentages (*dorsal cortex bounding box intersects outer skull into ambient air: 7.4% bone, 92.6% ambient air; internal ROIs sample voxels positioned within the cranial interior). (C) Post hoc threshold sensitivity sweep showing low-intensity fraction across candidate thresholds $T \in [15000, 25000]$ (where dorsal cortex tracks the outer geometric air boundary, while internal ROIs track tissue-internal low-intensity fractions). (D) Fitted parametric normal distributions (Gaussian fits using mean ± std of high-intensity bone-candidate voxels) demonstrating the absence of contrast between dorsal cortex (Zone 3) and dome core (Zone 2).*
 
 ### 4.3 Anatomical ROI Statistics (Full Accounting)
@@ -179,7 +179,7 @@ Evaluating the sensitivity of bone-candidate moments and low-intensity fractions
 | Dome Core (Zone 2) vs. Sedimentary Matrix | $0.4113$ | $0.0425$ | $0.3136$ | Overlapping (Matrix denser than core) |
 | Combined Bone vs. Sedimentary Matrix | $0.4461$ | $0.0508$ | $0.2987$ | Overlapping |
 
-![Figure 14](figures/figure14_dome_attenuation_transects.png)
+![Figure 14](figures/14_dome_intensity_transects.png)
 *Figure 14: Dome depth transects and cupping profiles. (A) Vertical depth transect from dorsal summit ($Z=110\text{ mm}$) to endocranial cavity ($Z=60\text{ mm}$), showing sharp entry into cortical bone ($Z \approx 94\text{ mm}$) and sustained high intensity through the core. (B) Coronal transverse transect across the dome width ($Y=120\text{ mm}, Z=90\text{ mm}$) showing residual 11.3% radial intensity drop across the 24.7-mm span. (C) Anteroposterior transect along the dorsal dome curvature ($Y=80\text{ to }160\text{ mm}$).*
 
 ### 4.6 Dome Depth Transects & Residual Spatial Variation
@@ -245,8 +245,8 @@ uv run pytest tests/test_gate_c_semantics.py -v
 
 ### Generated Result Artifacts
 - **Metrics JSON**: [`results/phase5/gate_c_semantics_metrics.json`](../results/phase5/gate_c_semantics_metrics.json)
-- **Figure 13**: [`reports/figures/figure13_ct_intensity_semantics.png`](figures/figure13_ct_intensity_semantics.png)
-- **Figure 14**: [`reports/figures/figure14_dome_attenuation_transects.png`](figures/figure14_dome_attenuation_transects.png)
+- **Figure 13**: [`reports/figures/13_ct_intensity_semantics.png`](figures/13_ct_intensity_semantics.png)
+- **Figure 14**: [`reports/figures/14_dome_intensity_transects.png`](figures/14_dome_intensity_transects.png)
 
 ### Governing Decision
 - **Decision D011**: Model B Histological Zonation via Literature-Informed Geometric Rules (Phase 5 Gate C Freeze) in [`docs/DECISIONS.md`](../docs/DECISIONS.md).
