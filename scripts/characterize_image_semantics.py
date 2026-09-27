@@ -1,4 +1,4 @@
-"""Phase 5 Gate C: Image Semantics, Attenuation Dynamic Range, and Tissue Contrast Characterization.
+"""Phase 5 Gate C: Image Semantics, Reconstructed CT Intensity Dynamic Range, and Tissue Contrast Characterization.
 
 Executes prospective experimental design defined in `docs/phase_design/PHASE5_GATE_C_DESIGN.md`
 with targeted scientific amendments addressing threshold sensitivity, bone-mask distributions,

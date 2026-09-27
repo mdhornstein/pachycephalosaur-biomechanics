@@ -1,4 +1,4 @@
-"""Image data semantics, attenuation profiling, and tissue contrast characterization for micro-CT data.
+"""Image data semantics, reconstructed CT intensity profiling, and tissue contrast characterization for micro-CT data.
 
 Provides reusable tools for Phase 5 Gate C:
 - DICOM volume loading with zero-based voxel coordinate mapping
