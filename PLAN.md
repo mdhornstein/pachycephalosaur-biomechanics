@@ -50,8 +50,8 @@ Phase 9     Comparative pachycephalosaur analysis  FUTURE
 
 | Phase / Gate | Focus | Governing Design | Report / Artifact | Key Decision | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Phase 1** | Digital Ingestion & Provenance | [`reports/phase1_data_and_geometry_report.md`](reports/phase1_data_and_geometry_report.md) | [`data/metadata/dataset_manifest.yaml`](data/metadata/dataset_manifest.yaml) | D01 | **COMPLETE** |
-| **Phase 2** | Anatomy Inventory & Coordinate Alignment | [`reports/phase2_digital_anatomy_report.md`](reports/phase2_digital_anatomy_report.md) | [`data/metadata/geometry_inventory.csv`](data/metadata/geometry_inventory.csv) | D02 | **COMPLETE** |
+| **Phase 1** | Digital Ingestion & Provenance | [`docs/phase_design/PHASE1_DESIGN_RECONSTRUCTED.md`](docs/phase_design/PHASE1_DESIGN_RECONSTRUCTED.md) | [`reports/phase1_data_and_geometry_report.md`](reports/phase1_data_and_geometry_report.md) | D01 | **COMPLETE** |
+| **Phase 2** | Anatomy Inventory & Coordinate Alignment | [`docs/phase_design/PHASE2_DESIGN_RECONSTRUCTED.md`](docs/phase_design/PHASE2_DESIGN_RECONSTRUCTED.md) | [`reports/phase2_digital_anatomy_report.md`](reports/phase2_digital_anatomy_report.md) | D02 | **COMPLETE** |
 | **Phase 3** | Published-Model Audit & Input Matrix | [`docs/phase_design/PHASE3_DESIGN_RECONSTRUCTED.md`](docs/phase_design/PHASE3_DESIGN_RECONSTRUCTED.md) | [`reports/snively_theodor_model_reconstruction.md`](reports/snively_theodor_model_reconstruction.md) | D04–D07 | **COMPLETE** |
 | **Phase 4** | Surface FEA Benchmark (Model A Baseline) | [`reports/phase4_fea_benchmark_report.md`](reports/phase4_fea_benchmark_report.md) | [`models/phase4/`](models/phase4/), Figures 08–12 | D03, D08–D10 | **COMPLETE** |
 | **Phase 5 Gate A** | Micro-CT DICOM Integrity & Spatial Mapping | [`docs/phase_design/PHASE5_GATE_A_DESIGN.md`](docs/phase_design/PHASE5_GATE_A_DESIGN.md) | [`reports/phase5_gate_a_dicom_report.md`](reports/phase5_gate_a_dicom_report.md) | D11 | **COMPLETE** |
