@@ -1,7 +1,7 @@
-"""Script to generate all Phase 4 result figures, convergence curves, and subregion metrics.
+"""Script to perform Phase 4 numerical post-processing, convergence metric derivation, and result figure generation.
 
 HARD ARCHITECTURAL INVARIANTS:
-1. This script is strictly in the Visualization Layer. It may NEVER call solve_linear_elasticity().
+1. This script is strictly a post-processing and visualization consumer. It may NEVER call solve_linear_elasticity().
 2. This script may NEVER generate or remesh geometries.
 3. It consumes precomputed, immutable numerical artifacts (solution_{tier}.npz and metrics_{tier}.json)
    produced by the simulation layer (solve_production.py).
@@ -348,22 +348,24 @@ def generate_all_phase4_results_and_plots():
     lin_disps = np.array([disp_1k * 0.5, disp_1k, disp_1k * 2.0])
     lin_energies = np.array([energy_1k * 0.25, energy_1k, energy_1k * 4.0])
 
-    # Displacement vs Load (linear fit)
-    ax1.plot(forces, lin_disps, "o", color="#27ae60", markersize=8, label="FEM Solves (500, 1000, 2000 N)")
+    # Displacement vs Load (1,000 N production solve + analytical linear scaling)
+    ax1.plot([1000.0], [disp_1k], "o", color="#27ae60", markersize=9, label="1,000 N Production Solve (FEA)")
+    ax1.plot([500.0, 2000.0], [disp_1k * 0.5, disp_1k * 2.0], "x", color="#e67e22", markersize=8, mew=2, label="Analytically Scaled (500 N, 2,000 N)")
     f_dense = np.linspace(0, 2200, 100)
     ax1.plot(f_dense, f_dense * (disp_1k / 1000.0), "--", color="#2c3e50", label=f"Exact Linear Slope: {disp_1k:.3e} mm/N")
     ax1.set_xlabel("Applied Compressive Force (N)", fontsize=10)
     ax1.set_ylabel("Max Cranial Displacement (mm)", fontsize=10)
-    ax1.set_title("Linearity: Displacement vs Force (Error = 0.000%)", fontsize=11, fontweight="bold")
+    ax1.set_title("Linearity: Displacement Scaling vs Force", fontsize=11, fontweight="bold")
     ax1.grid(True, linestyle="--", alpha=0.3)
     ax1.legend(frameon=True)
 
-    # Energy vs Load (quadratic fit)
-    ax2.plot(forces, lin_energies, "s", color="#8e44ad", markersize=8, label="FEM Total Energy (mJ)")
+    # Energy vs Load (1,000 N production solve + analytical quadratic scaling)
+    ax2.plot([1000.0], [energy_1k], "s", color="#8e44ad", markersize=9, label="1,000 N Production Solve (FEA)")
+    ax2.plot([500.0, 2000.0], [energy_1k * 0.25, energy_1k * 4.0], "^", color="#d35400", markersize=8, label="Analytically Scaled (500 N, 2,000 N)")
     ax2.plot(f_dense, (f_dense / 1000.0)**2 * energy_1k, "--", color="#2c3e50", label=f"Exact Quadratic Curve (U ∝ F²)")
     ax2.set_xlabel("Applied Compressive Force (N)", fontsize=10)
     ax2.set_ylabel("Total Strain Energy (mJ)", fontsize=10)
-    ax2.set_title("Quadratic Energy Scaling: U(F) (Error = 0.000%)", fontsize=11, fontweight="bold")
+    ax2.set_title("Quadratic Energy Scaling: U(F)", fontsize=11, fontweight="bold")
     ax2.grid(True, linestyle="--", alpha=0.3)
     ax2.legend(frameon=True)
 

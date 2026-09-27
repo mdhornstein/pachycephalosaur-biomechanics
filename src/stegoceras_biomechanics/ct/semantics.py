@@ -21,6 +21,11 @@ from sklearn.metrics import roc_auc_score
 def load_ct_volume(dicom_dir: Path) -> Tuple[np.ndarray, Dict[str, Any]]:
     """Loads 514 DICOM slice files into a contiguous 3D numpy volume array.
 
+    Note: This loader is intentionally specialized to the specific scan geometry
+    of series UALVP2-CT-DICOM-CRAN-01 (514 axial slices, identity direction cosines,
+    standard slice sorting) rather than serving as a general-purpose arbitrary DICOM
+    spatial mapper.
+
     Args:
         dicom_dir: Path to directory containing DICOM slice files.
 
@@ -640,9 +645,11 @@ def evaluate_cupping_profile(
     row_index: int = 500,
     otsu_threshold: int = 20864,
 ) -> Dict[str, Any]:
-    """Quantifies beam-hardening / cupping artifact across coronal cranial bone section.
+    """Evaluates descriptive residual radial/axial intensity variation (cupping profile) across coronal cranial bone section.
 
     Evaluates radial intensity drop from peripheral cortical margins to the central dome core.
+    Note: This is a descriptive spatial intensity profile across the reconstructed volume,
+    not a demonstrated physical or sinogram-based beam-hardening correction experiment.
 
     Args:
         volume_xyz: 3D CT volume array (cols, rows, slices).

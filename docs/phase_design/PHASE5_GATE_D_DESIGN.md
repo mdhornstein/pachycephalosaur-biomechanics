@@ -1,10 +1,16 @@
 # Phase 5 Gate D Design: Reconstruct Published Material Inference Logic
 
-**Document Role**: Prospective Scientific Research & Computational Design  
-**Status**: APPROVED / ACTIVE (Prospective Design Complete; Implementation Pending User Instruction)  
+**Document Role**: Prospective Scientific Research & Computational Design (Draft)  
+**Status**: UNEXECUTED DRAFT (Preserved as Research History; Pending Targeted Redesign Prior to Implementation)  
 **Governing Standard**: Model Decision Basis v1 ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](../LITERATURE_TO_MODEL_DECISIONS.md) §4.4, Decision D012)  
 **Specimen**: *Stegoceras validum* UALVP 2  
-**Date Formulated**: 2026-09-25 (Updated 2026-09-26)  
+**Date Formulated**: 2026-09-25 (Updated 2026-09-26; Admin Note 2026-09-27)  
+
+> [!IMPORTANT]
+> **Administrative Status Note (Independent Repository Audit Remediation)**:
+> This document represents an **unexecuted pre-execution design draft** preserved as research history. The independent audit identified several open design issues (including global $Z$-coordinate cutoffs versus anatomical masks, outer-surface shell definitions extending beyond the intended dorsal dome, and underspecified operationalization choices).
+> 
+> **Per project control directives, Gate D is NOT executed and NOT implemented.** A targeted redesign will be produced separately before any computational execution or implementation is authorized.
 
 ---
 

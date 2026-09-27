@@ -88,10 +88,10 @@ Phase 9     Comparative pachycephalosaur analysis  FUTURE
 - Formulated Model Decision Basis v1 ([`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md)).
 
 ### Phase 4: Surface FEA Benchmark & Discretization Sensitivity *(Complete)*
-- Immutable canonical master surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, SHA-256 `5adcf5369626...`).
+- Immutable canonical master surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, processed geometry-array SHA-256 `5adcf5369626...`).
 - Volumetric tetrahedral mesh hierarchy ($h_1, h_2, h_3, h_4$) generated via TetGen with volume refinement.
 - Geodesic load patch on dorsal dome apex ($3000.0\text{ mm}^2$, $1000.0\text{ N}$) and anatomical boundary restraints.
-- Solved Model A baseline (homogeneous isotropic linear elasticity, $E = 12.0\text{ GPa}, \nu = 0.29$).
+- Solved Model A baseline (homogeneous isotropic linear elasticity, $E = 17.0\text{ GPa}, \nu = 0.30$).
 - Milestone Synthesis Report: [`reports/phase4_fea_benchmark_report.md`](reports/phase4_fea_benchmark_report.md); Figures 08–12 in [`reports/figures/`](reports/figures/).
 
 ### Phase 5: UALVP 2 CT Characterization & Material A/B Experiment *(Active Phase)*

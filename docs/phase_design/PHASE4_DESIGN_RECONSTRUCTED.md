@@ -58,7 +58,7 @@ Specifically:
   - Tier 3 Medium ($h_3$): $-a = 0.20\text{ mm}^3$ ($\approx 825\text{k}$ elements)
 
 ### 5.2 Variables Being Held Fixed (Controls)
-- **Boundary Surface**: Canonical master surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, SHA-256 `5adcf536...`) held strictly constant across all tiers (`decimate_reduction: 0.0`).
+- **Boundary Surface**: Canonical master surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, processed geometry-array SHA-256 `5adcf536...`) held strictly constant across all tiers (`decimate_reduction: 0.0`).
 - **TetGen Quality Constraints**: Radius-edge ratio constraint $q = 1.5$, minimum dihedral angle $\theta_{\min} = 10.0^\circ$ held identical across all tiers.
 - **Material Constants**: Homogeneous isotropic compact bone ($E = 17.0\text{ GPa}$, $\nu = 0.30$).
 - **Load Patch**: Exactly identical surface facet and node cluster selected via dual-graph Dijkstra wavefront ($Z \ge 80.0\text{ mm}$).

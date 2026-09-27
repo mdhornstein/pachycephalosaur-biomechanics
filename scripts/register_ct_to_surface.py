@@ -37,7 +37,10 @@ LANDMARK_PROVENANCE_PATH = PROJECT_ROOT / "data" / "metadata" / "gate_b_landmark
 OUTPUT_DIR = PROJECT_ROOT / "results" / "phase5"
 METRICS_PATH = OUTPUT_DIR / "gate_b_registration_metrics.json"
 
-# Fixed anatomical landmarks documented in data/metadata/gate_b_landmark_provenance.json
+# Hard-coded anatomical landmark coordinates directly mirroring the 5 landmark pairs documented in
+# data/metadata/gate_b_landmark_provenance.json (snout_anterior_apex, dome_dorsal_apex,
+# occipital_condyle_apex, parietal_crest_left, parietal_crest_right). Note: The script defines
+# these 5 coordinate pairs directly rather than dynamically parsing the JSON document.
 LANDMARKS_G0 = {
     "snout_anterior_apex": [105.12, 10.37, 72.54],
     "dome_dorsal_apex": [105.34, 117.89, 107.52],

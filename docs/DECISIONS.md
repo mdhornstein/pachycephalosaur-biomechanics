@@ -25,7 +25,7 @@ This document records key scientific, modeling, and architectural decisions made
 ## D003 — Enforce Pure Volumetric $h$-Refinement on Identical Canonical Master Surface
 - **Date**: 2026-09-15
 - **Status**: ACCEPTED
-- **Decision**: Freeze a single canonical watertight boundary surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, SHA-256: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`) and enforce `decimate_reduction: 0.0` across all production convergence tiers.
+- **Decision**: Freeze a single canonical watertight boundary surface $G_0$ (`stegoceras_ualvp2_canonical_master.stl`, processed geometry-array SHA-256: `5adcf53696268578f083ea29f7f4665c0faf1b41e6362ac858c8a5a7a50d62e2`) and enforce `decimate_reduction: 0.0` across all production convergence tiers.
 - **Rationale**: Prior convergence attempts decimated surface triangles per tier to accelerate meshing. A dedicated diagnostic proved that surface decimation introduces boundary slivers ($AR > 25,000$) and alters the physical volume by up to $1.15\%$, conflating geometric boundary approximation with volumetric discretization error. Holding $G_0$ strictly constant ensures that mesh refinement reflects pure volumetric discretization ($h$-refinement).
 - **Evidence**: Diagnostic mesh analysis in Section 2.2 of [`reports/phase4_fea_benchmark_report.md`](../reports/phase4_fea_benchmark_report.md).
 

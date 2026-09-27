@@ -91,7 +91,7 @@ The project currently executes **Model A**:
   - Refinement driver: Max element volume constraint ($a_{\max} = \infty \to 5.0 \to 2.0 \to 1.0\text{ mm}^3$).
 - **Software Architecture**:
   - [`solve_production.py`](../src/stegoceras_biomechanics/fea/solve_production.py): Standalone CLI executing one tier per isolated process. Writes `.npz` and `.json` artifacts, then terminates.
-  - [`plot_results.py`](../src/stegoceras_biomechanics/fea/plot_results.py): Pure post-processing consumer. Never invokes the solver or Gmsh/TetGen.
+  - [`plot_results.py`](../src/stegoceras_biomechanics/fea/plot_results.py): Numerical post-processing and visualization consumer. Derives convergence metrics, aspect ratios, global/regional stress and strain percentiles, and generates authoritative JSON artifacts in addition to rendering figures; never invokes the solver or Gmsh/TetGen.
 
 ---
 
