@@ -1,6 +1,6 @@
 # PROJECT HANDOFF
 
-**Date**: 2026-09-24  
+**Date**: 2026-09-27  
 **Phase Transition Baseline**: `15a342f` (Phase 4 FE Freeze) & `2662be0` (Literature Basis v1 Freeze)  
 **Current Git State**: Dynamic — interrogate directly via `git rev-parse HEAD`  
 **Current Phase**: Phase 4, Literature Basis v1, Phase 5 Gate A, Gate B, & Gate C **FROZEN**; Phase 5 Gate D is the **NEXT SCIENTIFIC DESIGN TASK** (current design document is an unexecuted draft pending replacement; implementation/execution is not authorized).  
@@ -8,7 +8,7 @@
 
 > [!IMPORTANT]
 > **Authority & Orientation Notice**:
-> This document is the fast, living operational entry point for incoming humans and AI agents. It reflects current reality at HEAD. For historical milestones, see [`docs/snapshots/`](docs/snapshots/). For repository documentation conventions and rules, see [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md). For the formal scientific requirements translating literature into computational models, see [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md). Do not infer the current computational implementation from historical phase reports. For scientific review, independently inspect current code, configurations, and numerical artifacts rather than treating this handoff text as proof.
+> This document is the fast, living operational entry point for incoming humans and AI agents. It reflects current reality at HEAD. For historical milestones, see preserved records/archives; existing [`docs/snapshots/`](docs/snapshots/) contain selected point-in-time snapshots. For repository documentation conventions and rules, see [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md). For the formal scientific requirements translating literature into computational models, see [`docs/LITERATURE_TO_MODEL_DECISIONS.md`](docs/LITERATURE_TO_MODEL_DECISIONS.md). Do not infer the current computational implementation from historical phase reports. For scientific review, independently inspect current code, configurations, and numerical artifacts rather than treating this handoff text as proof.
 
 ---
 

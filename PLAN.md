@@ -37,7 +37,7 @@ Phase 4     Controlled FE verification (Model A)   COMPLETE
 Phase 5A    CT acquisition & integrity             COMPLETE
 Phase 5B    CT ↔ G₀ registration                  COMPLETE
 Phase 5C    CT image semantics & intensity audit   COMPLETE (Frozen)
-Phase 5D    Published material-inference logic     NEXT (Active Design)
+Phase 5D    Published material-inference logic     NEXT DESIGN TASK — REPLACEMENT DESIGN PENDING
 Phase 5E    Model B volume construction            FUTURE
 Phase 5F    Model B solve & verification           FUTURE
 Phase 6     A/B mechanical comparison              FUTURE
@@ -57,7 +57,7 @@ Phase 9     Comparative pachycephalosaur analysis  FUTURE
 | **Phase 5 Gate A** | Micro-CT DICOM Integrity & Spatial Mapping | [`docs/phase_design/PHASE5_GATE_A_DESIGN.md`](docs/phase_design/PHASE5_GATE_A_DESIGN.md) | [`reports/phase5_gate_a_dicom_report.md`](reports/phase5_gate_a_dicom_report.md) | D11 | **COMPLETE** |
 | **Phase 5 Gate B** | Volumetric CT ↔ $G_0$ Rigid Registration | [`docs/phase_design/PHASE5_GATE_B_DESIGN.md`](docs/phase_design/PHASE5_GATE_B_DESIGN.md) | [`reports/phase5_gate_b_registration_report.md`](reports/phase5_gate_b_registration_report.md) | D11 | **COMPLETE** |
 | **Phase 5 Gate C** | Reconstructed CT Intensity Semantics & Zonation | [`docs/phase_design/PHASE5_GATE_C_DESIGN.md`](docs/phase_design/PHASE5_GATE_C_DESIGN.md) | [`reports/phase5_gate_c_semantics_report.md`](reports/phase5_gate_c_semantics_report.md), Figs 13 & 14 | D011 (Frozen) | **COMPLETE** |
-| **Phase 5 Gate D** | Published Material Inference Logic | [`docs/phase_design/PHASE5_GATE_D_DESIGN.md`](docs/phase_design/PHASE5_GATE_D_DESIGN.md) | `reports/phase5_gate_d_material_report.md` | D012 | **NEXT** |
+| **Phase 5 Gate D** | Published Material Inference Logic | [`docs/phase_design/PHASE5_GATE_D_DESIGN.md`](docs/phase_design/PHASE5_GATE_D_DESIGN.md) | `reports/phase5_gate_d_material_report.md` | D012 | **NEXT DESIGN TASK** (Replacement Pending) |
 | **Phase 5 Gate E** | Model B 3-Zone Mesh Construction | `docs/phase_design/PHASE5_GATE_E_DESIGN.md` | `results/phase5/gate_e_mesh_metrics.json` | D013 | FUTURE |
 | **Phase 5 Gate F** | Model B FEA Solving & Verification | `docs/phase_design/PHASE5_GATE_F_DESIGN.md` | `reports/phase5_gate_f_solve_report.md` | D014 | FUTURE |
 | **Phase 6** | Decisive Model A vs. Model B Comparison | `docs/phase_design/PHASE6_DESIGN.md` | `reports/phase6_material_comparison_report.md` | D015 | FUTURE |
@@ -98,7 +98,7 @@ Phase 9     Comparative pachycephalosaur analysis  FUTURE
 - **Gate A (CT Ingestion & Integrity)** *(Complete)*: Ingested 514 micro-CT DICOM slices (`UALVP2-CT-DICOM-CRAN-01`), established zero-based indexing, confirmed uncalibrated 16-bit intensity values ([`reports/phase5_gate_a_dicom_report.md`](reports/phase5_gate_a_dicom_report.md)).
 - **Gate B (CT ↔ $G_0$ Registration)** *(Complete)*: Rigid registration establishing sub-voxel outer cranial alignment ($0.2472\text{ mm}$ translation) and approximately unit scale ([`reports/phase5_gate_b_registration_report.md`](reports/phase5_gate_b_registration_report.md)).
 - **Gate C (Reconstructed Intensity Semantics & Zonation Audit)** *(Complete / Frozen)*: Full-volume dynamic range audit ($396.8\text{M}$ voxels, Otsu $20,864$). Established that reconstructed CT image intensity alone does not recover the hypothesized Zone 2/Zone 3 boundary in sampled dome regions ($\text{CNR} = 0.0616 \ll 1.0$, descriptive $\text{AUC} = 0.5132$). Identified $16.2\%$ low-intensity voxels in core compatible with internal void/partial-volume structure. Decision D011 mandating literature-informed geometric rules for Model B ([`reports/phase5_gate_c_semantics_report.md`](reports/phase5_gate_c_semantics_report.md); Figures 13 & 14).
-- **Gate D (Published Material Inference Logic)** *(Next Action)*: Formalize explicit mathematical and spatial rules from Snively & Theodor (2011) and Schott et al. (2011) into executable code mapping onto canonical frame $G_0$ ([`docs/phase_design/PHASE5_GATE_D_DESIGN.md`](docs/phase_design/PHASE5_GATE_D_DESIGN.md)).
+- **Gate D (Published Material Inference Logic)** *(Next Scientific Design Task)*: Next scientific design task. The existing design ([`docs/phase_design/PHASE5_GATE_D_DESIGN.md`](docs/phase_design/PHASE5_GATE_D_DESIGN.md)) is an unexecuted historical draft; implementation and execution require a replacement design and explicit authorization.
 - **Gate E (Model B Mesh Construction)** *(Future)*: Map 3-zone architecture onto frozen $h_3$ volume mesh without altering surface boundary geometry.
 - **Gate F (Model B Solve & Verification)** *(Future)*: Solve Model B under identical loading and boundary conditions.
 
