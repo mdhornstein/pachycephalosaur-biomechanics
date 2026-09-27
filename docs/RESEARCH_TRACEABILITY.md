@@ -303,7 +303,7 @@ Each phase/gate documents the following minimal tuple:
     - Evaluates 100% full-volume histogram accounting ($396,857,344$ voxels).
     - Evaluates full-volume high-intensity / bone-candidate mask distribution and peak modes ($34,042$ bone vs $41,189$ matrix), demonstrating that a single global threshold does not uniquely isolate bone.
     - Extracts 5 anatomical ROIs without selection bias, evaluating post hoc threshold sensitivity across $T \in [15000, 25000]$.
-    - Identifies $16.2\%$ low-intensity voxels in dome core ($11.8\% < 10,000$), compatible with internal void/partial-volume structure (Schott et al. 2011) and aligning with spatial trabecular heterogeneity (Snively & Theodor 2011).
+    - Identifies $16.2\%$ low-intensity voxels in dome core ($11.8\% < 10,000$), demonstrating a substantial low-intensity voxel fraction in the core that is compatible with internal void/partial-volume structure and broadly consistent with the qualitative trabecular observations reported by Snively & Theodor (Schott et al. 2011).
     - Evaluates descriptive tissue contrast ($\text{CNR} = 0.0616$, $D_B = 0.0134$, descriptive $\text{ROC AUC} = 0.5132$) between dorsal cortex (Zone 3) and dome core (Zone 2).
     - Quantifies residual radial intensity drop ($11.34\%$ drop across $24.7\text{-mm}$ bone section).
 - **Figure-generation Entry Point(s)**:

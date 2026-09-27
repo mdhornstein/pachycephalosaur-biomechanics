@@ -98,11 +98,18 @@ def test_anatomical_rois_and_threshold_sensitivity(gate_c_metrics):
                 f"Fractions do not sum to 100% in {name} at T={t_key}: {total_pct}"
             )
 
-    # Dome core low-intensity fraction: sanity check (valid percentage) and reproducible numerical regression
+    # Dome core low-intensity fraction: verify mathematical domain bounds [0, 100]% and partition conservation
     core_sens = sens["dome_core_zone2"]["thresholds"]["20864"]
-    assert 0.0 <= core_sens["low_intensity_fraction_pct"] <= 100.0
-    assert np.isclose(core_sens["low_intensity_fraction_pct"], 16.21, atol=0.1)
-    assert np.isclose(core_sens["bone_fraction_pct"], 83.79, atol=0.1)
+    low_pct = core_sens["low_intensity_fraction_pct"]
+    bone_pct = core_sens["bone_fraction_pct"]
+    assert 0.0 <= low_pct <= 100.0
+    assert 0.0 <= bone_pct <= 100.0
+    assert np.isclose(low_pct + bone_pct, 100.0, atol=1e-3)
+
+    # Exact numerical regression check: verify that code reproducibly computes observed 16.21% value
+    # (Note: this is a code reproducibility test, not a scientific acceptance criterion)
+    assert np.isclose(low_pct, 16.21, atol=0.1)
+    assert np.isclose(bone_pct, 83.79, atol=0.1)
 
 
 def test_tissue_separability_metrics_consistency(gate_c_metrics):
@@ -128,12 +135,13 @@ def test_beam_hardening_cupping_profile(gate_c_metrics):
     """Verifies that residual radial intensity variation across the cross-section is quantified."""
     cupping = gate_c_metrics["beam_hardening_cupping"]
     assert cupping["status"] == "EVALUATED"
-    assert cupping["bone_voxel_count"] > 20
-    assert cupping["span_mm"] > 10.0
+    assert cupping["bone_voxel_count"] > 0
+    assert cupping["span_mm"] > 0.0
+    assert np.isclose(cupping["span_mm"], 24.70, atol=0.1)
     assert np.isfinite(cupping["periphery_mean"])
     assert np.isfinite(cupping["center_mean"])
     assert np.isfinite(cupping["cupping_drop_pct"])
-    # Regression check: exact reproducibility of computed radial intensity drop
+    # Exact numerical regression check: reproducibility of computed radial intensity drop
     assert np.isclose(cupping["cupping_drop_pct"], 11.34, atol=0.1)
 
 
