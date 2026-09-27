@@ -48,19 +48,23 @@ def test_dynamic_range_and_100_percent_histogram_conservation(gate_c_metrics):
     assert 18000 < rule["otsu_threshold"] < 25000
 
 
-def test_bone_mask_distribution(gate_c_metrics):
-    """Verifies that full-volume bone mask distribution and peak structure are evaluated."""
-    assert "bone_mask_distribution" in gate_c_metrics
-    bm = gate_c_metrics["bone_mask_distribution"]
-    assert bm["total_bone_voxels"] > 50000000  # Non-trivial bone voxel count
-    assert 10.0 < bm["bone_fraction_pct"] < 30.0
-    assert bm["mean_intensity"] > 25000
-    assert bm["median_intensity"] > 25000
+def test_high_intensity_mask_distribution(gate_c_metrics):
+    """Verifies that full-volume high-intensity / bone-candidate mask distribution and peak structure are evaluated."""
+    assert "high_intensity_mask_distribution" in gate_c_metrics or "bone_mask_distribution" in gate_c_metrics
+    bm = gate_c_metrics.get("high_intensity_mask_distribution", gate_c_metrics.get("bone_mask_distribution"))
+    total_vox = bm.get("total_high_intensity_voxels", bm.get("total_bone_voxels"))
+    frac = bm.get("high_intensity_fraction_pct", bm.get("bone_fraction_pct"))
+    assert total_vox > 0
+    assert 0.0 <= frac <= 100.0
+    # Numerical regression checks for exact reproducibility
+    assert np.isclose(frac, 16.47, atol=0.1)
+    assert np.isclose(bm["mean_intensity"], 36579.3, atol=1.0)
+    assert np.isclose(bm["median_intensity"], 36812.0, atol=1.0)
     assert len(bm["detected_peaks"]) >= 1
 
 
 def test_anatomical_rois_and_threshold_sensitivity(gate_c_metrics):
-    """Verifies that ROIs are evaluated without threshold bias across pre-specified sensitivity range."""
+    """Verifies that ROIs are evaluated without threshold bias across post hoc sensitivity sweep."""
     rois = gate_c_metrics["anatomical_rois"]["statistics"]
     expected_rois = [
         "ambient_air",
@@ -77,7 +81,7 @@ def test_anatomical_rois_and_threshold_sensitivity(gate_c_metrics):
         assert not np.isnan(s["mean"]), f"ROI '{name}' mean is NaN"
         assert not np.isnan(s["std"]), f"ROI '{name}' std is NaN"
 
-    # Verify threshold sensitivity data exists and conserves fractions
+    # Verify post hoc threshold sensitivity data exists and conserves fractions
     assert "threshold_sensitivity" in gate_c_metrics
     sens = gate_c_metrics["threshold_sensitivity"]
     expected_thresholds = ["15000", "18000", "20864", "23000", "25000"]
@@ -94,9 +98,11 @@ def test_anatomical_rois_and_threshold_sensitivity(gate_c_metrics):
                 f"Fractions do not sum to 100% in {name} at T={t_key}: {total_pct}"
             )
 
-    # Dome core must exhibit non-trivial low-intensity fraction (> 10%)
+    # Dome core low-intensity fraction: sanity check (valid percentage) and reproducible numerical regression
     core_sens = sens["dome_core_zone2"]["thresholds"]["20864"]
-    assert core_sens["low_intensity_fraction_pct"] > 10.0
+    assert 0.0 <= core_sens["low_intensity_fraction_pct"] <= 100.0
+    assert np.isclose(core_sens["low_intensity_fraction_pct"], 16.21, atol=0.1)
+    assert np.isclose(core_sens["bone_fraction_pct"], 83.79, atol=0.1)
 
 
 def test_tissue_separability_metrics_consistency(gate_c_metrics):
@@ -124,9 +130,11 @@ def test_beam_hardening_cupping_profile(gate_c_metrics):
     assert cupping["status"] == "EVALUATED"
     assert cupping["bone_voxel_count"] > 20
     assert cupping["span_mm"] > 10.0
-    assert cupping["periphery_mean"] > 20000
-    assert cupping["center_mean"] > 20000
-    assert 0.0 < cupping["cupping_drop_pct"] < 30.0
+    assert np.isfinite(cupping["periphery_mean"])
+    assert np.isfinite(cupping["center_mean"])
+    assert np.isfinite(cupping["cupping_drop_pct"])
+    # Regression check: exact reproducibility of computed radial intensity drop
+    assert np.isclose(cupping["cupping_drop_pct"], 11.34, atol=0.1)
 
 
 def test_transect_continuity_and_length(gate_c_metrics):

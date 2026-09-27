@@ -2,7 +2,7 @@
   "gate": "Gate C",
   "description": "Image Data Semantics and Reconstructed Intensity Characterization",
   "status": "VERIFIED_PASS",
-  "epistemic_conclusion": "The empirical data support the conclusion that reconstructed CT image intensity alone does not provide sufficient contrast to recover the hypothesized Zone 2/Zone 3 boundary in the sampled frontoparietal dome regions. Among bone-classified voxels, the sampled dorsal compact cortex (Zone 3, mean=37349.8) and deep dome core (Zone 2, mean=37907.4) exhibit near-zero contrast (CNR = 0.0616 << 1.0, Bhattacharyya distance D_B = 0.0134, descriptive ROC AUC = 0.5132 across spatially correlated voxels), and this poor separability persists across a pre-specified threshold sensitivity range (T in [15000, 25000], CNR <= 0.26, descriptive AUC in [0.45, 0.55]). Analysis of unfiltered voxels reveals a non-trivial low-intensity fraction in the dome core (16.2% at Otsu threshold, with 11.8% < 10,000), representing internal lower-density voids, vascular canals, or matrix channels, consistent with published observations of spatial trabecular heterogeneity (Snively & Theodor 2011). The causal mechanism for the observed similarity among bone voxels remains uncertain; diagenetic mineral infill is a plausible explanation, but the analysis does not rule out reconstruction effects, residual beam hardening (11.34% cupping measured across the cross-section), partial volume averaging, or genuine tissue similarity in the sampled regions. Consequently, downstream Model B multi-zone material architecture cannot be directly segmented by thresholding or edge-detection operators from this CT dataset, and must instead be constructed through literature-informed geometric rules from published histological thin sections (Schott et al. 2011, Snively & Theodor 2011) mapped onto the verified canonical coordinate frame.",
+  "epistemic_conclusion": "The empirical data support the conclusion that reconstructed CT image intensity alone does not provide sufficient contrast to recover the hypothesized Zone 2/Zone 3 boundary in the sampled frontoparietal dome regions. Among high-intensity bone-candidate voxels, the sampled dorsal compact cortex (Zone 3, mean=37349.8) and deep dome core (Zone 2, mean=37907.4) exhibit near-zero contrast (CNR = 0.0616 << 1.0, Bhattacharyya distance D_B = 0.0134, descriptive ROC AUC = 0.5132 across spatially correlated voxels), and this poor separability persists across a post hoc threshold-sensitivity analysis conducted during the Gate C amendment (T in [15000, 25000], CNR <= 0.26, descriptive AUC in [0.45, 0.55]). Analysis of unfiltered voxels reveals a non-trivial low-intensity fraction in the dome core (16.2% at Otsu threshold, with 11.8% < 10,000), demonstrating a substantial low-intensity voxel fraction within the sampled dome-core region, compatible with internal void/partial-volume structure but not sufficient to identify those voxels specifically as vascular spaces (Schott et al. 2011). Furthermore, the global high-intensity mask contains at least two broad intensity modes (~34,042 cranial bone vs ~41,189 dense sedimentary rock matrix), demonstrating that a single global intensity threshold does not uniquely identify bone material. The causal mechanism for the observed similarity among bone voxels remains uncertain; diagenetic mineral infill is a plausible explanation, but the analysis does not rule out reconstruction effects, residual beam hardening (11.34% cupping measured across the cross-section), partial volume averaging, or genuine tissue similarity in the sampled regions. Consequently, downstream Model B multi-zone material architecture cannot be directly segmented by thresholding or edge-detection operators from this CT dataset, and must instead be constructed through literature-informed geometric rules from published histological thin sections (Schott et al. 2011, Snively & Theodor 2011) mapped onto the verified canonical coordinate frame.",
   "specimen": "Stegoceras validum UALVP 2",
   "dataset": "UALVP2-CT-DICOM-CRAN-01",
   "volume_metadata": {
@@ -52,7 +52,9 @@
       "bone_mode": 34175.478515625
     }
   },
-  "bone_mask_distribution": {
+  "high_intensity_mask_distribution": {
+    "total_high_intensity_voxels": 65371767,
+    "high_intensity_fraction_pct": 16.472359145758936,
     "total_bone_voxels": 65371767,
     "bone_fraction_pct": 16.472359145758936,
     "mean_intensity": 36579.346876962954,
@@ -69,7 +71,28 @@
         "count": 1495838
       }
     ],
-    "interpretation": "Across the full cranial volume, the bone-classified mask exhibits two broad overlapping modes: a primary cranial bone mode at ~34,000 and a secondary high-intensity mode at ~41,200 corresponding to dense diagenetic sedimentary rock matrix fill in the endocranial braincase and cavity spaces."
+    "interpretation": "The global high-intensity mask contains at least two broad intensity modes: a primary cranial bone mode at ~34,000 and a secondary high-intensity mode at ~41,200 corresponding to dense diagenetic sedimentary rock matrix fill in the endocranial braincase and cavity spaces, demonstrating that a single global intensity threshold does not uniquely identify bone material."
+  },
+  "bone_mask_distribution": {
+    "total_high_intensity_voxels": 65371767,
+    "high_intensity_fraction_pct": 16.472359145758936,
+    "total_bone_voxels": 65371767,
+    "bone_fraction_pct": 16.472359145758936,
+    "mean_intensity": 36579.346876962954,
+    "std_intensity": 6427.560511188771,
+    "median_intensity": 36812.0,
+    "iqr_intensity": 9735.0,
+    "detected_peaks": [
+      {
+        "center_intensity": 34041.945,
+        "count": 1630489
+      },
+      {
+        "center_intensity": 41189.305,
+        "count": 1495838
+      }
+    ],
+    "interpretation": "The global high-intensity mask contains at least two broad intensity modes: a primary cranial bone mode at ~34,000 and a secondary high-intensity mode at ~41,200 corresponding to dense diagenetic sedimentary rock matrix fill in the endocranial braincase and cavity spaces, demonstrating that a single global intensity threshold does not uniquely identify bone material."
   },
   "threshold_sensitivity": {
     "ambient_air": {
@@ -932,5 +955,5 @@
     "reports/figures/figure13_ct_intensity_semantics.png",
     "reports/figures/figure14_dome_attenuation_transects.png"
   ],
-  "runtime_seconds": 14.21
+  "runtime_seconds": 14.04
 }

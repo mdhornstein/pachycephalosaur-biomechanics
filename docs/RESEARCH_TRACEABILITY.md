@@ -297,18 +297,18 @@ Each phase/gate documents the following minimal tuple:
 - **Primary Computational Entry Point(s)**:
   - [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py)
 - **Reusable Source Modules**:
-  - [`src/stegoceras_biomechanics/ct/semantics.py`](../src/stegoceras_biomechanics/ct/semantics.py): `load_ct_volume()`, `compute_dynamic_range_audit()`, `compute_bone_mask_distribution()`, `build_roi_definitions()`, `extract_roi_samples()`, `evaluate_threshold_sensitivity()`, `compute_roi_moments()`, `compute_tissue_contrast_and_separability()`, `sample_transect_ray()`, `evaluate_cupping_profile()`
+  - [`src/stegoceras_biomechanics/ct/semantics.py`](../src/stegoceras_biomechanics/ct/semantics.py): `load_ct_volume()`, `compute_dynamic_range_audit()`, `compute_bone_mask_distribution()`, `compute_high_intensity_mask_distribution()`, `build_roi_definitions()`, `extract_roi_samples()`, `evaluate_threshold_sensitivity()`, `compute_roi_moments()`, `compute_tissue_contrast_and_separability()`, `sample_transect_ray()`, `evaluate_cupping_profile()`
 - **Post-processing / Analysis Entry Point(s)**:
   - Integrated in [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py):
     - Evaluates 100% full-volume histogram accounting ($396,857,344$ voxels).
-    - Evaluates full-volume bone mask distribution and peak modes ($34,042$ bone vs $41,189$ matrix).
-    - Extracts 5 anatomical ROIs without selection bias, evaluating threshold sensitivity across $T \in [15000, 25000]$.
-    - Identifies $16.2\%$ low-intensity voxels in dome core ($11.8\% < 10,000$), aligning with spatial trabecular heterogeneity.
+    - Evaluates full-volume high-intensity / bone-candidate mask distribution and peak modes ($34,042$ bone vs $41,189$ matrix), demonstrating that a single global threshold does not uniquely isolate bone.
+    - Extracts 5 anatomical ROIs without selection bias, evaluating post hoc threshold sensitivity across $T \in [15000, 25000]$.
+    - Identifies $16.2\%$ low-intensity voxels in dome core ($11.8\% < 10,000$), compatible with internal void/partial-volume structure (Schott et al. 2011) and aligning with spatial trabecular heterogeneity (Snively & Theodor 2011).
     - Evaluates descriptive tissue contrast ($\text{CNR} = 0.0616$, $D_B = 0.0134$, descriptive $\text{ROC AUC} = 0.5132$) between dorsal cortex (Zone 3) and dome core (Zone 2).
     - Quantifies residual radial intensity drop ($11.34\%$ drop across $24.7\text{-mm}$ bone section).
 - **Figure-generation Entry Point(s)**:
   - [`scripts/characterize_image_semantics.py`](../scripts/characterize_image_semantics.py):
-    - `reports/figures/figure13_ct_intensity_semantics.png` (4 panels: full-volume & bone mask histogram, ROI boxplots with low-intensity %, threshold sensitivity sweep, KDE overlap)
+    - `reports/figures/figure13_ct_intensity_semantics.png` (4 panels: full-volume & high-intensity mask histogram, ROI boxplots with low-intensity %, post hoc threshold sensitivity sweep, KDE overlap)
     - `reports/figures/figure14_dome_attenuation_transects.png` (3 panels: vertical depth, coronal transverse, anteroposterior)
 - **Input Artifacts & Cryptographic Checksums**:
   - 514 Cranium micro-CT slices: `data/raw/dicom/cranium/` (SHA-256 verified in [`data/metadata/dicom_slice_manifest.json`](../data/metadata/dicom_slice_manifest.json))
@@ -320,7 +320,7 @@ Each phase/gate documents the following minimal tuple:
   - [`reports/figures/figure13_ct_intensity_semantics.png`](../reports/figures/figure13_ct_intensity_semantics.png)
   - [`reports/figures/figure14_dome_attenuation_transects.png`](../reports/figures/figure14_dome_attenuation_transects.png)
 - **Automated Verification Tests**:
-  - [`tests/test_gate_c_semantics.py`](../tests/test_gate_c_semantics.py) (8 tests: status & metadata, 100% histogram conservation, bone mask distribution & peaks, ROI completeness & threshold sensitivity, tissue separability consistency, cupping profile, transect continuity, figure existence)
+  - [`tests/test_gate_c_semantics.py`](../tests/test_gate_c_semantics.py) (8 tests: status & metadata, 100% histogram conservation, high-intensity mask distribution & peaks, ROI completeness & post hoc threshold sensitivity, tissue separability consistency, cupping profile, transect continuity, figure existence)
 - **Formal Report**:
   - [`reports/phase5_gate_c_semantics_report.md`](../reports/phase5_gate_c_semantics_report.md)
 - **Resulting Decision / State Update**:
@@ -328,7 +328,7 @@ Each phase/gate documents the following minimal tuple:
 
 ---
 
-### Phase 5 Gate D: Reconstruct Published Material Inference Logic *(ACTIVE NEXT)*
+### Phase 5 Gate D: Reconstruct Published Material Inference Logic *(HELD PENDING USER AUTHORIZATION)*
 
 - **Scientific Question**: What explicit mathematical and logical rules were used in published literature to assign heterogeneous material properties to pachycephalosaur skull models, and can they be formalized as reproducible code?
 - **Design Document**: [`docs/phase_design/PHASE5_GATE_D_DESIGN.md`](phase_design/PHASE5_GATE_D_DESIGN.md) *(Planned)*

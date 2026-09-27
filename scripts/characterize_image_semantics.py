@@ -27,6 +27,7 @@ from stegoceras_biomechanics.ct.semantics import (
     load_ct_volume,
     compute_dynamic_range_audit,
     compute_bone_mask_distribution,
+    compute_high_intensity_mask_distribution,
     build_roi_definitions,
     extract_roi_samples,
     evaluate_threshold_sensitivity,
@@ -69,7 +70,7 @@ def plot_figure_13(
     ]
 
     # -------------------------------------------------------------
-    # Panel A: Full-volume 16-bit intensity histogram & Bone Mask
+    # Panel A: Full-volume 16-bit intensity histogram & High-Intensity Mask
     # -------------------------------------------------------------
     ax_hist = axes[0, 0]
     hist_data = dynamic_range["histogram"]
@@ -80,19 +81,19 @@ def plot_figure_13(
     ax_hist.plot(bin_centers, bin_counts, color="#1f77b4", lw=2, label="Full Volume (396.8M voxels)")
     ax_hist.fill_between(bin_centers, bin_counts, color="#1f77b4", alpha=0.15)
 
-    # Bone mask distribution overlay
+    # High-intensity / bone-candidate mask distribution overlay
     bm_hist = bone_mask_dist["histogram"]
     bm_edges = np.array(bm_hist["bin_edges"])
     bm_counts = np.array(bm_hist["bin_counts"])
     bm_centers = (bm_edges[:-1] + bm_edges[1:]) / 2.0
-    ax_hist.plot(bm_centers, bm_counts, color="#ff7f0e", lw=1.8, linestyle="-", label="Bone Mask (65.4M voxels)")
+    ax_hist.plot(bm_centers, bm_counts, color="#ff7f0e", lw=1.8, linestyle="-", label="High-Intensity Mask (65.4M voxels)")
     ax_hist.fill_between(bm_centers, bm_counts, color="#ff7f0e", alpha=0.2)
 
     ax_hist.axvline(otsu_t, color="#d62728", linestyle="--", lw=1.8, label=f"Otsu Cutoff ({otsu_t})")
     ax_hist.axvline(bg_mode, color="#2ca02c", linestyle=":", lw=1.5, label=f"Air Mode ({bg_mode:.0f})")
     ax_hist.axvline(bone_mode, color="#ff7f0e", linestyle=":", lw=1.5, label=f"Bone Mode ({bone_mode:.0f})")
 
-    # Annotate dual peaks in bone mask
+    # Annotate dual peaks in high-intensity mask
     for p in bone_mask_dist.get("detected_peaks", []):
         c = p["center_intensity"]
         if 32000 < c < 36000:
@@ -116,7 +117,7 @@ def plot_figure_13(
                 color="#8c564b",
             )
 
-    ax_hist.set_title("A. Full-Volume Dynamic Range & Bone Mask Modes", fontsize=11, fontweight="bold")
+    ax_hist.set_title("A. Full-Volume Dynamic Range & High-Intensity Mask Modes", fontsize=11, fontweight="bold")
     ax_hist.set_xlabel("Reconstructed CT Intensity (16-bit Unsigned)", fontsize=9.5)
     ax_hist.set_ylabel("Voxel Count (Log Scale)", fontsize=9.5)
     ax_hist.set_yscale("log")
@@ -167,7 +168,7 @@ def plot_figure_13(
             bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.8, edgecolor="#cccccc"),
         )
 
-    ax_box.set_title("B. Anatomical ROI Intensity Distributions (Bone Voxels)", fontsize=11, fontweight="bold")
+    ax_box.set_title("B. Anatomical ROI Intensity Distributions (High-Intensity Subset)", fontsize=11, fontweight="bold")
     ax_box.set_ylabel("Reconstructed CT Intensity (16-bit)", fontsize=9.5)
     ax_box.set_ylim(-1000, 55000)
     ax_box.legend(loc="upper left", fontsize=8, framealpha=0.9)
@@ -186,7 +187,7 @@ def plot_figure_13(
         ax_sens.plot(thresh_keys, low_pcts, marker="o", lw=2, color=color, label=clean_label)
 
     ax_sens.axvline(otsu_t, color="#d62728", linestyle="--", lw=1.5, label=f"Otsu Cutoff ({otsu_t})")
-    ax_sens.set_title("C. Threshold Sensitivity Sweep (Low-Intensity / Void Fraction)", fontsize=11, fontweight="bold")
+    ax_sens.set_title("C. Post Hoc Threshold Sensitivity Sweep (Low-Intensity Fraction)", fontsize=11, fontweight="bold")
     ax_sens.set_xlabel("Candidate Bone Threshold $T$", fontsize=9.5)
     ax_sens.set_ylabel("Low-Intensity Voxel Fraction (%)", fontsize=9.5)
     ax_sens.set_ylim(0, 100)
@@ -351,11 +352,11 @@ def execute_gate_c_characterization() -> Dict[str, Any]:
         f"bone mode={dynamic_range['bone_mode']:.0f}."
     )
 
-    # 4. Bone Mask Distribution & Peak Detection
-    print("Computing bone-mask intensity distribution and peak structure across volume...")
-    bone_mask_dist = compute_bone_mask_distribution(volume_xyz, otsu_threshold=otsu_threshold, num_bins=100)
+    # 4. High-Intensity / Bone-Candidate Mask Distribution & Peak Detection
+    print("Computing high-intensity mask intensity distribution and peak structure across volume...")
+    bone_mask_dist = compute_high_intensity_mask_distribution(volume_xyz, otsu_threshold=otsu_threshold, num_bins=100)
     print(
-        f"  Bone mask: {bone_mask_dist['total_bone_voxels']} voxels ({bone_mask_dist['bone_fraction_pct']:.2f}%), "
+        f"  High-intensity mask: {bone_mask_dist['total_high_intensity_voxels']} voxels ({bone_mask_dist['high_intensity_fraction_pct']:.2f}%), "
         f"mean={bone_mask_dist['mean_intensity']:.1f}, median={bone_mask_dist['median_intensity']:.1f}."
     )
     for p in bone_mask_dist.get("detected_peaks", []):
@@ -374,9 +375,9 @@ def execute_gate_c_characterization() -> Dict[str, Any]:
         filter_bone_threshold=None,
     )
 
-    # Threshold sensitivity sweep across pre-specified candidate thresholds
+    # Post hoc threshold-sensitivity analysis conducted during Gate C amendment
     thresholds_sweep = [15000, 18000, 20864, 23000, 25000]
-    print(f"Evaluating threshold sensitivity across {thresholds_sweep}...")
+    print(f"Evaluating post hoc threshold sensitivity across candidate thresholds {thresholds_sweep}...")
     threshold_sensitivity = evaluate_threshold_sensitivity(roi_samples_unfiltered, thresholds=thresholds_sweep)
     for name, sens in threshold_sensitivity.items():
         sens_otsu = sens["thresholds"][str(otsu_threshold)]
@@ -489,19 +490,21 @@ def execute_gate_c_characterization() -> Dict[str, Any]:
     epistemic_conclusion = (
         f"The empirical data support the conclusion that reconstructed CT image intensity alone does not provide "
         f"sufficient contrast to recover the hypothesized Zone 2/Zone 3 boundary in the sampled frontoparietal dome regions. "
-        f"Among bone-classified voxels, the sampled dorsal compact cortex (Zone 3, mean={roi_stats_bone['dorsal_cortex_zone3']['mean']:.1f}) "
+        f"Among high-intensity bone-candidate voxels, the sampled dorsal compact cortex (Zone 3, mean={roi_stats_bone['dorsal_cortex_zone3']['mean']:.1f}) "
         f"and deep dome core (Zone 2, mean={roi_stats_bone['dome_core_zone2']['mean']:.1f}) exhibit near-zero contrast "
         f"(CNR = {cnr_cortex_core:.4f} << 1.0, Bhattacharyya distance D_B = {db_cortex_core:.4f}, descriptive ROC AUC = {auc_cortex_core:.4f} "
-        f"across spatially correlated voxels), and this poor separability persists across a pre-specified threshold sensitivity range "
-        f"(T in [15000, 25000], CNR <= 0.26, descriptive AUC in [0.45, 0.55]). Analysis of unfiltered voxels reveals a non-trivial "
-        f"low-intensity fraction in the dome core (16.2% at Otsu threshold, with 11.8% < 10,000), representing internal lower-density "
-        f"voids, vascular canals, or matrix channels, consistent with published observations of spatial trabecular heterogeneity "
-        f"(Snively & Theodor 2011). The causal mechanism for the observed similarity among bone voxels remains uncertain; diagenetic mineral "
-        f"infill is a plausible explanation, but the analysis does not rule out reconstruction effects, residual beam hardening (11.34% cupping "
-        f"measured across the cross-section), partial volume averaging, or genuine tissue similarity in the sampled regions. Consequently, "
-        f"downstream Model B multi-zone material architecture cannot be directly segmented by thresholding or edge-detection operators "
-        f"from this CT dataset, and must instead be constructed through literature-informed geometric rules from published histological thin "
-        f"sections (Schott et al. 2011, Snively & Theodor 2011) mapped onto the verified canonical coordinate frame."
+        f"across spatially correlated voxels), and this poor separability persists across a post hoc threshold-sensitivity analysis conducted "
+        f"during the Gate C amendment (T in [15000, 25000], CNR <= 0.26, descriptive AUC in [0.45, 0.55]). Analysis of unfiltered voxels "
+        f"reveals a non-trivial low-intensity fraction in the dome core (16.2% at Otsu threshold, with 11.8% < 10,000), demonstrating a substantial "
+        f"low-intensity voxel fraction within the sampled dome-core region, compatible with internal void/partial-volume structure but not sufficient "
+        f"to identify those voxels specifically as vascular spaces (Schott et al. 2011). Furthermore, the global high-intensity mask contains at least "
+        f"two broad intensity modes (~34,042 cranial bone vs ~41,189 dense sedimentary rock matrix), demonstrating that a single global intensity "
+        f"threshold does not uniquely identify bone material. The causal mechanism for the observed similarity among bone voxels remains uncertain; "
+        f"diagenetic mineral infill is a plausible explanation, but the analysis does not rule out reconstruction effects, residual beam hardening "
+        f"(11.34% cupping measured across the cross-section), partial volume averaging, or genuine tissue similarity in the sampled regions. Consequently, "
+        f"downstream Model B multi-zone material architecture cannot be directly segmented by thresholding or edge-detection operators from this CT dataset, "
+        f"and must instead be constructed through literature-informed geometric rules from published histological thin sections (Schott et al. 2011, "
+        f"Snively & Theodor 2011) mapped onto the verified canonical coordinate frame."
     )
 
     elapsed = time.time() - t_start
@@ -539,7 +542,21 @@ def execute_gate_c_characterization() -> Dict[str, Any]:
                 "bone_mode": dynamic_range["bone_mode"],
             },
         },
+        "high_intensity_mask_distribution": {
+            "total_high_intensity_voxels": bone_mask_dist["total_high_intensity_voxels"],
+            "high_intensity_fraction_pct": bone_mask_dist["high_intensity_fraction_pct"],
+            "total_bone_voxels": bone_mask_dist["total_bone_voxels"],
+            "bone_fraction_pct": bone_mask_dist["bone_fraction_pct"],
+            "mean_intensity": bone_mask_dist["mean_intensity"],
+            "std_intensity": bone_mask_dist["std_intensity"],
+            "median_intensity": bone_mask_dist["median_intensity"],
+            "iqr_intensity": bone_mask_dist["iqr_intensity"],
+            "detected_peaks": bone_mask_dist["detected_peaks"],
+            "interpretation": bone_mask_dist["interpretation"],
+        },
         "bone_mask_distribution": {
+            "total_high_intensity_voxels": bone_mask_dist["total_high_intensity_voxels"],
+            "high_intensity_fraction_pct": bone_mask_dist["high_intensity_fraction_pct"],
             "total_bone_voxels": bone_mask_dist["total_bone_voxels"],
             "bone_fraction_pct": bone_mask_dist["bone_fraction_pct"],
             "mean_intensity": bone_mask_dist["mean_intensity"],

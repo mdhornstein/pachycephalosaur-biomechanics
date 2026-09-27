@@ -293,14 +293,15 @@ def evaluate_threshold_sensitivity(
     roi_samples: Dict[str, np.ndarray],
     thresholds: Optional[List[int]] = None,
 ) -> Dict[str, Dict[str, Any]]:
-    """Evaluates low-intensity (void/porosity proxy) vs bone-classified fractions across threshold sensitivity range.
+    """Evaluates low-intensity vs high-intensity fractions across a threshold sensitivity range.
 
-    For each ROI, tests the sensitivity of bone-classified versus low-intensity fractions and
-    their respective distribution moments across a pre-specified threshold range.
+    Conducted as a post hoc threshold-sensitivity analysis during the Gate C amendment to evaluate
+    the sensitivity of bone-candidate versus low-intensity fractions and their respective distribution
+    moments across candidate thresholds without a priori threshold filtering.
 
     Args:
         roi_samples: Dictionary mapping ROI name to unfiltered array of intensity samples.
-        thresholds: Pre-specified list of thresholds to evaluate.
+        thresholds: Candidate list of thresholds to evaluate.
                     Default: [15000, 18000, 20864, 23000, 25000].
 
     Returns:
@@ -376,23 +377,23 @@ def evaluate_threshold_sensitivity(
     return sensitivity
 
 
-def compute_bone_mask_distribution(
+def compute_high_intensity_mask_distribution(
     volume_xyz: np.ndarray,
     otsu_threshold: int = 20864,
     num_bins: int = 100,
 ) -> Dict[str, Any]:
-    """Evaluates intensity distribution, moments, and peak structure within the bone-classified mask.
+    """Evaluates intensity distribution, moments, and peak structure within the high-intensity / bone-candidate mask ($I > T_{\\text{primary}}$).
 
     Specifically tests whether voxels above the primary segmentation threshold exhibit
     unimodal or multimodal characteristics across the cranial volume.
 
     Args:
         volume_xyz: 3D CT volume array.
-        otsu_threshold: Primary bone segmentation cutoff.
+        otsu_threshold: Primary segmentation cutoff.
         num_bins: Number of histogram bins.
 
     Returns:
-        Dictionary containing bone mask voxel count, moments, histogram, and detected peak modes.
+        Dictionary containing mask voxel counts, moments, histogram, and detected peak modes.
     """
     flat = volume_xyz.ravel()
     bone_mask = flat > otsu_threshold
@@ -402,7 +403,9 @@ def compute_bone_mask_distribution(
 
     if total_bone == 0:
         return {
+            "total_high_intensity_voxels": 0,
             "total_bone_voxels": 0,
+            "high_intensity_fraction_pct": 0.0,
             "bone_fraction_pct": 0.0,
             "mean": float("nan"),
             "std": float("nan"),
@@ -430,9 +433,11 @@ def compute_bone_mask_distribution(
             })
 
     return {
-        "total_bone_voxels": total_bone,
+        "total_high_intensity_voxels": total_bone,
+        "total_bone_voxels": total_bone,  # backward compatibility alias
         "total_volume_voxels": total_vol,
-        "bone_fraction_pct": float(total_bone / total_vol * 100.0),
+        "high_intensity_fraction_pct": float(total_bone / total_vol * 100.0),
+        "bone_fraction_pct": float(total_bone / total_vol * 100.0),  # alias
         "mean_intensity": mu,
         "std_intensity": sig,
         "median_intensity": med,
@@ -444,11 +449,17 @@ def compute_bone_mask_distribution(
             "bin_counts": [int(c) for c in hist],
         },
         "interpretation": (
-            "Across the full cranial volume, the bone-classified mask exhibits two broad overlapping modes: "
-            "a primary cranial bone mode at ~34,000 and a secondary high-intensity mode at ~41,200 corresponding "
-            "to dense diagenetic sedimentary rock matrix fill in the endocranial braincase and cavity spaces."
+            "The global high-intensity mask contains at least two broad intensity modes: "
+            "a primary cranial bone mode at ~34,000 and a secondary high-intensity mode at ~41,200 "
+            "corresponding to dense diagenetic sedimentary rock matrix fill in the endocranial braincase "
+            "and cavity spaces, demonstrating that a single global intensity threshold does not uniquely "
+            "identify bone material."
         ),
     }
+
+
+# Backward compatibility alias
+compute_bone_mask_distribution = compute_high_intensity_mask_distribution
 
 
 def compute_roi_moments(roi_samples: Dict[str, np.ndarray]) -> Dict[str, Dict[str, float]]:

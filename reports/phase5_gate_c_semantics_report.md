@@ -8,7 +8,7 @@
 **Dataset**: `UALVP2-CT-DICOM-CRAN-01` (514 Slices, 16-bit Unsigned, Matrix $754 \times 1024 \times 514$)  
 **Generated Artifacts**:
 - Machine-Readable Metrics: [`results/phase5/gate_c_semantics_metrics.json`](../results/phase5/gate_c_semantics_metrics.json)
-- Figure 13 (Full-Volume Dynamic Range, Bone Mask, & Threshold Sensitivity): [`reports/figures/figure13_ct_intensity_semantics.png`](figures/figure13_ct_intensity_semantics.png)
+- Figure 13 (Full-Volume Dynamic Range, High-Intensity Mask, & Post Hoc Threshold Sensitivity): [`reports/figures/figure13_ct_intensity_semantics.png`](figures/figure13_ct_intensity_semantics.png)
 - Figure 14 (Dome Depth Transects & Cupping Profile): [`reports/figures/figure14_dome_attenuation_transects.png`](figures/figure14_dome_attenuation_transects.png)
 
 ---
@@ -17,17 +17,17 @@
 
 Phase 5 Gate C establishes the empirical image semantics, reconstructed CT intensity distributions, artifact profiles, and tissue contrast characteristics of the micro-CT volume (`UALVP2-CT-DICOM-CRAN-01`), evaluating whether internal histological dome zonation can be segmented directly from CT intensity data:
 
-> **Central Scientific Finding**: Reconstructed CT image intensity alone **does not provide sufficient contrast to recover the hypothesized Zone 2/Zone 3 histological boundary in the sampled frontoparietal dome regions**. Among bone-classified voxels, the sampled dorsal compact cortex (Zone 3; mean reconstructed intensity $37,349.8 \pm 7069.4$) and deep cancellous core (Zone 2; mean reconstructed intensity $37,907.4 \pm 5649.6$) exhibit near-zero contrast:
+> **Central Scientific Finding**: Reconstructed CT image intensity alone **does not provide sufficient contrast to recover the hypothesized Zone 2/Zone 3 histological boundary in the sampled frontoparietal dome regions**. Among high-intensity bone-candidate voxels, the sampled dorsal compact cortex (Zone 3; mean reconstructed intensity $37,349.8 \pm 7069.4$) and deep cancellous core (Zone 2; mean reconstructed intensity $37,907.4 \pm 5649.6$) exhibit near-zero contrast:
 > 
 > $$\text{CNR} = 0.0616 \ll 1.0 \quad (\text{negligible contrast})$$
 > $$D_B = 0.0134 \quad (\text{high distributional overlap})$$
 > $$\text{Descriptive ROC AUC} = 0.5132 \quad (\text{poor separability across spatially correlated voxels})$$
 > 
-> This poor separability persists across a pre-specified threshold sensitivity range ($T \in [15000, 25000]$, $\text{CNR} \le 0.26$, descriptive $\text{AUC} \in [0.45, 0.55]$).
+> This poor separability persists across a post hoc threshold-sensitivity analysis conducted during the Gate C amendment ($T \in [15000, 25000]$, $\text{CNR} \le 0.26$, descriptive $\text{AUC} \in [0.45, 0.55]$).
 > 
-> **Threshold Sensitivity & Internal Porosity**: Analysis of unfiltered voxels demonstrates that while the dorsal cortex bounding box spans the sloping outer skull perimeter into ambient air ($92.6\%$ low-intensity voxels), the deep dome core ROI is located entirely within the cranial interior, where **$16.2\%$ of voxels fall below the primary Otsu threshold ($20,864$)**, with $11.8\%$ ($4,042$ voxels) below $10,000$ (mean $9,278.0 \pm 3872.3$, median $7,754.0$). This non-trivial low-intensity fraction represents internal lower-density voids, vascular canals, partial volume averaging, or lower-density matrix infill, providing quantitative alignment with published observations of spatial trabecular heterogeneity (Snively & Theodor 2011).
+> **Threshold Sensitivity & Internal Porosity**: Analysis of unfiltered voxels demonstrates that while the dorsal cortex bounding box spans the sloping outer skull perimeter into ambient air ($92.6\%$ low-intensity voxels), the deep dome core ROI is located entirely within the cranial interior, where **$16.2\%$ of voxels fall below the primary Otsu threshold ($20,864$)**, with $11.8\%$ ($4,042$ voxels) below $10,000$ (mean $9,278.0 \pm 3872.3$, median $7,754.0$). This demonstrates a substantial low-intensity voxel fraction within the sampled dome-core region, compatible with internal void/partial-volume structure but not sufficient to identify those voxels specifically as vascular spaces (Schott et al. 2011, Snively & Theodor 2011).
 > 
-> **Epistemic & Causal Qualification**: The causal mechanism responsible for the lack of contrast among bone-classified voxels remains uncertain. Secondary diagenetic mineral infill (calcite, silicates, iron-bearing phases) is a plausible explanation, but the present analysis cannot rule out imaging reconstruction effects, residual beam hardening ($11.34\%$ radial intensity drop measured across the cross-section), partial volume averaging, or genuine tissue similarity in the sampled regions.
+> **Epistemic & Causal Qualification**: The causal mechanism responsible for the lack of contrast among bone-candidate voxels remains uncertain. Secondary diagenetic mineral infill (calcite, silicates, iron-bearing phases) is a plausible explanation, but the present analysis cannot rule out imaging reconstruction effects, residual beam hardening ($11.34\%$ radial intensity drop measured across the cross-section), partial volume averaging, or genuine tissue similarity in the sampled regions.
 > 
 > **Biomechanical Consequence for Model B**: Because CT gray levels alone cannot resolve internal histological boundaries without introducing spurious thresholding artifacts, **Model B multi-zone material architecture must be constructed through literature-informed geometric rules derived from published histological thin sections (Schott et al. 2011, Snively & Theodor 2011)** mapped onto the registered canonical mesh frame ($G_0$).
 
@@ -35,12 +35,12 @@ Phase 5 Gate C establishes the empirical image semantics, reconstructed CT inten
 1. **Histogram Accounting & Completeness**: $100.0\%$ of voxels ($396,857,344$ total voxels in a $754 \times 1024 \times 514$ matrix) are accounted for across the unsigned 16-bit range $[0, 65535]$. Non-zero voxel fraction is $90.12\%$.
 2. **Global Dynamic Range**: Min intensity $0$, max intensity $65,535$, global volume mean $10,607.0 \pm 12,011.7$, median $6,102.0$, IQR $740.0$.
 3. **Objective Segmentation Cutoff**: Global Otsu criterion objectively identifies $T_{\text{primary}} = 20,864$, separating the ambient air mode ($6,016$) from the fossil bone/matrix mode ($34,175$).
-4. **Full-Volume Bone Mask Distribution**: Across the full volume, voxels with $I > 20,864$ ($65,371,767$ voxels, $16.47\%$ of scan volume) exhibit two broad overlapping modes: a primary cranial bone peak at $34,042$ and a secondary peak at $41,189$ corresponding to dense sedimentary rock matrix in the braincase and cranial cavities. In contrast, within the sampled dome core, bone voxels follow a broad unimodal distribution centered at $\sim 37,000$.
+4. **Full-Volume High-Intensity Mask Distribution**: Across the full volume, voxels in the high-intensity mask ($I > 20,864$; $65,371,767$ voxels, $16.47\%$ of scan volume) exhibit two broad overlapping modes: a primary cranial bone peak at $34,042$ and a secondary peak at $41,189$ corresponding to dense sedimentary rock matrix in the braincase and cranial cavities. The global high-intensity mask contains at least two broad intensity modes, demonstrating that a single global intensity threshold does not uniquely identify bone material. In contrast, within the sampled dome core, bone voxels follow a broad unimodal distribution centered at $\sim 37,000$.
 5. **Tissue ROI Full Accounting (Unfiltered & Bone-Classified)**:
    - `ambient_air`: $N = 125,000$; $100.0\%$ low-intensity; mean $423.9 \pm 1585.1$, median $0.0$, $\text{SNR} = 0.27$.
-   - `dorsal_cortex_zone3`: $N = 10,080$; $92.6\%$ low-intensity (ambient air outside sloping dome); $7.4\%$ ($743$ voxels) bone-classified: mean $37,349.8 \pm 7069.4$, median $39,387.0$, $\text{IQR} = 9994.5$, $\text{SNR} = 5.28$.
-   - `dome_core_zone2`: $N = 34,272$; $83.8\%$ ($28,717$ voxels) bone-classified: mean $37,907.4 \pm 5649.6$, median $37,971.0$, $\text{IQR} = 7189.0$, $\text{SNR} = 6.71$; $16.2\%$ ($5,555$ voxels) low-intensity void proxy: mean $9,278.0 \pm 3872.3$, median $7,754.0$.
-   - `basicranium_zone1`: $N = 16,800$; $86.8\%$ ($14,583$ voxels) bone-classified: mean $37,279.4 \pm 4869.2$, median $37,139.0$, $\text{IQR} = 6901.5$, $\text{SNR} = 7.66$; $13.2\%$ ($2,217$ voxels) low-intensity: mean $7,983.6 \pm 3356.0$, median $6,678.0$.
+   - `dorsal_cortex_zone3`: $N = 10,080$; $92.6\%$ low-intensity (ambient air outside sloping dome); $7.4\%$ ($743$ voxels) bone-candidate: mean $37,349.8 \pm 7069.4$, median $39,387.0$, $\text{IQR} = 9994.5$, $\text{SNR} = 5.28$.
+   - `dome_core_zone2`: $N = 34,272$; $83.8\%$ ($28,717$ voxels) bone-candidate: mean $37,907.4 \pm 5649.6$, median $37,971.0$, $\text{IQR} = 7189.0$, $\text{SNR} = 6.71$; $16.2\%$ ($5,555$ voxels) low-intensity (compatible with void/partial volume): mean $9,278.0 \pm 3872.3$, median $7,754.0$.
+   - `basicranium_zone1`: $N = 16,800$; $86.8\%$ ($14,583$ voxels) bone-candidate: mean $37,279.4 \pm 4869.2$, median $37,139.0$, $\text{IQR} = 6901.5$, $\text{SNR} = 7.66$; $13.2\%$ ($2,217$ voxels) low-intensity: mean $7,983.6 \pm 3356.0$, median $6,678.0$.
    - `sedimentary_matrix`: $N = 28,800$; $99.0\%$ ($28,520$ voxels) dense matrix: mean $41,530.9 \pm 5002.0$, median $42,441.0$, $\text{IQR} = 6363.0$, $\text{SNR} = 8.30$; $1.0\%$ low-intensity.
 6. **Descriptive Tissue Separability**:
    - Dorsal Cortex (Zone 3) vs. Dome Core (Zone 2) (bone voxels): $\text{CNR} = 0.0616$, $D_B = 0.0134$, descriptive $\text{ROC AUC} = 0.5132$.
@@ -77,8 +77,8 @@ Downstream Model B requires allocating material properties (e.g. $E_{\text{corte
 ### 3.2 Dynamic Range Audit & Full-Volume Histogram
 The full volume ($396,857,344$ voxels) was flattened and binned into 256 intensity bins across $[0, 65535]$. Histogram conservation was verified by confirming that the sum of bin counts equals total voxels. Global statistical moments, percentiles, and the global Otsu threshold were computed.
 
-### 3.3 Full-Volume Bone Mask Distribution Analysis
-To test the distribution structure of bone-classified voxels, all voxels above the Otsu cutoff ($I > 20,864$) were extracted and binned into 100 bins across $[20864, 65535]$. Moments, quartiles, and prominent histogram peaks (> 5% of peak maximum) were identified to test for modality.
+### 3.3 Full-Volume High-Intensity / Bone-Candidate Mask Distribution Analysis
+To test the distribution structure of voxels above the primary segmentation threshold, all voxels in the high-intensity mask ($I > 20,864$) were extracted and binned into 100 bins across $[20864, 65535]$. Moments, quartiles, and prominent histogram peaks (> 5% of peak maximum) were identified to test for modality and determine whether a single global threshold uniquely isolates bone material.
 
 ### 3.4 Anatomical Region-of-Interest (ROI) Sampling without Selection Bias
 To avoid the threshold-selection bias identified during peer review (where filtering `vals > otsu_threshold` prior to analysis excluded low-intensity voxels that could represent vascular/trabecular void space), five anatomical ROIs were sampled in physical coordinates, and **all sampled voxels were preserved unfiltered**:
@@ -88,11 +88,11 @@ To avoid the threshold-selection bias identified during peer review (where filte
 4. `basicranium_zone1`: Dense basicranium around the occipital condyle and basioccipital $X \in [98, 112]$, $Y \in [170, 185]$, $Z \in [45, 55]\text{ mm}$ in $G_0$ ($n = 16,800$).
 5. `sedimentary_matrix`: Rock matrix fill within the endocranial cavity $X \in [98, 110]$, $Y \in [135, 155]$, $Z \in [50, 65]\text{ mm}$ in $G_0$ ($n = 28,800$).
 
-### 3.5 Threshold Sensitivity Sweep
-To evaluate the sensitivity of tissue characterization to threshold choice, each ROI was evaluated across a pre-specified sensitivity sweep:
+### 3.5 Post Hoc Threshold-Sensitivity Analysis
+To evaluate the sensitivity of tissue characterization to threshold choice without prospectively committing to a single cutoff, a post hoc threshold-sensitivity analysis was conducted during the Gate C amendment across candidate thresholds:
 $$T \in [15000, 18000, 20864, 23000, 25000]$$
-For each threshold $T$, we computed:
-- Bone-classified fraction ($\% > T$) and moments ($\mu, \sigma, \text{median}, \text{IQR}, \text{SNR}$)
+For each candidate threshold $T$, we computed:
+- Bone-candidate fraction ($\% > T$) and moments ($\mu, \sigma, \text{median}, \text{IQR}, \text{SNR}$)
 - Low-intensity fraction ($\% \le T$) and moments ($\mu, \sigma, \text{median}, \text{IQR}$)
 - Contrast-to-noise ratio ($\text{CNR}$) and descriptive $\text{ROC AUC}$ between cortex and core bone subsets.
 
@@ -131,21 +131,21 @@ Trilinear interpolation (`scipy.ndimage.map_coordinates`, order=1) was evaluated
 | Bone/Matrix Peak Mode | $34,175$ |
 | **Objective Otsu Threshold** | **$20,864$** |
 
-### 4.2 Full-Volume Bone Mask Distribution & Modality
-Across the entire scan volume, the bone-classified mask ($I > 20,864$) contains $65,371,767$ voxels ($16.47\%$ of volume) with mean $36,579.3 \pm 6427.6$ and median $36,812.0$ ($\text{IQR} = 7543.0$).
+### 4.2 Full-Volume High-Intensity / Bone-Candidate Mask Distribution & Modality
+Across the entire scan volume, the high-intensity mask ($I > 20,864$) contains $65,371,767$ voxels ($16.47\%$ of volume) with mean $36,579.3 \pm 6427.6$ and median $36,812.0$ ($\text{IQR} = 7543.0$).
 Histogram peak detection identifies two distinct macroscopic modes:
 1. **Cranial Bone Mode**: Centered at $34,041.9$ ($1,630,489$ voxels at bin peak), representing the primary fossil bone matrix of the cranium.
 2. **Dense Rock Matrix Mode**: Centered at $41,189.3$ ($1,495,838$ voxels at bin peak), representing heavy diagenetic mineral fill within the endocranial braincase and cavity spaces.
 
-In contrast, within the frontoparietal dome bone (cortex and core), the intensity distribution is unimodal, centered at $\sim 37,000-38,000$, with no secondary bone mode.
+The global high-intensity mask contains at least two broad intensity modes, demonstrating that a single global intensity threshold does not uniquely identify bone material. In contrast, within the frontoparietal dome bone (cortex and core), the intensity distribution is unimodal, centered at $\sim 37,000-38,000$, with no secondary bone mode.
 
 ![Figure 13](figures/figure13_ct_intensity_semantics.png)
-*Figure 13: Full-volume CT intensity semantics, tissue ROI distributions, and threshold sensitivity. (A) Full-volume 16-bit histogram showing bimodal separation between air (mode 6016) and bone/matrix (mode 34175) separated by the objective Otsu threshold (20864), with bone mask distribution overlay showing cranial bone peak (34042) and matrix peak (41189). (B) Boxplots of tissue ROI distributions for bone-classified voxels, annotated with low-intensity fraction percentages. (C) Threshold sensitivity sweep showing low-intensity / void fraction across candidate thresholds $T \in [15000, 25000]$. (D) Probability density overlap demonstrating the absence of contrast between dorsal cortex (Zone 3) and dome core (Zone 2).*
+*Figure 13: Full-volume CT intensity semantics, tissue ROI distributions, and post hoc threshold sensitivity. (A) Full-volume 16-bit histogram showing bimodal separation between air (mode 6016) and bone/matrix (mode 34175) separated by the objective Otsu threshold (20864), with high-intensity mask distribution overlay showing cranial bone peak (34042) and matrix peak (41189). (B) Boxplots of tissue ROI distributions for high-intensity bone-candidate voxels, annotated with low-intensity fraction percentages. (C) Post hoc threshold sensitivity sweep showing low-intensity fraction across candidate thresholds $T \in [15000, 25000]$. (D) Probability density overlap demonstrating the absence of contrast between dorsal cortex (Zone 3) and dome core (Zone 2).*
 
 ### 4.3 Anatomical ROI Statistics (Full Accounting)
-Reporting both the unfiltered sample and the bone-classified subset at nominal Otsu threshold ($T = 20,864$):
+Reporting both the unfiltered sample and the high-intensity bone-candidate subset at nominal Otsu threshold ($T = 20,864$):
 
-| Anatomical ROI | Total Voxels | Bone Voxels ($>T$) | Bone % | Low Voxels ($\le T$) | Low % | Bone Mean $\pm$ SD | Low Mean $\pm$ SD | Bone SNR |
+| Anatomical ROI | Total Voxels | High-Intensity ($>T$) | High % | Low Voxels ($\le T$) | Low % | High Mean $\pm$ SD | Low Mean $\pm$ SD | High SNR |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `ambient_air` | $125,000$ | $0$ | $0.0\%$ | $125,000$ | $100.0\%$ | N/A | $423.9 \pm 1585.1$ | N/A |
 | `dorsal_cortex_zone3` | $10,080$ | $743$ | $7.4\%$ | $9,337$ | $92.6\%$ | $37,349.8 \pm 7069.4$ | $6,426.0 \pm 1680.7$ | $5.28$ |
@@ -153,10 +153,10 @@ Reporting both the unfiltered sample and the bone-classified subset at nominal O
 | `basicranium_zone1` | $16,800$ | $14,583$ | $86.8\%$ | $2,217$ | $13.2\%$ | $37,279.4 \pm 4869.2$ | $7,983.6 \pm 3356.0$ | $7.66$ |
 | `sedimentary_matrix` | $28,800$ | $28,520$ | $99.0\%$ | $280$ | $1.0\%$ | $41,530.9 \pm 5002.0$ | $11,485.1 \pm 4723.3$ | $8.30$ |
 
-### 4.4 Threshold Sensitivity Sweep (Low-Intensity Void Fractions & Separability)
-Evaluating the sensitivity of bone-classified moments and low-intensity fractions across the candidate threshold range:
+### 4.4 Post Hoc Threshold-Sensitivity Analysis (Low-Intensity Fractions & Separability)
+Evaluating the sensitivity of bone-candidate moments and low-intensity fractions across the candidate threshold range:
 
-| Candidate Threshold ($T$) | Cortex Bone Mean | Core Bone Mean | Cortex Bone % | Core Bone % | Core Low % (Void Proxy) | Cortex vs Core CNR | Descriptive ROC AUC |
+| Candidate Threshold ($T$) | Cortex High Mean | Core High Mean | Cortex High % | Core High % | Core Low % (Void/PV Proxy) | Cortex vs Core CNR | Descriptive ROC AUC |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | $T = 15,000$ | $34,451.1 \pm 9583.7$ | $37,455.1 \pm 6329.1$ | $8.6\%$ | $85.7\%$ | $14.3\%$ | $0.2616$ | $0.4487$ |
 | $T = 18,000$ | $36,156.5 \pm 8164.5$ | $37,692.5 \pm 5955.4$ | $7.9\%$ | $84.8\%$ | $15.2\%$ | $0.1520$ | $0.4847$ |
@@ -165,8 +165,8 @@ Evaluating the sensitivity of bone-classified moments and low-intensity fraction
 | $T = 25,000$ | $38,879.3 \pm 5495.0$ | $38,380.9 \pm 5069.5$ | $6.7\%$ | $81.2\%$ | $18.8\%$ | $0.0667$ | $0.5514$ |
 
 **Key Sensitivity Insights**:
-1. **Persistent Lack of Bone Contrast**: Across all tested thresholds from $15,000$ to $25,000$, the contrast-to-noise ratio between bone-classified cortex and core remains low ($\text{CNR} \le 0.26 \ll 1.0$), and descriptive $\text{ROC AUC}$ remains tightly bounded between $0.45$ and $0.55$.
-2. **Stable Internal Void Fraction**: In the deep dome core, the low-intensity fraction varies mildly from $14.3\%$ at $T=15,000$ to $18.8\%$ at $T=25,000$, establishing that approximately $14-19\%$ of the sampled core volume consists of low-intensity voxels ($I \le T$, with $11.8\% < 10,000$).
+1. **Persistent Lack of Bone Contrast**: Across all tested candidate thresholds from $15,000$ to $25,000$, the contrast-to-noise ratio between bone-candidate cortex and core remains low ($\text{CNR} \le 0.26 \ll 1.0$), and descriptive $\text{ROC AUC}$ remains tightly bounded between $0.45$ and $0.55$.
+2. **Stable Low-Intensity Fraction**: In the deep dome core, the low-intensity fraction varies mildly from $14.3\%$ at $T=15,000$ to $18.8\%$ at $T=25,000$, establishing that approximately $14-19\%$ of the sampled core volume consists of low-intensity voxels ($I \le T$, with $11.8\% < 10,000$). This demonstrates a substantial low-intensity fraction compatible with internal void or partial-volume structure, but not sufficient to identify those voxels specifically as vascular spaces (Schott et al. 2011).
 
 ### 4.5 Descriptive Tissue Separability (at Nominal Otsu Cutoff)
 | Tissue Comparison Pair | CNR | Bhattacharyya Distance ($D_B$) | Descriptive ROC AUC | Separation Quality |
@@ -191,20 +191,21 @@ As illustrated in Figure 14:
 
 ### 5.1 Qualified Epistemic Boundaries
 The empirical measurements demonstrate that:
-1. **Bone-Classified Contrast is Negligible**: In the specifically sampled dorsal cortex and deep dome core ROIs, bone voxels share near-identical reconstructed intensity distributions ($\text{CNR} = 0.0616$, descriptive $\text{AUC} = 0.5132$).
+1. **Bone-Candidate Contrast is Negligible**: In the specifically sampled dorsal cortex and deep dome core ROIs, bone voxels share near-identical reconstructed intensity distributions ($\text{CNR} = 0.0616$, descriptive $\text{AUC} = 0.5132$).
 2. **Whole-Dome Uniformity is Not Asserted**: The present analysis sampled localized ROIs and three 1D transects. It establishes that *no strong cortex–core intensity contrast was detected in the sampled dome regions*, but does not demonstrate whole-dome radiological uniformity.
 3. **Causal Mechanisms are Not Discriminated**: Diagenetic permineralization of vascular spaces by secondary mineral matrix is a plausible physical mechanism, but the present CT analysis does not prove this mechanism. Reconstruction filtering, partial volume averaging, residual beam hardening ($11.34\%$), scan-specific gain, or genuine morphological similarity could also contribute.
+4. **Global High-Intensity Mask Bimodality**: Across the full volume, voxels with $I > 20,864$ contain at least two broad intensity modes ($\sim 34,042$ cranial bone vs $\sim 41,189$ sedimentary rock matrix), demonstrating that a single global intensity threshold does not uniquely isolate bone material.
 
 ### 5.2 Literature Reconciliation: Published Qualitative Observations vs. Quantitative DICOM Analysis
-The findings of Gate C must be reconciled with published literature on UALVP 2:
-- **Snively & Theodor (2011)**: Reported CT evidence of spatial density heterogeneity in UALVP 2, specifically noting that cortical bone density and thickness increased toward the dome apex, low-density trabecular regions were visible *posterior to the orbits*, and beam-hardening cupping was present alongside a dense deep compact layer.
-- **Schott et al. (2011)**: Observed that in CT work on *Stegoceras*, Zones I–III could be distinguished in some specimens, with UALVP 2 noted as comparable to ROM 53555.
+The findings of Gate C reconcile with published literature on *Stegoceras validum* and UALVP 2:
+- **Snively & Theodor (2011)**: Reported CT evidence of spatial density heterogeneity in UALVP 2, specifically noting that cortical bone density and thickness increased toward the dome apex, low-density trabecular regions were visible *posterior to the orbits*, and a dense deep compact layer underlay the dome. Importantly, Snively & Theodor explicitly warned that beam-hardening artifacts can artificially inflate superficial bone density, and emphasized the necessity of histological examination for checking and calibrating CT density interpretations.
+- **Schott et al. (2011)**: Examined frontoparietal dome vascularity and histology across pachycephalosaurids. While Schott et al. had access to UALVP 2, they explicitly noted that its scan orientation and resolution differed from the comparative micro-CT scans used for their primary quantitative analysis, and their void-space assessment for UALVP 2 was an approximate estimate. Furthermore, Schott et al.'s methodology made the identical epistemic distinction required here: they used CT void space strictly as an approximate proxy for vascularity, explicitly noting that true histological vascularity cannot be measured directly in fossilized specimens via CT.
 
-**Reconciliation**:
-1. **Spatial Localization**: Snively & Theodor observed trabecular porosity specifically *posterior to the orbits* (orbitotemporal region) and dense bone at the apex. Our dorsal cortex and core ROIs sample the dorsal summit and deep central core, where bone density is highest.
-2. **Internal Low-Intensity Fraction**: When analyzed without threshold bias, our dome core ROI contains **$16.2\%$ low-intensity voxels** ($11.8\% < 10,000$), directly confirming the presence of lower-density / void spaces within the core that align with Snively & Theodor's visual observations of trabecular architecture.
-3. **Display Windowing vs. Quantitative Moments**: Historical CT assessments often relied on subjective window/level visual display settings where narrow contrast windows visually exaggerate slight intensity shifts ($\sim 5-10\%$), whereas our quantitative analysis assesses the complete 16-bit numerical distributions ($\text{CNR} = 0.0616$).
-4. **Reconstructed Pixel Intensity vs. Physical Bone Density**: 16-bit reconstructed pixel values reflect effective X-ray attenuation conflated with diagenetic infill, beam hardening, and partial volume effects, and cannot be treated as calibrated physical bone density.
+**Reconciliation & Synthesis**:
+1. **Spatial Localization & Anatomy**: Snively & Theodor observed trabecular porosity specifically *posterior to the orbits* (orbitotemporal region) and dense compact bone at the apex. Our dorsal cortex and core ROIs sample the dorsal summit and deep central core, where compact bone is densest.
+2. **Internal Low-Intensity Structure**: When analyzed without threshold bias, our dome core ROI contains **$16.2\%$ low-intensity voxels** ($11.8\% < 10,000$), demonstrating a substantial low-intensity voxel fraction within the sampled dome-core region. This is compatible with internal void or partial-volume structure, but not sufficient to identify those voxels specifically as vascular spaces without direct histological validation (Schott et al. 2011).
+3. **Scan-Specific Interpretation**: Our scan-specific quantitative characterization does not cleanly reproduce a simple Zone II/III CT-intensity separation, but this does not negate the published anatomical/histological interpretation. Rather, it demonstrates that historical visual impressions of high contrast often stemmed from narrow display windowing rather than wide quantitative separation.
+4. **Core Scientific Conclusion**: **CT intensity is demonstrably informative about preserved image heterogeneity, but it does not provide a sufficiently specific or validated mapping to the histological material zones needed for Model B.**
 
 ### 5.3 Architectural Rule for Downstream Model B
 Because reconstructed CT intensity alone does not provide contrast to recover the Zone 2/Zone 3 boundary in the sampled regions, attempting to segment Zone 2 by applying an arbitrary intensity threshold would produce unscientific, spurious geometry.
