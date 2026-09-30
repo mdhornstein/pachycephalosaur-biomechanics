@@ -117,6 +117,8 @@ uv run pytest -v
 uv run jupyter lab
 ```
 
+For detailed developer setup, package workflows, and Git/GitHub invariants, see [`DEVELOPMENT.md`](DEVELOPMENT.md).
+
 ---
 
 ## 🔬 4. Current Status & State Architecture
